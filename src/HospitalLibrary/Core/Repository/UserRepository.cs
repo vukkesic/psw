@@ -1,4 +1,5 @@
 ﻿using HospitalLibrary.Core.Model;
+using HospitalLibrary.Settings;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,19 +10,24 @@ namespace HospitalLibrary.Core.Repository
 {
     public class UserRepository : IUserRepository
     {
+        private readonly HospitalDbContext _context;
+        public UserRepository(HospitalDbContext context)
+        {
+            _context = context;
+        }
         public IEnumerable<User> GetAll()
         {
-            throw new NotImplementedException();
+            return _context.users.ToList();
         }
 
         public User GetByCredentials(string username, string password)
         {
-            throw new NotImplementedException();
+            return GetAll().FirstOrDefault(u => u.Username.Equals(username) && u.Password.Equals(password));
         }
 
         public User GetById(int id)
         {
-            throw new NotImplementedException();
+            return _context.users.Find(id);
         }
     }
 }

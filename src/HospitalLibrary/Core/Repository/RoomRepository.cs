@@ -17,17 +17,17 @@ namespace HospitalLibrary.Core.Repository
 
         public IEnumerable<Room> GetAll()
         {
-            return _context.Rooms.ToList();
+            return _context.rooms.ToList();
         }
 
         public Room GetById(int id)
         {
-            return _context.Rooms.Find(id);
+            return _context.rooms.Find(id);
         }
 
         public void Create(Room room)
         {
-            _context.Rooms.Add(room);
+            _context.rooms.Add(room);
             _context.SaveChanges();
         }
 
@@ -47,7 +47,7 @@ namespace HospitalLibrary.Core.Repository
 
         public void Delete(Room room)
         {
-            _context.Rooms.Remove(room);
+            _context.rooms.Remove(room);
             _context.SaveChanges();
         }
     }

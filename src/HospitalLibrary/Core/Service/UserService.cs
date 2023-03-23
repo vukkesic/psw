@@ -18,17 +18,19 @@ namespace HospitalLibrary.Core.Service
 
         public bool ExistsByUsername(string username)
         {
-            throw new NotImplementedException();
+
+            List<User> users = _userRepository.GetAll().ToList();
+            return users.Any(user => user.Username != null && user.Username == username);
         }
 
         public IEnumerable<User> GetAll()
         {
-            throw new NotImplementedException();
+            return _userRepository.GetAll();
         }
 
         public User GetById(int id)
         {
-            throw new NotImplementedException();
+            return _userRepository.GetById(id);
         }
     }
 }
