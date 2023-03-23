@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 namespace HospitalLibrary.Core.Repository
 {
     public interface IUserRepository
-    { 
-     IEnumerable<User> GetAll();
-    User GetById(int id);
-    User GetByCredentials(string username, string password);
+    {
+        IEnumerable<User> GetAll();
+        User GetById(int id);
+        User GetByCredentials(string username, string password);
     }
 }

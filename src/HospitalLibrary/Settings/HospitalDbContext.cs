@@ -8,6 +8,7 @@ namespace HospitalLibrary.Settings
     {
         public DbSet<Room> rooms { get; set; }
         public DbSet<User> users { get; set; }
+        public DbSet<Patient> patients { get; set; }
 
         public HospitalDbContext(DbContextOptions<HospitalDbContext> options) : base(options) { }
 
