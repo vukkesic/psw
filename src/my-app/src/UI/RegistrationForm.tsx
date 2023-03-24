@@ -15,19 +15,75 @@ const RegistrationForm: FC = () => {
     const [inputSurname, setInputSurname] = useState<string>('');
     const [inputGender, setInputGender] = useState<Gender>(Gender.Male);
     const [inputPhone, setInputPhone] = useState<string>('');
-    const [inputImagePath, setInputImagePath] = useState<string>('');
+    const [inputProfileImage, setInputProfileImage] = useState<File>();
+    const [inputProfileImageName, setInputProfileImageName] = useState<string>('');
 
+    const uploadImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+        e.preventDefault();
+        const target = e.target;
+        if (!target.files) {
+            console.log('error');
+        }
+        else {
+            const file = target.files[0];
+            setInputProfileImage(file);
+            setInputProfileImageName(file.name)
+            console.log(file);
+        }
+    }
+
+    const cancelImage = (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
+        setInputProfileImage(undefined);
+        setInputProfileImageName('');
+    }
+
+    const uploadHandler = async (e: React.MouseEvent<HTMLButtonElement>) => {
+        const formData = new FormData();
+        formData.append("formFile", inputProfileImage!);
+        formData.append("fileName", inputProfileImageName);
+        try {
+            const res = await axios.post("http://localhost:16177/api/Users/uploadImage", formData);
+            console.log(res);
+        } catch (ex) {
+            console.log(ex);
+        }
+    }
 
     const submitHandler = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        let data = { id: 0, name: inputName, surname: inputSurname, dateOfBirth: inputDateOfBirth, email: inputEmail, username: inputEmail, password: inputPassword, phone: inputPhone, gender: inputGender, profileImageName: inputImagePath, role: Role.Patient };
-        axios.post('http://localhost:16177/api/Users/userRegistration', data)
-            .then(function (response) {
-                console.log(response)
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
+        let imagePath = '';
+        if (inputProfileImage !== undefined) {
+            const formData = new FormData();
+            formData.append("formFile", inputProfileImage!);
+            formData.append("fileName", inputProfileImageName);
+            try {
+                const res = await axios.post("http://localhost:16177/api/Users/uploadImage", formData);
+                imagePath = res.data;
+                console.log(res);
+            } catch (ex) {
+                console.log(ex);
+            }
+            let data = { id: 0, name: inputName, surname: inputSurname, dateOfBirth: inputDateOfBirth, email: inputEmail, username: inputEmail, password: inputPassword, phone: inputPhone, gender: inputGender, profileImageName: imagePath, role: Role.Patient };
+            axios.post('http://localhost:16177/api/Users/userRegistration', data)
+                .then(function (response) {
+                    console.log(response)
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        }
+        else {
+            let imagePath = '';
+            let data = { id: 0, name: inputName, surname: inputSurname, dateOfBirth: inputDateOfBirth, email: inputEmail, username: inputEmail, password: inputPassword, phone: inputPhone, gender: inputGender, profileImageName: imagePath, role: Role.Patient };
+            axios.post('http://localhost:16177/api/Users/userRegistration', data)
+                .then(function (response) {
+                    console.log(response)
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        }
     }
 
     return (
@@ -122,7 +178,14 @@ const RegistrationForm: FC = () => {
                             Female
                         </option>
                     </Input>
-
+                    <label >
+                        Image
+                    </label>
+                    <input
+                        type="file"
+                        onChange={(e) => uploadImage(e)}
+                    />
+                    <button onClick={(e) => cancelImage(e)}>X</button>
                     <div className="signup-form__actions">
                         <button
                             type="submit"

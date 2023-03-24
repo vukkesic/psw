@@ -4,6 +4,8 @@ using HospitalLibrary.Core.Model;
 using HospitalLibrary.Core.Service;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.IO;
+using System;
 
 namespace HospitalAPI.Controllers
 {
@@ -18,6 +20,23 @@ namespace HospitalAPI.Controllers
         {
             _patientService = patientService;
             _userService = userService;
+        }
+        [HttpPost("uploadImage")]
+        public IActionResult UploadImage([FromForm] FileDTO file)
+        {
+            try
+            {
+                string path = Path.Combine(Directory.GetCurrentDirectory(), "images", file.FileName);
+                using (Stream stream = new FileStream(path, FileMode.Create))
+                {
+                    file.FormFile.CopyTo(stream);
+                }
+                return Ok(path);
+            }
+            catch (Exception)
+            {
+                return BadRequest("Error");
+            }
         }
 
         [HttpPost("userRegistration")]
