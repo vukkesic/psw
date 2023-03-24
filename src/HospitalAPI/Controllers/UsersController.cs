@@ -31,7 +31,7 @@ namespace HospitalAPI.Controllers
                     return BadRequest(ModelState);
                 }
                 _patientService.Create(patient);
-                //return CreatedAtAction("GetById", new { id = patient.Id }, patient);
+                //return CreatedAtAction("GetById", new { id = patient.Id }, patient);   Treba dodati get metodu 
                 return Ok(patient);
             }
             else
