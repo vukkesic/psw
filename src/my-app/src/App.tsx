@@ -9,11 +9,13 @@ import {
   Navigate
 } from "react-router-dom";
 import HomePage from './UI/HomePage';
+import NavigationBar from './UI/Navbar';
 
 function App() {
   return (
     <div className="App">
       <Router>
+        <NavigationBar />
         <Routes>
           <Route path="/signup" element={<RegistrationForm />} />
           <Route path="/*" element={<HomePage />} />
