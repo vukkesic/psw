@@ -17,7 +17,69 @@ const RegistrationForm: FC = () => {
     const [inputPhone, setInputPhone] = useState<string>('');
     const [inputProfileImage, setInputProfileImage] = useState<File>();
     const [inputProfileImageName, setInputProfileImageName] = useState<string>('');
+    const [isValidName, setIsValidName] = useState<boolean>(false);
+    const [isValidSurname, setIsValidSurname] = useState<boolean>(false);
+    const [isValidEmail, setIsValidEmail] = useState<boolean>(false);
+    const [isValidPassword, setIsValidPassword] = useState<boolean>(false);
+    const [isValidPhone, setIsValidPhone] = useState<boolean>(false);
+    let errorMesage = '';
 
+    const validateEmail = (email: string) => {
+        if (email.trim().length === 0 || /\S+@\S+\.\S+/.test(email) === false) {
+            setIsValidEmail(false);
+            errorMesage += 'Bad email, email should be example@mail.com.\n';
+        }
+        else {
+            setIsValidEmail(true);
+        }
+    }
+
+    const validateName = (name: string) => {
+        if (name.trim().length === 0) {
+            setIsValidName(false);
+            errorMesage += 'Name cannot be empty.\n';
+        }
+        else {
+            setIsValidName(true);
+        }
+    }
+
+    const validateSurname = (surname: string) => {
+        if (surname.trim().length === 0) {
+            setIsValidSurname(false);
+            errorMesage += 'Surname cannot be empty.\n';
+        }
+        else {
+            setIsValidSurname(true);
+        }
+    }
+
+    const validatePassword = (password: string) => {
+        var re = {
+            'capital': /[A-Z]/,
+            'digit': /[0-9]/,
+            'full': /[A-Za-z0-9]{7,13}$/
+        };
+        if (re.capital.test(password) &&
+            re.digit.test(password) &&
+            re.full.test(password)) {
+            setIsValidPassword(true);
+        }
+        else {
+            setIsValidPassword(false);
+            errorMesage = errorMesage + 'Password must contain at least one capital letter and number. Password lenght must be 7-13 characters.\n';
+        }
+    }
+
+    const validatePhone = (phone: string) => {
+        if (phone.length < 6 || phone.length > 16) {
+            setIsValidPhone(false);
+            errorMesage = errorMesage + 'Phone number lenght must contain 6-16 digits.\n';
+        }
+        else {
+            setIsValidPhone(true);
+        }
+    }
     const uploadImage = (e: React.ChangeEvent<HTMLInputElement>) => {
         e.preventDefault();
         const target = e.target;
@@ -52,37 +114,48 @@ const RegistrationForm: FC = () => {
 
     const submitHandler = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        let imagePath = '';
-        if (inputProfileImage !== undefined) {
-            const formData = new FormData();
-            formData.append("formFile", inputProfileImage!);
-            formData.append("fileName", inputProfileImageName);
-            try {
-                const res = await axios.post("http://localhost:16177/api/Users/uploadImage", formData);
-                imagePath = res.data;
-                console.log(res);
-            } catch (ex) {
-                console.log(ex);
+        validateEmail(inputEmail);
+        validateName(inputName);
+        validateSurname(inputSurname);
+        validatePassword(inputPassword);
+        validatePhone(inputPhone);
+        if (isValidEmail && isValidName && isValidSurname && isValidPassword && isValidPhone) {
+            let imagePath = '';
+            if (inputProfileImage !== undefined) {
+                const formData = new FormData();
+                formData.append("formFile", inputProfileImage!);
+                formData.append("fileName", inputProfileImageName);
+                try {
+                    const res = await axios.post("http://localhost:16177/api/Users/uploadImage", formData);
+                    imagePath = res.data;
+                    console.log(res);
+                } catch (ex) {
+                    console.log(ex);
+                }
+                let data = { id: 0, name: inputName, surname: inputSurname, dateOfBirth: inputDateOfBirth, email: inputEmail, username: inputEmail, password: inputPassword, phone: inputPhone, gender: inputGender, profileImageName: imagePath, role: Role.Patient };
+                axios.post('http://localhost:16177/api/Users/userRegistration', data)
+                    .then(function (response) {
+                        console.log(response)
+                        errorMesage = '';
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
             }
-            let data = { id: 0, name: inputName, surname: inputSurname, dateOfBirth: inputDateOfBirth, email: inputEmail, username: inputEmail, password: inputPassword, phone: inputPhone, gender: inputGender, profileImageName: imagePath, role: Role.Patient };
-            axios.post('http://localhost:16177/api/Users/userRegistration', data)
-                .then(function (response) {
-                    console.log(response)
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
+            else {
+                let data = { id: 0, name: inputName, surname: inputSurname, dateOfBirth: inputDateOfBirth, email: inputEmail, username: inputEmail, password: inputPassword, phone: inputPhone, gender: inputGender, profileImageName: imagePath, role: Role.Patient };
+                axios.post('http://localhost:16177/api/Users/userRegistration', data)
+                    .then(function (response) {
+                        console.log(response)
+                        errorMesage = '';
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            }
         }
         else {
-            let imagePath = '';
-            let data = { id: 0, name: inputName, surname: inputSurname, dateOfBirth: inputDateOfBirth, email: inputEmail, username: inputEmail, password: inputPassword, phone: inputPhone, gender: inputGender, profileImageName: imagePath, role: Role.Patient };
-            axios.post('http://localhost:16177/api/Users/userRegistration', data)
-                .then(function (response) {
-                    console.log(response)
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
+            console.log(errorMesage);
         }
     }
 
