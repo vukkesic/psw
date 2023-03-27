@@ -12,5 +12,6 @@ namespace HospitalLibrary.Core.Service
         IEnumerable<User> GetAll();
         User GetById(int id);
         bool ExistsByUsername(string username);
+        User GetByCredentials(string username, string password);
     }
 }

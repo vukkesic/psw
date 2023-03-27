@@ -26,6 +26,22 @@ namespace HospitalTests
             bool b = service.ExistsByUsername("vuk@gmail.com");
             b.ShouldBeFalse();
         }
+
+        [Fact]
+        public void User_found_by_credentials()
+        {
+            UserService service = new UserService(CreateStubRepository());
+            User u = service.GetByCredentials("vuk@mail.com", "123");
+            u.ShouldNotBeNull();
+        }
+
+        [Fact]
+        public void User_not_found_by_credentials()
+        {
+            UserService service = new UserService(CreateStubRepository());
+            User u = service.GetByCredentials("vuk@mail.com", "123");
+            u.ShouldNotBeNull();
+        }
         private static IUserRepository CreateStubRepository()
         {
             var stubRepository = new Mock<IUserRepository>();
@@ -66,6 +82,8 @@ namespace HospitalTests
 
             stubRepository.Setup(m => m.GetById(1)).Returns(p1);
             stubRepository.Setup(m => m.GetById(5)).Returns(p2);
+            stubRepository.Setup(m => m.GetByCredentials("vuk@mail.com", "123")).Returns(p1);
+            stubRepository.Setup(m => m.GetByCredentials("maria@mail.com", "123")).Returns(p2);
             stubRepository.Setup(m => m.GetAll()).Returns(patients);
             return stubRepository.Object;
         }

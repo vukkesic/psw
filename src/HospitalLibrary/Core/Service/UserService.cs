@@ -28,6 +28,11 @@ namespace HospitalLibrary.Core.Service
             return _userRepository.GetAll();
         }
 
+        public User GetByCredentials(string username, string password)
+        {
+            return _userRepository.GetByCredentials(username, password);
+        }
+
         public User GetById(int id)
         {
             return _userRepository.GetById(id);
