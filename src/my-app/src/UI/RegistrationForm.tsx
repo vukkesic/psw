@@ -6,6 +6,7 @@ import moment from "moment";
 import { Role } from "../Models/Role";
 import axios from "axios";
 import "./Form.css"
+import RegistrationCheckModal from "./RegistrationCheckModal";
 
 const RegistrationForm: FC = () => {
     const [inputEmail, setInputEmail] = useState<string>('');
@@ -22,6 +23,7 @@ const RegistrationForm: FC = () => {
     const [isValidEmail, setIsValidEmail] = useState<boolean>(false);
     const [isValidPassword, setIsValidPassword] = useState<boolean>(false);
     const [isValidPhone, setIsValidPhone] = useState<boolean>(false);
+    const [showErrorModal, setShowErrorModal] = useState<boolean>(false);
     let errorMesage = '';
 
     const validateEmail = (email: string) => {
@@ -155,6 +157,11 @@ const RegistrationForm: FC = () => {
             }
         }
         else {
+            setShowErrorModal(true);
+            <RegistrationCheckModal
+                errMessage={errorMesage}
+                isOpen={showErrorModal}
+                setIsOpen={setShowErrorModal} />
             console.log(errorMesage);
         }
     }

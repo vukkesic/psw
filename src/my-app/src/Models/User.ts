@@ -1,5 +1,6 @@
 import { Gender } from "./Gender";
 import { Role } from "./Role";
+
 export type RegisterData = {
     id: number,
     name: string,
@@ -12,4 +13,9 @@ export type RegisterData = {
     gender: Gender,
     profileImageName: string,
     role: Role
+};
+
+export type LoginData = {
+    username: string,
+    password: string
 };
