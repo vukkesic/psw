@@ -58,5 +58,16 @@ namespace HospitalAPI.Controllers
                 return BadRequest("Username and email you used in form are already taken. Try to login with that email or change it.");
             }
         }
+
+        [HttpGet("getCurrentUser")]
+        public ActionResult getCurrentUser(int id)
+        {
+            var user = _userService.GetById(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            return Ok(user);
+        }
     }
 }

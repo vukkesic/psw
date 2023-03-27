@@ -11,6 +11,7 @@ import {
 import HomePage from './UI/HomePage';
 import NavigationBar from './UI/Navbar';
 import LoginForm from './UI/LoginForm';
+import Dashboard from './UI/Dashboard';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
         <Routes>
           <Route path="/signup" element={<RegistrationForm />} />
           <Route path="/login" element={<LoginForm />} />
+          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/*" element={<HomePage />} />
         </Routes>
       </Router>
