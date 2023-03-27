@@ -11,14 +11,14 @@ using System.Threading.Tasks;
 
 namespace HospitalLibrary.Core.Repository
 {
-    public class JWTManagerRepository
+    public class JWTManagerRepository : IJWTManagerRepository
     {
         private readonly IConfiguration _iconfiguration;
         public JWTManagerRepository(IConfiguration iconfiguration)
         {
             _iconfiguration = iconfiguration;
         }
-        public Tokens Authenticate(User user)
+        public Tokens Authenticate(string name, Role r)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var tokenKey = Encoding.UTF8.GetBytes(_iconfiguration["JWT:Key"]);
@@ -26,8 +26,8 @@ namespace HospitalLibrary.Core.Repository
             {
                 Subject = new ClaimsIdentity(new Claim[]
               {
-             new Claim(ClaimTypes.Name, user.Name),
-             new Claim(ClaimTypes.Role, user.Role.ToString())
+             new Claim(ClaimTypes.Name, name),
+             new Claim(ClaimTypes.Role, r.ToString())
               }),
                 Expires = DateTime.UtcNow.AddHours(1),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(tokenKey), SecurityAlgorithms.HmacSha256Signature)
