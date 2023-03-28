@@ -158,11 +158,6 @@ const RegistrationForm: FC = () => {
         }
         else {
             setShowErrorModal(true);
-            <RegistrationCheckModal
-                errMessage={errorMesage}
-                isOpen={showErrorModal}
-                setIsOpen={setShowErrorModal} />
-            console.log(errorMesage);
         }
     }
 
@@ -275,6 +270,11 @@ const RegistrationForm: FC = () => {
                         </button>
                     </div>
                 </form>
+                {showErrorModal && <RegistrationCheckModal
+                    errMessage={errorMesage}
+                    isOpen={showErrorModal}
+                    setIsOpen={setShowErrorModal} />}
+                console.log(errorMesage);
             </div>
 
         </section>

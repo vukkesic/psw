@@ -10,6 +10,7 @@ namespace HospitalLibrary.Settings
         public DbSet<User> users { get; set; }
         public DbSet<Patient> patients { get; set; }
         public DbSet<PatientHealthData> healthdata { get; set; }
+        public DbSet<Appointment> appointments { get; set; }
 
         public HospitalDbContext(DbContextOptions<HospitalDbContext> options) : base(options) { }
 
@@ -62,6 +63,10 @@ namespace HospitalLibrary.Settings
             modelBuilder.Entity<PatientHealthData>().HasData(
               new PatientHealthData() { Id = 1, BloodPresure = "120/80", BodyFatPercentage = "17", BloodSugar = "12", Weight = "102", PatientId = 1 }
           );
+
+            modelBuilder.Entity<Appointment>().HasData(
+               new Appointment() { Id = 1, StartTime = new DateTime(2023, 05, 20, 9, 30, 0), EndTime = new DateTime(2023, 05, 20, 10, 00, 0), DoctorId = 2, PatientId = 1, Canceled = false, CancelationTime = new DateTime(), Used = false }
+           );
 
             base.OnModelCreating(modelBuilder);
         }
