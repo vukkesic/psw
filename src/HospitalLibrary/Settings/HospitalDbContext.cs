@@ -11,6 +11,7 @@ namespace HospitalLibrary.Settings
         public DbSet<Patient> patients { get; set; }
         public DbSet<PatientHealthData> healthdata { get; set; }
         public DbSet<Appointment> appointments { get; set; }
+        public DbSet<Doctor> doctors { get; set; }
 
         public HospitalDbContext(DbContextOptions<HospitalDbContext> options) : base(options) { }
 
@@ -60,7 +61,42 @@ namespace HospitalLibrary.Settings
                }
                );
 
-            modelBuilder.Entity<PatientHealthData>().HasData(
+
+            modelBuilder.Entity<Doctor>().HasData(
+            new Doctor()
+            {
+                Id = 2,
+                Name = "Miki",
+                Surname = "Mikic",
+                DateOfBirth = new DateTime(1967, 7, 24),
+                Email = "miki@gmail.com",
+                Username = "miki@gmail.com",
+                Phone = "0691202148",
+                Password = "123",
+                ProfileImage = "",
+                Gender = Gender.MALE,
+                Role = Role.DOCTOR,
+                LicenseNumber = "123dr2009"
+            },
+            new Doctor()
+            {
+                Id = 3,
+                Name = "Roki",
+                Surname = "Rokic",
+                DateOfBirth = new DateTime(1991, 2, 4),
+                Email = "roki@gmail.com",
+                Username = "roki@gmail.com",
+                Phone = "06312909304",
+                Password = "123",
+                ProfileImage = "",
+                Gender = Gender.MALE,
+                Role = Role.DOCTOR,
+                LicenseNumber = "198r2009"
+            }
+            );
+
+
+        modelBuilder.Entity<PatientHealthData>().HasData(
               new PatientHealthData() { Id = 1, BloodPresure = "120/80", BodyFatPercentage = "17", BloodSugar = "12", Weight = "102", PatientId = 1 }
           );
 
