@@ -12,6 +12,7 @@ import HomePage from './UI/HomePage';
 import NavigationBar from './UI/Navbar';
 import LoginForm from './UI/LoginForm';
 import Dashboard from './UI/Dashboard';
+import ChartDisplay from './UI/ChartDisplay';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
           <Route path="/signup" element={<RegistrationForm />} />
           <Route path="/login" element={<LoginForm />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path='dashboard/chart' element={<ChartDisplay />} />
           <Route path="/*" element={<HomePage />} />
         </Routes>
       </Router>

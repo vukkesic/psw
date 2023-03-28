@@ -4,6 +4,8 @@ import { Gender } from "../Models/Gender";
 import "./UserProfile.css";
 import men from "../assets/men.jpg"
 import women from "../assets/women.jpg"
+import { HealthData } from "../Models/User";
+import { useNavigate } from "react-router-dom";
 
 const Dashboard: FC = () => {
     const [userId, setUserId] = useState<string>(localStorage.id);
@@ -22,6 +24,55 @@ const Dashboard: FC = () => {
     const [bodyFatPercentage, setBodyFatPercentage] = useState<string>('');
     const [weight, setWeight] = useState<string>('');
     const [editMode, setEditMode] = useState<boolean>(false);
+    const [healthData, setHealthData] = useState<HealthData[]>([]);
+    const listId: Number[] = [];
+    const listPresureHigh: string[] = [];
+    const listPresureLow: string[] = [];
+    const listBloodSugar: string[] = [];
+    const listBodyFatPercentage: string[] = [];
+    const listWeight: string[] = [];
+    const listMeasurementTime: Date[] = [];
+    const navigate = useNavigate();
+
+    const mapValuesForGraph = () => {
+        healthData.forEach((item, index) => {
+            listId.push(
+                item.id
+            );
+            listPresureHigh.push(
+                item.bloodPresure.split('/', 1)[0]
+            );
+            listPresureLow.push(
+                item.bloodPresure.split('/', 2)[1]
+            );
+            listBloodSugar.push(
+                item.bloodSugar
+            );
+            listBodyFatPercentage.push(
+                item.bodyFatPercentage
+            );
+            listWeight.push(
+                item.weight
+            );
+            listMeasurementTime.push(
+                item.measurementTime
+            );
+        });
+        console.log(listMeasurementTime, listPresureHigh, listPresureLow, listBloodSugar, listBodyFatPercentage, listWeight, listId);
+    }
+
+    const getUserData = (userId: Number) => {
+        axios.get('http://localhost:16177/api/HealthData/getHealthData', {
+            params: { userId: userId }
+        })
+            .then(function (response) {
+                console.log(response.data)
+                setHealthData(response.data);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    }
 
     const getCurrentUser = (userId: Number) => {
         axios.get('http://localhost:16177/api/Users/getCurrentUser', { params: { id: userId } })
@@ -60,8 +111,14 @@ const Dashboard: FC = () => {
 
     }
 
+    const showGraph = () => {
+        mapValuesForGraph();
+        navigate('chart', { state: { arrayDates: listMeasurementTime, arrayHigh: listPresureHigh, arrayLow: listPresureLow, arraySugar: listBloodSugar, arrayFat: listBodyFatPercentage, arrayWeight: listWeight } })
+    }
+
     useEffect(() => {
         getCurrentUser(localStorage.id);
+        getUserData(localStorage.id);
     }, []);
 
     return (
@@ -76,6 +133,9 @@ const Dashboard: FC = () => {
                 <div className="buttons">
                     <button className="primary" onClick={() => setEditMode(!editMode)}>
                         New health data
+                    </button>
+                    <button className="primary ghost" onClick={() => showGraph()}>
+                        Show Graph
                     </button>
                 </div>
             </div>
