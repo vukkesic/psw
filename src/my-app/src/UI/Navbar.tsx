@@ -19,6 +19,11 @@ const NavigationBar: FC = () => {
                 </Nav>
                 <Nav>
                     <NavItem>
+                        <NavLink href="/login/">
+                            Login
+                        </NavLink>
+                    </NavItem>
+                    <NavItem>
                         <NavLink href="/signup">
                             Signup
                         </NavLink>

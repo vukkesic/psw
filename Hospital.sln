@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IntegrationAPI", "src\Integ
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IntegrationLibrary", "src\IntegrationLibrary\IntegrationLibrary.csproj", "{102C0DCD-A879-4476-B637-37DBAA270DB1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HospitalTests", "HospitalTests\HospitalTests.csproj", "{ABCF3C2B-A3DA-4829-97F3-94F1890AA8CE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HospitalTests", "HospitalTests\HospitalTests.csproj", "{ABCF3C2B-A3DA-4829-97F3-94F1890AA8CE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -50,6 +50,7 @@ Global
 		{4061723E-C72C-45A0-B1EC-5068C52594AE} = {D598A8FD-AF65-4E98-A73B-1BE4D96774C6}
 		{96E3A4C6-03A9-4E22-BE54-A95D993EB4E3} = {D598A8FD-AF65-4E98-A73B-1BE4D96774C6}
 		{102C0DCD-A879-4476-B637-37DBAA270DB1} = {D598A8FD-AF65-4E98-A73B-1BE4D96774C6}
+		{ABCF3C2B-A3DA-4829-97F3-94F1890AA8CE} = {D598A8FD-AF65-4E98-A73B-1BE4D96774C6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {321E0EAD-F8FE-4843-A345-178BDB1D01E8}

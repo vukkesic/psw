@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace HospitalLibrary.Core.Repository
 {
-    public class PatientHealthDataRepository
+    public class PatientHealthDataRepository :IPatientHealthDataRepository
     {
         private readonly HospitalDbContext _context;
         public PatientHealthDataRepository(HospitalDbContext context)

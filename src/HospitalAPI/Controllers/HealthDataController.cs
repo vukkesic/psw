@@ -4,6 +4,7 @@ using HospitalLibrary.Core.Model;
 using HospitalLibrary.Core.Service;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 
 namespace HospitalAPI.Controllers
 {
@@ -18,6 +19,30 @@ namespace HospitalAPI.Controllers
         {
             _patientHealthDataService = patientHealthDataService;
             _patientHealthDataMapper = new PatientHealthDataMapper(patientService);
+        }
+        [HttpGet]
+        public ActionResult GetAll()
+        {
+            return Ok(_patientHealthDataService.GetAll());
+        }
+
+        [HttpGet("{id}")]
+        public ActionResult GetById(int id)
+        {
+            var healthData = _patientHealthDataService.GetById(id);
+            if (healthData == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(healthData);
+        }
+
+        [HttpGet("getHealthData")]
+        public ActionResult getHealthDataForUser(int userId)
+        {
+            List<PatientHealthData> data = _patientHealthDataService.GetByUserId(userId);
+            return Ok(data);
         }
 
         [HttpPost]

@@ -44,6 +44,8 @@ namespace HospitalAPI
             services.AddScoped<IPatientRepository, PatientRepository>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<IJWTManagerRepository, JWTManagerRepository>();
+            services.AddScoped<IPatientHealthDataService, PatientHealthDataService>();
+            services.AddScoped<IPatientHealthDataRepository, PatientHealthDataRepository>();
 
 
             services.AddCors(options =>

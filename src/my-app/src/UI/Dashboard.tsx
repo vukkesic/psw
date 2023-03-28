@@ -14,6 +14,14 @@ const Dashboard: FC = () => {
     const [gender, setGender] = useState<Gender>();
     const [genderString, setGenderString] = useState<string>('');
     const [profileImage, setProfileImage] = useState<string>('');
+    const [healthDataId, setHealthDataId] = useState<number>(0);
+    const [bloodPresure, setBloodPresure] = useState<string>('');
+    const [presureHigh, setPresureHigh] = useState<string>('');
+    const [presureLow, setPresureLow] = useState<string>('');
+    const [bloodSugar, setBloodSugar] = useState<string>('');
+    const [bodyFatPercentage, setBodyFatPercentage] = useState<string>('');
+    const [weight, setWeight] = useState<string>('');
+    const [editMode, setEditMode] = useState<boolean>(false);
 
     const getCurrentUser = (userId: Number) => {
         axios.get('http://localhost:16177/api/Users/getCurrentUser', { params: { id: userId } })
@@ -36,6 +44,22 @@ const Dashboard: FC = () => {
             });
     }
 
+    const HealthDataHandler = (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        setBloodPresure(`${presureHigh}/${presureLow}`);
+        let bp = `${presureHigh}/${presureLow}`;
+        let d = { id: healthDataId, bloodPresure: bp, bloodSugar: bloodSugar, bodyFatPercentage: bodyFatPercentage, weight: weight, userId: userId, measurementTime: new Date() };
+        console.log(d)
+        axios.post('http://localhost:16177/api/HealthData', d)
+            .then(function (response) {
+                setEditMode(!editMode);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+
+    }
+
     useEffect(() => {
         getCurrentUser(localStorage.id);
     }, []);
@@ -49,7 +73,99 @@ const Dashboard: FC = () => {
                 <h2>{name} {surname}</h2>
                 <h4>{email}</h4>
                 <p>{phone} <br /> {genderString}</p>
+                <div className="buttons">
+                    <button className="primary" onClick={() => setEditMode(!editMode)}>
+                        New health data
+                    </button>
+                </div>
             </div>
+            {editMode === true ?
+                <div className="card">
+                    <form className="form-style-5" onSubmit={HealthDataHandler}>
+                        <label>
+                            Blood pressure(mmHg)
+                        </label>
+                        <div style={{ display: 'flex' }}>
+                            <input style={{ width: '45%' }}
+                                max={400}
+                                min={30}
+                                placeholder="Presure high"
+                                type="number"
+                                value={presureHigh}
+                                onChange={event => {
+                                    setPresureHigh(event.target.value);
+                                }}
+                            />
+                            <label style={{ width: '10%', padding: '10px' }}>
+                                /
+                            </label>
+                            <input style={{ width: '45%' }}
+                                max={400}
+                                min={30}
+                                placeholder="Presure low"
+                                type="number"
+                                value={presureLow}
+                                onChange={event => {
+                                    setPresureLow(event.target.value);
+                                }}
+                            />
+                        </div>
+                        <label>
+                            Blood sugar(mmol/L)
+                        </label>
+                        <input
+                            max={50}
+                            min={0}
+                            placeholder="Blood sugar"
+                            type="number"
+                            value={bloodSugar}
+                            onChange={event => {
+                                setBloodSugar(event.target.value);
+                            }}
+                        />
+                        <label>
+                            Body fat percentage(%)
+                        </label>
+                        <input
+                            max={70}
+                            min={0}
+                            placeholder="bodyFatPercentage"
+                            type="number"
+                            value={bodyFatPercentage}
+                            onChange={event => {
+                                setBodyFatPercentage(event.target.value)
+                            }}
+                        />
+                        <label>
+                            Weight(kg)
+                        </label>
+                        <input
+                            max={999}
+                            min={0}
+                            placeholder="weight"
+                            type="number"
+                            value={weight}
+                            onChange={event => {
+                                setWeight(event.target.value)
+                            }}
+                        />
+                        <button
+                            type="submit"
+                            color="primary"
+                        >
+                            Submit
+                        </button>
+
+                    </form>
+
+                </div>
+                :
+                <div className="card-container">
+                    <h6>Blood pressure: {bloodPresure} mmHg</h6>
+                    <h6>Blood sugar : {bloodSugar} mmol/L</h6>
+                    <h6>Weight(kg): {weight} kg</h6>
+                    <h6>Body fat percentage: {bodyFatPercentage} %</h6>
+                </div>}
         </section>
     )
 
