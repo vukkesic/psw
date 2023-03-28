@@ -19,6 +19,50 @@ namespace HospitalLibrary.Migrations
                 .HasAnnotation("ProductVersion", "5.0.10")
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
+            modelBuilder.Entity("HospitalLibrary.Core.Model.PatientHealthData", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<string>("BloodPresure")
+                        .HasColumnType("text");
+
+                    b.Property<string>("BloodSugar")
+                        .HasColumnType("text");
+
+                    b.Property<string>("BodyFatPercentage")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("MeasurementTime")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<int>("PatientId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Weight")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PatientId");
+
+                    b.ToTable("healthdata");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            BloodPresure = "120/80",
+                            BloodSugar = "12",
+                            BodyFatPercentage = "17",
+                            MeasurementTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            PatientId = 1,
+                            Weight = "102"
+                        });
+                });
+
             modelBuilder.Entity("HospitalLibrary.Core.Model.Room", b =>
                 {
                     b.Property<int>("Id")
@@ -146,6 +190,17 @@ namespace HospitalLibrary.Migrations
                             Username = "maria@mail.com",
                             Blocked = false
                         });
+                });
+
+            modelBuilder.Entity("HospitalLibrary.Core.Model.PatientHealthData", b =>
+                {
+                    b.HasOne("HospitalLibrary.Core.Model.Patient", "Patient")
+                        .WithMany()
+                        .HasForeignKey("PatientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Patient");
                 });
 #pragma warning restore 612, 618
         }
