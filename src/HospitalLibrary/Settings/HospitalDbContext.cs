@@ -9,11 +9,14 @@ namespace HospitalLibrary.Settings
         public DbSet<Room> rooms { get; set; }
         public DbSet<User> users { get; set; }
         public DbSet<Patient> patients { get; set; }
+        public DbSet<PatientHealthData> healthdata { get; set; }
 
         public HospitalDbContext(DbContextOptions<HospitalDbContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<PatientHealthData>().HasOne(phd => phd.Patient);
+
             modelBuilder.Entity<Room>().HasData(
                 new Room() { Id = 1, Number = "101A", Floor = 1 },
                 new Room() { Id = 2, Number = "204", Floor = 2 },
@@ -55,6 +58,10 @@ namespace HospitalLibrary.Settings
                    Blocked = false
                }
                );
+
+            modelBuilder.Entity<PatientHealthData>().HasData(
+              new PatientHealthData() { Id = 1, BloodPresure = "120/80", BodyFatPercentage = "17", BloodSugar = "12", Weight = "102", PatientId = 1 }
+          );
 
             base.OnModelCreating(modelBuilder);
         }
