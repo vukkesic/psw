@@ -50,5 +50,15 @@ namespace HospitalLibrary.Core.Repository
                 throw;
             }
         }
+
+        public IEnumerable<Appointment> GetByDoctor(int doctorId)
+        {
+            return GetAll().Where(a => a.DoctorId.Equals(doctorId) && a.Canceled == false && a.Used == false);
+        }
+
+        public IEnumerable<Appointment> GetByPatient(int patientId)
+        {
+            return GetAll().Where(a => a.PatientId.Equals(patientId) && a.Canceled == false && a.Used == false);
+        }
     }
 }

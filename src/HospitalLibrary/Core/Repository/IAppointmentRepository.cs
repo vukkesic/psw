@@ -14,5 +14,7 @@ namespace HospitalLibrary.Core.Repository
         void Create(Appointment appointment);
         void Update(Appointment appointment);
         void Delete(Appointment appointment);
+        IEnumerable<Appointment> GetByDoctor(int doctorId);
+        IEnumerable<Appointment> GetByPatient(int patientId);
     }
 }

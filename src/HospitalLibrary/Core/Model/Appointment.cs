@@ -32,5 +32,15 @@ namespace HospitalLibrary.Core.Model
             CancelationTime = cancelationTime;
             Used = used;
         }
+
+        public bool CompareStartTime(DateTime startTime)
+        {
+            if (DateTime.Compare(StartTime, startTime) == 0)
+            {
+                return true;
+
+            }
+            return false;
+        }
     }
 }

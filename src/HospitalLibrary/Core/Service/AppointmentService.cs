@@ -40,5 +40,15 @@ namespace HospitalLibrary.Core.Service
         {
             _appointmentRepository.Update(appointment);
         }
+
+        public IEnumerable<Appointment> GetByDoctor(int doctorId)
+        {
+            return _appointmentRepository.GetByDoctor(doctorId);
+        }
+
+        public IEnumerable<Appointment> GetByPatient(int patientId)
+        {
+            return _appointmentRepository.GetByPatient(patientId);
+        }
     }
 }
