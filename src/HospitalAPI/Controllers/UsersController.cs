@@ -15,11 +15,13 @@ namespace HospitalAPI.Controllers
     {
         private readonly IPatientService _patientService;
         private readonly IUserService _userService;
+        private readonly IDoctorService _doctorService;
 
-        public UsersController(IPatientService patientService, IUserService userService)
+        public UsersController(IPatientService patientService, IUserService userService, IDoctorService doctorService)
         {
             _patientService = patientService;
             _userService = userService;
+            _doctorService = doctorService;
         }
         [HttpPost("uploadImage")]
         public IActionResult UploadImage([FromForm] FileDTO file)
@@ -68,6 +70,12 @@ namespace HospitalAPI.Controllers
                 return NotFound();
             }
             return Ok(user);
+        }
+
+        [HttpGet("getAllDoctors")]
+        public ActionResult GetAllDoctors()
+        {
+            return Ok(_doctorService.GetAll());
         }
     }
 }

@@ -4,7 +4,7 @@ import { Gender } from "../Models/Gender";
 import "./UserProfile.css";
 import men from "../assets/men.jpg"
 import women from "../assets/women.jpg"
-import { HealthData } from "../Models/User";
+import { HealthData } from "../Models/HealthData";
 import { useNavigate } from "react-router-dom";
 
 const Dashboard: FC = () => {

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace HospitalLibrary.Core.Repository
 {
-    public class DoctorRepository
+    public class DoctorRepository : IDoctorRepository
     {
         private readonly HospitalDbContext _context;
         public DoctorRepository(HospitalDbContext context)

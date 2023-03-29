@@ -9,6 +9,25 @@ namespace HospitalLibrary.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "appointments",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    StartTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    EndTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    DoctorId = table.Column<int>(type: "integer", nullable: false),
+                    PatientId = table.Column<int>(type: "integer", nullable: false),
+                    Canceled = table.Column<bool>(type: "boolean", nullable: false),
+                    CancelationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    Used = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_appointments", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "rooms",
                 columns: table => new
                 {
@@ -39,6 +58,7 @@ namespace HospitalLibrary.Migrations
                     ProfileImage = table.Column<string>(type: "text", nullable: true),
                     Role = table.Column<int>(type: "integer", nullable: false),
                     Discriminator = table.Column<string>(type: "text", nullable: false),
+                    LicenseNumber = table.Column<string>(type: "text", nullable: true),
                     Blocked = table.Column<bool>(type: "boolean", nullable: true)
                 },
                 constraints: table =>
@@ -71,6 +91,11 @@ namespace HospitalLibrary.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "appointments",
+                columns: new[] { "Id", "CancelationTime", "Canceled", "DoctorId", "EndTime", "PatientId", "StartTime", "Used" },
+                values: new object[] { 1, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), false, 2, new DateTime(2023, 5, 20, 10, 0, 0, 0, DateTimeKind.Unspecified), 1, new DateTime(2023, 5, 20, 9, 30, 0, 0, DateTimeKind.Unspecified), false });
+
+            migrationBuilder.InsertData(
                 table: "rooms",
                 columns: new[] { "Id", "Floor", "Number" },
                 values: new object[,]
@@ -78,6 +103,15 @@ namespace HospitalLibrary.Migrations
                     { 1, 1, "101A" },
                     { 2, 2, "204" },
                     { 3, 3, "305B" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "users",
+                columns: new[] { "Id", "DateOfBirth", "Discriminator", "Email", "Gender", "LicenseNumber", "Name", "Password", "Phone", "ProfileImage", "Role", "Surname", "Username" },
+                values: new object[,]
+                {
+                    { 2, new DateTime(1967, 7, 24, 0, 0, 0, 0, DateTimeKind.Unspecified), "Doctor", "miki@gmail.com", 0, "123dr2009", "Miki", "123", "0691202148", "", 1, "Mikic", "miki@gmail.com" },
+                    { 3, new DateTime(1991, 2, 4, 0, 0, 0, 0, DateTimeKind.Unspecified), "Doctor", "roki@gmail.com", 0, "198r2009", "Roki", "123", "06312909304", "", 1, "Rokic", "roki@gmail.com" }
                 });
 
             migrationBuilder.InsertData(
@@ -102,6 +136,9 @@ namespace HospitalLibrary.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "appointments");
+
             migrationBuilder.DropTable(
                 name: "healthdata");
 

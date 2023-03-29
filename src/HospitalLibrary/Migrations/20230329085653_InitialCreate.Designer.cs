@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace HospitalLibrary.Migrations
 {
     [DbContext(typeof(HospitalDbContext))]
-    [Migration("20230328083328_InitialCreate")]
+    [Migration("20230329085653_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -20,6 +20,52 @@ namespace HospitalLibrary.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63)
                 .HasAnnotation("ProductVersion", "5.0.10")
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+            modelBuilder.Entity("HospitalLibrary.Core.Model.Appointment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<DateTime>("CancelationTime")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<bool>("Canceled")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("DoctorId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("EndTime")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<int>("PatientId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("StartTime")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<bool>("Used")
+                        .HasColumnType("boolean");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("appointments");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CancelationTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Canceled = false,
+                            DoctorId = 2,
+                            EndTime = new DateTime(2023, 5, 20, 10, 0, 0, 0, DateTimeKind.Unspecified),
+                            PatientId = 1,
+                            StartTime = new DateTime(2023, 5, 20, 9, 30, 0, 0, DateTimeKind.Unspecified),
+                            Used = false
+                        });
+                });
 
             modelBuilder.Entity("HospitalLibrary.Core.Model.PatientHealthData", b =>
                 {
@@ -150,6 +196,48 @@ namespace HospitalLibrary.Migrations
                     b.ToTable("users");
 
                     b.HasDiscriminator<string>("Discriminator").HasValue("User");
+                });
+
+            modelBuilder.Entity("HospitalLibrary.Core.Model.Doctor", b =>
+                {
+                    b.HasBaseType("HospitalLibrary.Core.Model.User");
+
+                    b.Property<string>("LicenseNumber")
+                        .HasColumnType("text");
+
+                    b.HasDiscriminator().HasValue("Doctor");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 2,
+                            DateOfBirth = new DateTime(1967, 7, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "miki@gmail.com",
+                            Gender = 0,
+                            Name = "Miki",
+                            Password = "123",
+                            Phone = "0691202148",
+                            ProfileImage = "",
+                            Role = 1,
+                            Surname = "Mikic",
+                            Username = "miki@gmail.com",
+                            LicenseNumber = "123dr2009"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            DateOfBirth = new DateTime(1991, 2, 4, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "roki@gmail.com",
+                            Gender = 0,
+                            Name = "Roki",
+                            Password = "123",
+                            Phone = "06312909304",
+                            ProfileImage = "",
+                            Role = 1,
+                            Surname = "Rokic",
+                            Username = "roki@gmail.com",
+                            LicenseNumber = "198r2009"
+                        });
                 });
 
             modelBuilder.Entity("HospitalLibrary.Core.Model.Patient", b =>

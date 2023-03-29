@@ -20,12 +20,18 @@ export type LoginData = {
     password: string
 };
 
-export type HealthData = {
+export type Doctor = {
     id: number,
-    bloodPresure: string,
-    bloodSugar: string,
-    bodyFatPercentage: string,
-    weight: string,
-    userId: string,
-    measurementTime: Date
-};
+    name: string,
+    surname: string,
+    dateOfBirth: Date
+    email: string,
+    username: string
+    password: string,
+    phone: string
+    gender: Gender,
+    profileImage: string,
+    role: Role,
+    licenseNumber: string,
+    specializationId: string
+}

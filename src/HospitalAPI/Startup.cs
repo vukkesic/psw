@@ -46,6 +46,11 @@ namespace HospitalAPI
             services.AddScoped<IJWTManagerRepository, JWTManagerRepository>();
             services.AddScoped<IPatientHealthDataService, PatientHealthDataService>();
             services.AddScoped<IPatientHealthDataRepository, PatientHealthDataRepository>();
+            services.AddScoped<IDoctorService, DoctorService>();
+            services.AddScoped<IDoctorRepository, DoctorRepository>();
+            services.AddScoped<IAppointmentService, AppointmentService>();
+            services.AddScoped<IAppointmentRepository, AppointmentRepository>();
+
 
 
             services.AddCors(options =>

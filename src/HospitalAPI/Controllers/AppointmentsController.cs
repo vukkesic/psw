@@ -25,6 +25,7 @@ namespace HospitalAPI.Controllers
             return new DateTime((dt.Ticks + d.Ticks - 1) / d.Ticks * d.Ticks, dt.Kind);
         }
 
+        [HttpPost("checkPeriod")]
         public SuggestionDTO CheckPeriod(Period period)
         {
             DateTime tempStart = RoundUp(period.StartTime, TimeSpan.FromMinutes(30)).ToLocalTime();
