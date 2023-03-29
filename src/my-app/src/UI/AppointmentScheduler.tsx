@@ -5,6 +5,8 @@ import { Doctor } from "../Models/User";
 import axios from "axios";
 import moment from "moment";
 import DateTimePicker from 'react-datetime-picker';
+import AppointmentModal from "./AppointmentModal";
+import AppointmentNotFoundModal from "./AppointmentNotFoundModal";
 
 const AppointmentScheduler: FC = () => {
     const [startTime, setStartTime] = useState<Date>();
@@ -16,6 +18,8 @@ const AppointmentScheduler: FC = () => {
     const current = new Date();
     current.setDate(current.getDate() + 2);
     const [dateCheck, setDateCheck] = useState<boolean>(false);
+    const [showAppointment, setShowAppointment] = useState<boolean>(false);
+
 
 
     const getAllDoctors = () => {
@@ -42,6 +46,7 @@ const AppointmentScheduler: FC = () => {
             axios.post('http://localhost:16177/api/Appointments/checkPeriod', data)
                 .then(function (response) {
                     setRecommendedAppointment(response.data);
+                    setShowAppointment(true);
                     console.log(response.data);
                 })
                 .catch(function (error) {
@@ -58,6 +63,17 @@ const AppointmentScheduler: FC = () => {
         if (st != null && et != null && moment(et).isAfter(moment(st))) {
             setDateCheck(true);
         }
+    }
+
+    const submitAppointment = () => {
+        const newAppointment = { id: 0, startTime: recommendedAppointment?.startTime, endTime: recommendedAppointment?.endTime, doctorId: recommendedAppointment?.doctorId, patientId: recommendedAppointment?.patientId, canceled: false, cancelationDate: new Date(), used: false }
+        axios.post('http://localhost:16177/api/Appointments/addAppointment', newAppointment)
+            .then(function (response) {
+                console.log(response);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
     }
 
     useEffect(() => {
@@ -111,6 +127,18 @@ const AppointmentScheduler: FC = () => {
                     submit
                 </button>
             </div>
+            {showAppointment && recommendedAppointment &&
+                <AppointmentModal
+                    startDate={recommendedAppointment.startTime}
+                    endDate={recommendedAppointment.endTime}
+                    doctorName={recommendedAppointment.doctorName}
+                    message={recommendedAppointment.message}
+                    isOpen={showAppointment} setIsOpen={setShowAppointment}
+                    createAppointment={submitAppointment} />}
+            {showAppointment && !recommendedAppointment &&
+                <AppointmentNotFoundModal
+                    message={"Appointment for given parameters were not found.Please adjust your parameters and try again."}
+                    isOpen={showAppointment} setIsOpen={setShowAppointment} />}
         </div >
     )
 }

@@ -1,4 +1,5 @@
 ﻿using HospitalLibrary.Core.DTOs;
+using HospitalLibrary.Core.Mapper;
 using HospitalLibrary.Core.Model;
 using HospitalLibrary.Core.Service;
 using Microsoft.AspNetCore.Http;
@@ -14,11 +15,13 @@ namespace HospitalAPI.Controllers
     {
         private IAppointmentService _appointmentService;
         private IDoctorService _doctorService;
+        private AppointmentMapper _appointmentMapper;
 
         public AppointmentsController(IAppointmentService appointmentService, IDoctorService doctorService)
         {
             _appointmentService = appointmentService;
             _doctorService = doctorService;
+            _appointmentMapper = new AppointmentMapper();
         }
         DateTime RoundUp(DateTime dt, TimeSpan d)
         {
@@ -32,11 +35,12 @@ namespace HospitalAPI.Controllers
                 Boolean flag = false;
                 foreach (Appointment a in appointments)
                 {
-                    flag = a.CompareStartTime(start);
+                    if (a.CompareStartTime(start))
+                        flag = true;
                 }
                 if (flag == false)
                 {
-                    return (new SuggestionDTO(start, start.AddMinutes(30), period.DoctorId, period.PatientId, d.Name, message));
+                    return (new SuggestionDTO(start, start.AddMinutes(30), d.Id, period.PatientId, d.Name, message));
                 }
             }
             return null;
@@ -86,7 +90,7 @@ namespace HospitalAPI.Controllers
                 foreach (Doctor doc in doctors)
                 {
                     appointments = (_appointmentService.GetByDoctor(doc.Id)).ToArray();
-                    suggestion = createSuggestion(appointments, tempStart, tempEnd, period, doc, "Sorry, all appointments for your preferred time are busy. We offer you adjusted appointment.");
+                    suggestion = createSuggestion(appointments, tempStart, tempEnd, period, doc, "Sorry, all appointments for your preferred doctor are busy. We offer you adjusted appointment.");
                     if (suggestion != null)
                         return suggestion;
                 }
@@ -96,6 +100,13 @@ namespace HospitalAPI.Controllers
             return null;
         }
 
+        [HttpPost("addAppointment")]
+        public ActionResult AddAppointment(AppointmentDTO dto)
+        {
+            Appointment appointment = _appointmentMapper.MapAppointmentDTOToAppointment(dto);
+            _appointmentService.Create(appointment);
+            return Ok("Added successfull");
 
+        }
     }
 }
