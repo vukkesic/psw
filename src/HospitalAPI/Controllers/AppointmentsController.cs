@@ -108,5 +108,37 @@ namespace HospitalAPI.Controllers
             return Ok("Added successfull");
 
         }
+
+        [HttpPut("cancel/{id}")]
+        public ActionResult Cancel(int id)
+        {
+            Appointment appointment = _appointmentService.GetById(id);
+            if (DateTime.Now <= appointment.StartTime.AddDays(-2))
+            {
+                appointment.Canceled = true;
+                appointment.CancelationTime = DateTime.Now;
+                try
+                {
+                    _appointmentService.Update(appointment);
+                }
+                catch
+                {
+                    return BadRequest();
+                }
+            }
+            else
+            {
+                return BadRequest();
+            }
+
+            return Ok(appointment);
+        }
+
+        [HttpGet("getAppointmentsByPatient")]
+        public ActionResult GetByPatient(int patientId)
+        {
+            return Ok(_appointmentService.GetByPatient(patientId));
+        }
+
     }
 }

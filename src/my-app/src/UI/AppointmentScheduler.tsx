@@ -19,7 +19,8 @@ const AppointmentScheduler: FC = () => {
     current.setDate(current.getDate() + 2);
     const [dateCheck, setDateCheck] = useState<boolean>(false);
     const [showAppointment, setShowAppointment] = useState<boolean>(false);
-
+    const [scheduledAppointments, setScheduledAppointments] = useState<Appointment[]>([]);
+    const [selctedCancelAppointment, setSelectedCancelAppointment] = useState<Appointment>();
 
 
     const getAllDoctors = () => {
@@ -76,8 +77,35 @@ const AppointmentScheduler: FC = () => {
             });
     }
 
+    const CancelationHandler = () => {
+        if (selctedCancelAppointment) {
+            const idsa = selctedCancelAppointment.id;
+            axios.put(`http://localhost:16177/api/Appointments/cancel/${idsa}`, {})
+                .then(function (response) {
+                    console.log(response.data)
+                })
+                .catch(function (error) {
+                    console.log(error);
+
+                });
+        }
+    }
+
+    const getPatientAppointments = () => {
+        axios.get('http://localhost:16177/api/Appointments/getAppointmentsByPatient', {
+            params: { patientId: localStorage.id }
+        })
+            .then(function (response) {
+                setScheduledAppointments(response.data);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    }
+
     useEffect(() => {
         getAllDoctors();
+        getPatientAppointments();
     }, []);
 
     useEffect(() => {
@@ -126,19 +154,50 @@ const AppointmentScheduler: FC = () => {
                 <button onClick={submitHandler}>
                     submit
                 </button>
+                {showAppointment && recommendedAppointment &&
+                    <AppointmentModal
+                        startDate={recommendedAppointment.startTime}
+                        endDate={recommendedAppointment.endTime}
+                        doctorName={recommendedAppointment.doctorName}
+                        message={recommendedAppointment.message}
+                        isOpen={showAppointment} setIsOpen={setShowAppointment}
+                        createAppointment={submitAppointment} />}
+                {showAppointment && !recommendedAppointment &&
+                    <AppointmentNotFoundModal
+                        message={"Appointment for given parameters were not found.Please adjust your parameters and try again."}
+                        isOpen={showAppointment} setIsOpen={setShowAppointment} />}
             </div>
-            {showAppointment && recommendedAppointment &&
-                <AppointmentModal
-                    startDate={recommendedAppointment.startTime}
-                    endDate={recommendedAppointment.endTime}
-                    doctorName={recommendedAppointment.doctorName}
-                    message={recommendedAppointment.message}
-                    isOpen={showAppointment} setIsOpen={setShowAppointment}
-                    createAppointment={submitAppointment} />}
-            {showAppointment && !recommendedAppointment &&
-                <AppointmentNotFoundModal
-                    message={"Appointment for given parameters were not found.Please adjust your parameters and try again."}
-                    isOpen={showAppointment} setIsOpen={setShowAppointment} />}
+            <div className="card-container">
+                <h3>Scheduled Appointments:</h3>
+                <ol>
+                    {scheduledAppointments.map((appointment, index) =>
+
+                        <li key={index} >
+                            <h6>{`Id: ${appointment.id}`}</h6>
+                            <h6>{`Start time :  ${appointment.startTime}`}</h6>
+                            <h6>{`End time:  ${appointment.endTime}`}</h6>
+                            <h6>{`Doctor id:  ${appointment.doctorId}`}</h6>
+                        </li>
+                    )}
+                </ol>
+            </div>
+            <div style={styles.container}>
+                <label>
+                    Cancel appointment
+                </label>
+                <select onChange={event => {
+                    setSelectedCancelAppointment(JSON.parse(event.target.value));
+                }} style={styles.select}>
+                    <option value='null'></option>
+                    {scheduledAppointments.map((app, index) =>
+                        <option key={index}
+                            value={JSON.stringify(app)}>
+                            {"Id" + app.id.toString()}
+                        </option>
+                    )}
+                </select>
+                <button onClick={CancelationHandler}>Cancel appointment</button>
+            </div>
         </div >
     )
 }
