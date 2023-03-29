@@ -25,13 +25,8 @@ namespace HospitalAPI.Controllers
             return new DateTime((dt.Ticks + d.Ticks - 1) / d.Ticks * d.Ticks, dt.Kind);
         }
 
-        [HttpPost("checkPeriod")]
-        public SuggestionDTO CheckPeriod(Period period)
+        SuggestionDTO createSuggestion(Appointment[] appointments, DateTime tempStart, DateTime tempEnd, Period period, Doctor d, string message)
         {
-            DateTime tempStart = RoundUp(period.StartTime, TimeSpan.FromMinutes(30)).ToLocalTime();
-            DateTime tempEnd = RoundUp(period.EndTime.AddSeconds(1), TimeSpan.FromMinutes(30)).AddMinutes(-30).ToLocalTime();
-            Appointment[] appointments = (_appointmentService.GetByDoctor(period.DoctorId)).ToArray();
-            Doctor d = _doctorService.GetById(period.DoctorId);
             for (DateTime start = tempStart; start < tempEnd; start = start.AddMinutes(30))
             {
                 Boolean flag = false;
@@ -41,10 +36,66 @@ namespace HospitalAPI.Controllers
                 }
                 if (flag == false)
                 {
-                    return (new SuggestionDTO(start, start.AddMinutes(30), period.DoctorId, period.PatientId, d.Name, "Great! We found appointment for your parameters."));
+                    return (new SuggestionDTO(start, start.AddMinutes(30), period.DoctorId, period.PatientId, d.Name, message));
                 }
             }
             return null;
         }
+
+        [HttpPost("checkPeriod")]
+        public SuggestionDTO CheckPeriod(Period period)
+        {
+            DateTime tempStart = RoundUp(period.StartTime, TimeSpan.FromMinutes(30)).ToLocalTime();
+            DateTime tempEnd = RoundUp(period.EndTime.AddSeconds(1), TimeSpan.FromMinutes(30)).AddMinutes(-30).ToLocalTime();
+            Appointment[] appointments = (_appointmentService.GetByDoctor(period.DoctorId)).ToArray();
+            Doctor d = _doctorService.GetById(period.DoctorId);
+            SuggestionDTO suggestion = null;
+
+            suggestion = createSuggestion(appointments, tempStart, tempEnd, period, d, "Great! We found appointment for your parameters.");
+            if (suggestion != null)
+                return suggestion;
+
+            if (period.Priority == 1)
+            {
+                tempStart = RoundUp(period.EndTime, TimeSpan.FromMinutes(30)).AddMinutes(-30).ToLocalTime();
+                tempEnd = RoundUp(period.EndTime.AddSeconds(1).AddDays(7), TimeSpan.FromMinutes(30)).AddMinutes(-30).ToLocalTime();
+
+                suggestion = createSuggestion(appointments, tempStart, tempEnd, period, d, "Sorry, all appointments for your preferred time are busy. We offer you adjusted appointment.");
+                if (suggestion != null)
+                    return suggestion;
+
+                if (DateTime.Compare(period.StartTime, DateTime.Now.AddDays(9)) > 0)
+                {
+                    tempStart = RoundUp(period.StartTime.AddDays(-7), TimeSpan.FromMinutes(30)).ToLocalTime();
+                }
+                else
+                {
+                    tempStart = RoundUp(DateTime.Now.AddDays(2), TimeSpan.FromMinutes(30)).AddMinutes(-30).ToLocalTime();
+                }
+                tempEnd = RoundUp(period.StartTime, TimeSpan.FromMinutes(30)).ToLocalTime();
+
+                suggestion = createSuggestion(appointments, tempStart, tempEnd, period, d, "Sorry, all appointments for your preferred time are busy. We offer you adjusted appointment.");
+                if (suggestion != null)
+                    return suggestion;
+
+            }
+            else if (period.Priority == 0)
+            {
+                d = _doctorService.GetById(period.DoctorId);
+                Doctor[] doctors = _doctorService.GetAll().ToArray();
+                foreach (Doctor doc in doctors)
+                {
+                    appointments = (_appointmentService.GetByDoctor(doc.Id)).ToArray();
+                    suggestion = createSuggestion(appointments, tempStart, tempEnd, period, doc, "Sorry, all appointments for your preferred time are busy. We offer you adjusted appointment.");
+                    if (suggestion != null)
+                        return suggestion;
+                }
+
+            }
+
+            return null;
+        }
+
+
     }
 }
