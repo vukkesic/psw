@@ -52,7 +52,8 @@ namespace HospitalAPI
             services.AddScoped<IAppointmentRepository, AppointmentRepository>();
             services.AddScoped<ISpecializationService, SpecializationService>();
             services.AddScoped<ISpecializationRepository, SpecializationRepository>();
-
+            services.AddScoped<IReferralLetterService, ReferralLetterService>();
+            services.AddScoped<IReferralLetterRepository, ReferralLetterRepository>();
 
             services.AddCors(options =>
             {

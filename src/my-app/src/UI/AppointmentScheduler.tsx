@@ -7,6 +7,7 @@ import moment from "moment";
 import DateTimePicker from 'react-datetime-picker';
 import AppointmentModal from "./AppointmentModal";
 import AppointmentNotFoundModal from "./AppointmentNotFoundModal";
+import { ReferralLetter } from "../Models/ReferralLetter";
 
 const AppointmentScheduler: FC = () => {
     const [startTime, setStartTime] = useState<Date>();
@@ -21,10 +22,15 @@ const AppointmentScheduler: FC = () => {
     const [showAppointment, setShowAppointment] = useState<boolean>(false);
     const [scheduledAppointments, setScheduledAppointments] = useState<Appointment[]>([]);
     const [selctedCancelAppointment, setSelectedCancelAppointment] = useState<Appointment>();
-
+    const [myRefferalLetters, setMyReferralLetters] = useState<ReferralLetter[]>([]);
+    const [selectedReferralLetter, setSelectedReferralLetter] = useState<ReferralLetter>();
 
     const getAllDoctors = () => {
-        axios.get('http://localhost:16177/api/Users/getAllDoctors')
+        var spec: Number = 6;
+        if (selectedReferralLetter) {
+            spec = selectedReferralLetter.specializationId;
+        }
+        axios.get('http://localhost:16177/api/Users/getAllSpecialist', { params: { specializationId: spec } })
             .then(function (response) {
                 console.log(response.data)
                 setDoctors(response.data);
@@ -67,6 +73,7 @@ const AppointmentScheduler: FC = () => {
     }
 
     const submitAppointment = () => {
+        let refId = selectedReferralLetter?.id;
         const newAppointment = { id: 0, startTime: recommendedAppointment?.startTime, endTime: recommendedAppointment?.endTime, doctorId: recommendedAppointment?.doctorId, patientId: recommendedAppointment?.patientId, canceled: false, cancelationDate: new Date(), used: false }
         axios.post('http://localhost:16177/api/Appointments/addAppointment', newAppointment)
             .then(function (response) {
@@ -75,6 +82,22 @@ const AppointmentScheduler: FC = () => {
             .catch(function (error) {
                 console.log(error);
             });
+
+        if (selectedReferralLetter) {
+
+            axios.put('http://localhost:16177/api/ReferralLetters/' + refId, { id: refId, patientId: selectedReferralLetter.patientId, isActive: false, specializationId: selectedReferralLetter.specializationId }, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.userToken.slice(1, -1)}`
+                }
+            })
+                .then(function (response) {
+                    console.log(response);
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        }
     }
 
     const CancelationHandler = () => {
@@ -103,18 +126,55 @@ const AppointmentScheduler: FC = () => {
             });
     }
 
+    const getMyReferralLetters = () => {
+        axios.get('http://localhost:16177/api/ReferralLetters/getMyReferralLetters', {
+            params: { patientId: localStorage.id },
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.userToken.slice(1, -1)}`
+            }
+        })
+            .then(function (response) {
+                console.log(response.data)
+                setMyReferralLetters(response.data);
+            })
+            .catch(function (error) {
+                console.log(error);
+
+            });
+    }
+
     useEffect(() => {
         getAllDoctors();
         getPatientAppointments();
+        getMyReferralLetters();
     }, []);
 
     useEffect(() => {
         validatePeriod(startTime, endTime);
     }, [startTime, endTime]);
 
+    useEffect(() => {
+        getAllDoctors();
+    }, [selectedReferralLetter]);
+
     return (
         <div style={{ display: 'flex', justifyContent: 'space-around', }}>
             <div style={styles.container}>
+                <label>
+                    Referral letter
+                </label>
+                <select onChange={event => {
+                    setSelectedReferralLetter(JSON.parse(event.target.value));
+                }} style={styles.select}>
+                    <option value='null'></option>
+                    {myRefferalLetters.map((letter, index) =>
+                        <option key={index}
+                            value={JSON.stringify(letter)}>
+                            {letter.specializationId.toString()}
+                        </option>
+                    )}
+                </select>
                 <label>
                     start time
                 </label>

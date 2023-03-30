@@ -77,5 +77,11 @@ namespace HospitalAPI.Controllers
         {
             return Ok(_doctorService.GetAll());
         }
+
+        [HttpGet("getAllSpecialist")]
+        public ActionResult GetAllSpecialist(int specializationId)
+        {
+            return Ok(_doctorService.GetAllSpecialist(specializationId));
+        }
     }
 }
