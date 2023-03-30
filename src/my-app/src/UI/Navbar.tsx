@@ -14,6 +14,18 @@ const NavigationBar: FC = () => {
     return (
         <div>
             <Navbar className="navbar">
+                <Nav className="navl" navbar>
+                    <NavItem>
+                        <NavLink href="/dashboard">
+                            Profile
+                        </NavLink>
+                    </NavItem>
+                    <NavItem>
+                        <NavLink href="/scheduling">
+                            Scheduling
+                        </NavLink>
+                    </NavItem>
+                </Nav>
                 <Nav className="nav" navbar>
                     <NavbarBrand className="brand" href="/">Home</NavbarBrand>
                 </Nav>

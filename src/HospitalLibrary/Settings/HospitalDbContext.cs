@@ -15,6 +15,7 @@ namespace HospitalLibrary.Settings
         public DbSet<Doctor> doctors { get; set; }
         public DbSet<Specialization> specializations { get; set; }
         public DbSet<ReferralLetter> referralletters { get; set; }
+        public DbSet<MenstrualData> menstrualdata { get; set; }
 
         public HospitalDbContext(DbContextOptions<HospitalDbContext> options) : base(options) { }
 
@@ -172,6 +173,10 @@ namespace HospitalLibrary.Settings
                 new ReferralLetter() { Id = 1, IsActive = true, PatientId = 1, SpecializationId= 1 }
                 );
 
+            modelBuilder.Entity<MenstrualData>().HasData(
+                new MenstrualData() { Id = 1, LastPeriod = new DateTime(), NextPeriod = new DateTime(), ApproxOvulationDay = new DateTime(), PatientId= 5 }
+                );
+            
             base.OnModelCreating(modelBuilder);
         }
     }
