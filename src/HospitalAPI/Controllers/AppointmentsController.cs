@@ -139,6 +139,5 @@ namespace HospitalAPI.Controllers
         {
             return Ok(_appointmentService.GetByPatient(patientId));
         }
-
     }
 }

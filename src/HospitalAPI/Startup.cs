@@ -50,7 +50,8 @@ namespace HospitalAPI
             services.AddScoped<IDoctorRepository, DoctorRepository>();
             services.AddScoped<IAppointmentService, AppointmentService>();
             services.AddScoped<IAppointmentRepository, AppointmentRepository>();
-
+            services.AddScoped<ISpecializationService, SpecializationService>();
+            services.AddScoped<ISpecializationRepository, SpecializationRepository>();
 
 
             services.AddCors(options =>

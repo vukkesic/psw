@@ -1,6 +1,7 @@
 ﻿using HospitalLibrary.Core.Model;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Reflection;
 
 namespace HospitalLibrary.Settings
 {
@@ -12,18 +13,44 @@ namespace HospitalLibrary.Settings
         public DbSet<PatientHealthData> healthdata { get; set; }
         public DbSet<Appointment> appointments { get; set; }
         public DbSet<Doctor> doctors { get; set; }
+        public DbSet<Specialization> specializations { get; set; }
 
         public HospitalDbContext(DbContextOptions<HospitalDbContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
             modelBuilder.Entity<PatientHealthData>().HasOne(phd => phd.Patient);
+            modelBuilder.Entity<Doctor>().HasOne(doc => doc.Specialization);
 
             modelBuilder.Entity<Room>().HasData(
                 new Room() { Id = 1, Number = "101A", Floor = 1 },
                 new Room() { Id = 2, Number = "204", Floor = 2 },
                 new Room() { Id = 3, Number = "305B", Floor = 3 }
             );
+
+            modelBuilder.Entity<Specialization>().HasData(
+               new Specialization() { Id = 1, SpecName = "Allergy and immunology" },
+               new Specialization() { Id = 2, SpecName = "Anesthesiology" },
+               new Specialization() { Id = 3, SpecName = "Dermatology" },
+               new Specialization() { Id = 4, SpecName = "Diagnostic radiology" },
+               new Specialization() { Id = 5, SpecName = "Emergency medicine" },
+               new Specialization() { Id = 6, SpecName = "Family medicine" },
+               new Specialization() { Id = 7, SpecName = "Internal medicine" },
+               new Specialization() { Id = 8, SpecName = "Medical genetics" },
+               new Specialization() { Id = 9, SpecName = "Neurology" },
+               new Specialization() { Id = 10, SpecName = "Nuclear medicine" },
+               new Specialization() { Id = 11, SpecName = "Obstetrics and gynecology" },
+               new Specialization() { Id = 12, SpecName = "Ophthalmology" },
+               new Specialization() { Id = 13, SpecName = "Pathology" },
+               new Specialization() { Id = 14, SpecName = "Pediatrics" },
+               new Specialization() { Id = 15, SpecName = "Physical medicine and rehabilitation" },
+               new Specialization() { Id = 16, SpecName = "Preventive medicine" },
+               new Specialization() { Id = 17, SpecName = "Psychiatry" },
+               new Specialization() { Id = 18, SpecName = "Radiation oncology" },
+               new Specialization() { Id = 19, SpecName = "Surgery" },
+               new Specialization() { Id = 20, SpecName = "Urology" }
+               );
 
             modelBuilder.Entity<Patient>().HasData(
                 new Patient()

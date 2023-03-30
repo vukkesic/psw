@@ -25,5 +25,14 @@ namespace HospitalLibrary.Core.Service
         {
             return _doctorRepository.GetById(id);
         }
+        public Doctor GetBySpecialization(int specId)
+        {
+            return _doctorRepository.GetBySpecialization(specId);
+        }
+
+        public IEnumerable<Doctor> GetAllSpecialist(int specializationId)
+        {
+            return _doctorRepository.GetAllSpecialist(specializationId);
+        }
     }
 }

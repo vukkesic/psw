@@ -26,5 +26,15 @@ namespace HospitalLibrary.Core.Repository
         {
             return _context.doctors.Find(id);
         }
+
+        public Doctor GetBySpecialization(int specId)
+        {
+            return GetAll().FirstOrDefault(d => d.Specialization.Id.Equals(specId));
+        }
+
+        public IEnumerable<Doctor> GetAllSpecialist(int specializationId)
+        {
+            return GetAll().Where(d => d.SpecializationId == specializationId);
+        }
     }
 }

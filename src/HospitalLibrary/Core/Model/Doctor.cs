@@ -9,12 +9,14 @@ namespace HospitalLibrary.Core.Model
     public class Doctor : User
     {
         public string LicenseNumber { get; set; }
+        public int SpecializationId { get; set; }
+        public virtual Specialization Specialization { get; set; }
 
         public Doctor() { }
-
         public Doctor(int id, string name, string surname, DateTime dateOfBirth,
                 string email, string username, string password, string phone,
-                Gender gender, string profileImage, Role role, string licenseNumber)
+                Gender gender, string profileImage, Role role,
+                string licenseNumber, Specialization specialization)
         {
             Id = id;
             Name = name;
@@ -28,6 +30,8 @@ namespace HospitalLibrary.Core.Model
             Gender = gender;
             Role = role;
             LicenseNumber = licenseNumber;
+            SpecializationId = specialization.Id;
+            Specialization = specialization;
         }
     }
 }
