@@ -14,6 +14,7 @@ namespace HospitalLibrary.Settings
         public DbSet<Appointment> appointments { get; set; }
         public DbSet<Doctor> doctors { get; set; }
         public DbSet<Specialization> specializations { get; set; }
+        public DbSet<ReferralLetter> referralletters { get; set; }
 
         public HospitalDbContext(DbContextOptions<HospitalDbContext> options) : base(options) { }
 
@@ -103,7 +104,8 @@ namespace HospitalLibrary.Settings
                 ProfileImage = "",
                 Gender = Gender.MALE,
                 Role = Role.DOCTOR,
-                LicenseNumber = "123dr2009"
+                LicenseNumber = "123dr2009",
+                SpecializationId = 1
             },
             new Doctor()
             {
@@ -118,18 +120,57 @@ namespace HospitalLibrary.Settings
                 ProfileImage = "",
                 Gender = Gender.MALE,
                 Role = Role.DOCTOR,
-                LicenseNumber = "198r2009"
-            }
+                LicenseNumber = "198r2009",
+                SpecializationId = 2
+            },
+
+               new Doctor()
+               {
+                   Id = 6,
+                   Name = "Dunja",
+                   Surname = "Jovanovic",
+                   DateOfBirth = new DateTime(1995, 5, 8),
+                   Email = "dunja@gmail.com",
+                   Username = "dunja@gmail.com",
+                   Phone = "0656757304",
+                   Password = "123",
+                   ProfileImage = "",
+                   Gender = Gender.FEMALE,
+                   Role = Role.DOCTOR,
+                   LicenseNumber = "138r2014",
+                   SpecializationId = 6
+               },
+
+                 new Doctor()
+                 {
+                     Id = 7,
+                     Name = "Anja",
+                     Surname = "Ilic",
+                     DateOfBirth = new DateTime(1990, 12, 12),
+                     Email = "anja@gmail.com",
+                     Username = "anja@gmail.com",
+                     Phone = "0604489354",
+                     Password = "123",
+                     ProfileImage = "",
+                     Gender = Gender.FEMALE,
+                     Role = Role.DOCTOR,
+                     LicenseNumber = "14567sd8",
+                     SpecializationId = 1
+                 }
             );
 
 
-        modelBuilder.Entity<PatientHealthData>().HasData(
-              new PatientHealthData() { Id = 1, BloodPresure = "120/80", BodyFatPercentage = "17", BloodSugar = "12", Weight = "102", PatientId = 1 }
-          );
+            modelBuilder.Entity<PatientHealthData>().HasData(
+                  new PatientHealthData() { Id = 1, BloodPresure = "120/80", BodyFatPercentage = "17", BloodSugar = "12", Weight = "102", PatientId = 1 }
+              );
 
             modelBuilder.Entity<Appointment>().HasData(
                new Appointment() { Id = 1, StartTime = new DateTime(2023, 05, 20, 9, 30, 0), EndTime = new DateTime(2023, 05, 20, 10, 00, 0), DoctorId = 2, PatientId = 1, Canceled = false, CancelationTime = new DateTime(), Used = false }
            );
+
+            modelBuilder.Entity<ReferralLetter>().HasData(
+                new ReferralLetter() { Id = 1, IsActive = true, PatientId = 1, SpecializationId= 1 }
+                );
 
             base.OnModelCreating(modelBuilder);
         }

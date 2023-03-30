@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace HospitalLibrary.Migrations
 {
     [DbContext(typeof(HospitalDbContext))]
-    [Migration("20230329085653_InitialCreate")]
+    [Migration("20230330082604_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -111,6 +111,38 @@ namespace HospitalLibrary.Migrations
                         });
                 });
 
+            modelBuilder.Entity("HospitalLibrary.Core.Model.ReferralLetter", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("PatientId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("SpecializationId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SpecializationId");
+
+                    b.ToTable("referralletters");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            IsActive = true,
+                            PatientId = 1,
+                            SpecializationId = 1
+                        });
+                });
+
             modelBuilder.Entity("HospitalLibrary.Core.Model.Room", b =>
                 {
                     b.Property<int>("Id")
@@ -147,6 +179,123 @@ namespace HospitalLibrary.Migrations
                             Id = 3,
                             Floor = 3,
                             Number = "305B"
+                        });
+                });
+
+            modelBuilder.Entity("HospitalLibrary.Core.Model.Specialization", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<string>("SpecName")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("specializations");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            SpecName = "Allergy and immunology"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            SpecName = "Anesthesiology"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            SpecName = "Dermatology"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            SpecName = "Diagnostic radiology"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            SpecName = "Emergency medicine"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            SpecName = "Family medicine"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            SpecName = "Internal medicine"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            SpecName = "Medical genetics"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            SpecName = "Neurology"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            SpecName = "Nuclear medicine"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            SpecName = "Obstetrics and gynecology"
+                        },
+                        new
+                        {
+                            Id = 12,
+                            SpecName = "Ophthalmology"
+                        },
+                        new
+                        {
+                            Id = 13,
+                            SpecName = "Pathology"
+                        },
+                        new
+                        {
+                            Id = 14,
+                            SpecName = "Pediatrics"
+                        },
+                        new
+                        {
+                            Id = 15,
+                            SpecName = "Physical medicine and rehabilitation"
+                        },
+                        new
+                        {
+                            Id = 16,
+                            SpecName = "Preventive medicine"
+                        },
+                        new
+                        {
+                            Id = 17,
+                            SpecName = "Psychiatry"
+                        },
+                        new
+                        {
+                            Id = 18,
+                            SpecName = "Radiation oncology"
+                        },
+                        new
+                        {
+                            Id = 19,
+                            SpecName = "Surgery"
+                        },
+                        new
+                        {
+                            Id = 20,
+                            SpecName = "Urology"
                         });
                 });
 
@@ -205,6 +354,11 @@ namespace HospitalLibrary.Migrations
                     b.Property<string>("LicenseNumber")
                         .HasColumnType("text");
 
+                    b.Property<int>("SpecializationId")
+                        .HasColumnType("integer");
+
+                    b.HasIndex("SpecializationId");
+
                     b.HasDiscriminator().HasValue("Doctor");
 
                     b.HasData(
@@ -221,7 +375,8 @@ namespace HospitalLibrary.Migrations
                             Role = 1,
                             Surname = "Mikic",
                             Username = "miki@gmail.com",
-                            LicenseNumber = "123dr2009"
+                            LicenseNumber = "123dr2009",
+                            SpecializationId = 1
                         },
                         new
                         {
@@ -236,7 +391,40 @@ namespace HospitalLibrary.Migrations
                             Role = 1,
                             Surname = "Rokic",
                             Username = "roki@gmail.com",
-                            LicenseNumber = "198r2009"
+                            LicenseNumber = "198r2009",
+                            SpecializationId = 2
+                        },
+                        new
+                        {
+                            Id = 6,
+                            DateOfBirth = new DateTime(1995, 5, 8, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "dunja@gmail.com",
+                            Gender = 1,
+                            Name = "Dunja",
+                            Password = "123",
+                            Phone = "0656757304",
+                            ProfileImage = "",
+                            Role = 1,
+                            Surname = "Jovanovic",
+                            Username = "dunja@gmail.com",
+                            LicenseNumber = "138r2014",
+                            SpecializationId = 6
+                        },
+                        new
+                        {
+                            Id = 7,
+                            DateOfBirth = new DateTime(1990, 12, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "anja@gmail.com",
+                            Gender = 1,
+                            Name = "Anja",
+                            Password = "123",
+                            Phone = "0604489354",
+                            ProfileImage = "",
+                            Role = 1,
+                            Surname = "Ilic",
+                            Username = "anja@gmail.com",
+                            LicenseNumber = "14567sd8",
+                            SpecializationId = 1
                         });
                 });
 
@@ -291,6 +479,28 @@ namespace HospitalLibrary.Migrations
                         .IsRequired();
 
                     b.Navigation("Patient");
+                });
+
+            modelBuilder.Entity("HospitalLibrary.Core.Model.ReferralLetter", b =>
+                {
+                    b.HasOne("HospitalLibrary.Core.Model.Specialization", "Specialization")
+                        .WithMany()
+                        .HasForeignKey("SpecializationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Specialization");
+                });
+
+            modelBuilder.Entity("HospitalLibrary.Core.Model.Doctor", b =>
+                {
+                    b.HasOne("HospitalLibrary.Core.Model.Specialization", "Specialization")
+                        .WithMany()
+                        .HasForeignKey("SpecializationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Specialization");
                 });
 #pragma warning restore 612, 618
         }
