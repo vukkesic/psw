@@ -25,6 +25,7 @@ const Dashboard: FC = () => {
     const [weight, setWeight] = useState<string>('');
     const [editMode, setEditMode] = useState<boolean>(false);
     const [healthData, setHealthData] = useState<HealthData[]>([]);
+    const [bloodPresureCheck, setBloodPresureCheck] = useState<boolean>(false);
     const listId: Number[] = [];
     const listPresureHigh: string[] = [];
     const listPresureLow: string[] = [];
@@ -97,18 +98,23 @@ const Dashboard: FC = () => {
 
     const HealthDataHandler = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        setBloodPresure(`${presureHigh}/${presureLow}`);
-        let bp = `${presureHigh}/${presureLow}`;
-        let d = { id: healthDataId, bloodPresure: bp, bloodSugar: bloodSugar, bodyFatPercentage: bodyFatPercentage, weight: weight, userId: userId, measurementTime: new Date() };
-        console.log(d)
-        axios.post('http://localhost:16177/api/HealthData', d)
-            .then(function (response) {
-                setEditMode(!editMode);
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
-
+        if (bloodPresureCheck === true) {
+            setBloodPresure(`${presureHigh}/${presureLow}`);
+            let bp = `${presureHigh}/${presureLow}`;
+            let d = { id: healthDataId, bloodPresure: bp, bloodSugar: bloodSugar, bodyFatPercentage: bodyFatPercentage, weight: weight, userId: userId, measurementTime: new Date() };
+            console.log(d)
+            axios.post('http://localhost:16177/api/HealthData', d)
+                .then(function (response) {
+                    setEditMode(!editMode);
+                    setBloodPresureCheck(!bloodPresureCheck);
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        }
+        else {
+            console.log("Presure high must be greater than presure low");
+        }
     }
 
     const showGraph = () => {
@@ -116,10 +122,23 @@ const Dashboard: FC = () => {
         navigate('chart', { state: { arrayDates: listMeasurementTime, arrayHigh: listPresureHigh, arrayLow: listPresureLow, arraySugar: listBloodSugar, arrayFat: listBodyFatPercentage, arrayWeight: listWeight } })
     }
 
+    const BloodPresureCheck = (high: string, low: string) => {
+        if (Number(high) > Number(low) && low !== '' && high !== '') {
+            setBloodPresureCheck(true);
+        }
+        else {
+            setBloodPresureCheck(false);
+        }
+    }
+
     useEffect(() => {
         getCurrentUser(localStorage.id);
         getUserData(localStorage.id);
     }, []);
+
+    useEffect(() => {
+        BloodPresureCheck(presureHigh, presureLow);
+    }, [presureHigh, presureLow]);
 
     return (
         <section className="container" style={{ height: '88vh', backgroundColor: '#eee' }}>
