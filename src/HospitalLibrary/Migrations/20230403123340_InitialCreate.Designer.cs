@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace HospitalLibrary.Migrations
 {
     [DbContext(typeof(HospitalDbContext))]
-    [Migration("20230330082604_InitialCreate")]
+    [Migration("20230403123340_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -64,6 +64,42 @@ namespace HospitalLibrary.Migrations
                             PatientId = 1,
                             StartTime = new DateTime(2023, 5, 20, 9, 30, 0, 0, DateTimeKind.Unspecified),
                             Used = false
+                        });
+                });
+
+            modelBuilder.Entity("HospitalLibrary.Core.Model.MenstrualData", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<DateTime>("ApproxOvulationDay")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<DateTime>("LastPeriod")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<DateTime>("NextPeriod")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<int>("PatientId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PatientId");
+
+                    b.ToTable("menstrualdata");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            ApproxOvulationDay = new DateTime(2023, 4, 3, 10, 0, 0, 0, DateTimeKind.Unspecified),
+                            LastPeriod = new DateTime(2023, 3, 20, 9, 30, 0, 0, DateTimeKind.Unspecified),
+                            NextPeriod = new DateTime(2023, 4, 23, 10, 0, 0, 0, DateTimeKind.Unspecified),
+                            PatientId = 5
                         });
                 });
 
@@ -468,6 +504,17 @@ namespace HospitalLibrary.Migrations
                             Username = "maria@mail.com",
                             Blocked = false
                         });
+                });
+
+            modelBuilder.Entity("HospitalLibrary.Core.Model.MenstrualData", b =>
+                {
+                    b.HasOne("HospitalLibrary.Core.Model.Patient", "Patient")
+                        .WithMany()
+                        .HasForeignKey("PatientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Patient");
                 });
 
             modelBuilder.Entity("HospitalLibrary.Core.Model.PatientHealthData", b =>

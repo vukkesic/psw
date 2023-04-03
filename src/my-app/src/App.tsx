@@ -14,6 +14,7 @@ import LoginForm from './UI/LoginForm';
 import Dashboard from './UI/Dashboard';
 import ChartDisplay from './UI/ChartDisplay';
 import AppointmentScheduler from './UI/AppointmentScheduler';
+import MenstrualCalendar from './UI/MenstrualCalendar';
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path='dashboard/chart' element={<ChartDisplay />} />
           <Route path='/scheduling' element={<AppointmentScheduler />} />
+          <Route path='/calendar' element={<MenstrualCalendar />} />
           <Route path="/*" element={<HomePage />} />
         </Routes>
       </Router>

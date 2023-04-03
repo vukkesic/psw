@@ -16,12 +16,14 @@ namespace HospitalAPI.Controllers
         private readonly IPatientService _patientService;
         private readonly IUserService _userService;
         private readonly IDoctorService _doctorService;
+        private readonly IMenstrualDataService _menstrualDataService;
 
-        public UsersController(IPatientService patientService, IUserService userService, IDoctorService doctorService)
+        public UsersController(IPatientService patientService, IUserService userService, IDoctorService doctorService, IMenstrualDataService menstrualDataService)
         {
             _patientService = patientService;
             _userService = userService;
             _doctorService = doctorService;
+            _menstrualDataService = menstrualDataService;
         }
         [HttpPost("uploadImage")]
         public IActionResult UploadImage([FromForm] FileDTO file)
@@ -45,6 +47,7 @@ namespace HospitalAPI.Controllers
         public IActionResult Register(RegistrationDTO dto)
         {
             Patient patient = PatientMapper.MapRegistrationDTOToPatient(dto);
+            MenstrualData data= new MenstrualData();
             if (_userService.ExistsByUsername(patient.Username) == false)
             {
                 if (!ModelState.IsValid)
@@ -52,6 +55,10 @@ namespace HospitalAPI.Controllers
                     return BadRequest(ModelState);
                 }
                 _patientService.Create(patient);
+                if(patient.Gender == Gender.FEMALE)
+                {
+                    _menstrualDataService.Create(data);
+                }
                 //return CreatedAtAction("GetById", new { id = patient.Id }, patient);   Treba dodati get metodu 
                 return Ok(patient);
             }

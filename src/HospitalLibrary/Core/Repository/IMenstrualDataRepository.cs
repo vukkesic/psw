@@ -14,5 +14,6 @@ namespace HospitalLibrary.Core.Repository
         void Create(MenstrualData data);
         void Update(MenstrualData data);
         void Delete(MenstrualData data);
+        MenstrualData GetByPatientId(int patientId);
     }
 }

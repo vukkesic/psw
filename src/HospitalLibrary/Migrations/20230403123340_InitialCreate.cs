@@ -131,6 +131,28 @@ namespace HospitalLibrary.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "menstrualdata",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    LastPeriod = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    NextPeriod = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    ApproxOvulationDay = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    PatientId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_menstrualdata", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_menstrualdata_users_PatientId",
+                        column: x => x.PatientId,
+                        principalTable: "users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.InsertData(
                 table: "appointments",
                 columns: new[] { "Id", "CancelationTime", "Canceled", "DoctorId", "EndTime", "PatientId", "StartTime", "Used" },
@@ -188,6 +210,11 @@ namespace HospitalLibrary.Migrations
                 values: new object[] { 1, "120/80", "12", "17", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 1, "102" });
 
             migrationBuilder.InsertData(
+                table: "menstrualdata",
+                columns: new[] { "Id", "ApproxOvulationDay", "LastPeriod", "NextPeriod", "PatientId" },
+                values: new object[] { 1, new DateTime(2023, 4, 3, 10, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2023, 3, 20, 9, 30, 0, 0, DateTimeKind.Unspecified), new DateTime(2023, 4, 23, 10, 0, 0, 0, DateTimeKind.Unspecified), 5 });
+
+            migrationBuilder.InsertData(
                 table: "referralletters",
                 columns: new[] { "Id", "IsActive", "PatientId", "SpecializationId" },
                 values: new object[] { 1, true, 1, 1 });
@@ -209,6 +236,11 @@ namespace HospitalLibrary.Migrations
                 column: "PatientId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_menstrualdata_PatientId",
+                table: "menstrualdata",
+                column: "PatientId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_referralletters_SpecializationId",
                 table: "referralletters",
                 column: "SpecializationId");
@@ -226,6 +258,9 @@ namespace HospitalLibrary.Migrations
 
             migrationBuilder.DropTable(
                 name: "healthdata");
+
+            migrationBuilder.DropTable(
+                name: "menstrualdata");
 
             migrationBuilder.DropTable(
                 name: "referralletters");

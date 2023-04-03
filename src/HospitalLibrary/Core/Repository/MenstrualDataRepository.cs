@@ -40,6 +40,11 @@ namespace HospitalLibrary.Core.Repository
             return _context.menstrualdata.Find(id);
         }
 
+        public MenstrualData GetByPatientId(int patientId)
+        {
+            return GetAll().FirstOrDefault(a => a.PatientId.Equals(patientId));
+        }
+
         public void Update(MenstrualData data)
         {
             _context.Entry(data).State = EntityState.Modified;

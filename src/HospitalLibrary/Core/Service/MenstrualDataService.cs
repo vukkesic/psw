@@ -37,6 +37,11 @@ namespace HospitalLibrary.Core.Service
             return _menstrualDataRepository.GetById(id);
         }
 
+        public MenstrualData GetByPatientId(int patientId)
+        {
+            return _menstrualDataRepository.GetByPatientId(patientId);
+        }
+
         public void Update(MenstrualData data)
         {
             _menstrualDataRepository.Update(data);

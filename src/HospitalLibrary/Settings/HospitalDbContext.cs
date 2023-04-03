@@ -172,11 +172,10 @@ namespace HospitalLibrary.Settings
             modelBuilder.Entity<ReferralLetter>().HasData(
                 new ReferralLetter() { Id = 1, IsActive = true, PatientId = 1, SpecializationId= 1 }
                 );
-
             modelBuilder.Entity<MenstrualData>().HasData(
-                new MenstrualData() { Id = 1, LastPeriod = new DateTime(), NextPeriod = new DateTime(), ApproxOvulationDay = new DateTime(), PatientId= 5 }
-                );
-            
+               new MenstrualData() { Id = 1, LastPeriod = new DateTime(2023, 03, 20, 9, 30, 0), NextPeriod = new DateTime(2023, 04, 23, 10, 00, 0), ApproxOvulationDay = new DateTime(2023, 04, 03, 10, 00, 0), PatientId = 5}
+           );
+
             base.OnModelCreating(modelBuilder);
         }
     }

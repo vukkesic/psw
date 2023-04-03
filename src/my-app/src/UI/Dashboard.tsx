@@ -156,6 +156,9 @@ const Dashboard: FC = () => {
                     <button className="primary ghost" onClick={() => showGraph()}>
                         Show Graph
                     </button>
+                    {gender === 1 && <button className="primary" onClick={() => navigate("/calendar")}>
+                        Menstrual calendar
+                    </button>}
                 </div>
             </div>
             {editMode === true ?
