@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.IO;
 using System;
+using Microsoft.AspNetCore.Authorization;
 
 namespace HospitalAPI.Controllers
 {
@@ -25,6 +26,8 @@ namespace HospitalAPI.Controllers
             _doctorService = doctorService;
             _menstrualDataService = menstrualDataService;
         }
+
+        [AllowAnonymous]
         [HttpPost("uploadImage")]
         public IActionResult UploadImage([FromForm] FileDTO file)
         {
@@ -43,6 +46,7 @@ namespace HospitalAPI.Controllers
             }
         }
 
+        [AllowAnonymous]
         [HttpPost("userRegistration")]
         public IActionResult Register(RegistrationDTO dto)
         {
@@ -68,6 +72,7 @@ namespace HospitalAPI.Controllers
             }
         }
 
+        [AllowAnonymous]
         [HttpGet("getCurrentUser")]
         public ActionResult getCurrentUser(int id)
         {
@@ -79,12 +84,14 @@ namespace HospitalAPI.Controllers
             return Ok(user);
         }
 
+        [Authorize]
         [HttpGet("getAllDoctors")]
         public ActionResult GetAllDoctors()
         {
             return Ok(_doctorService.GetAll());
         }
 
+        [Authorize]
         [HttpGet("getAllSpecialist")]
         public ActionResult GetAllSpecialist(int specializationId)
         {

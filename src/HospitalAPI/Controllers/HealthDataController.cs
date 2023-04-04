@@ -2,12 +2,14 @@
 using HospitalLibrary.Core.Mapper;
 using HospitalLibrary.Core.Model;
 using HospitalLibrary.Core.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 
 namespace HospitalAPI.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class HealthDataController : ControllerBase
@@ -20,6 +22,7 @@ namespace HospitalAPI.Controllers
             _patientHealthDataService = patientHealthDataService;
             _patientHealthDataMapper = new PatientHealthDataMapper(patientService);
         }
+
         [HttpGet]
         public ActionResult GetAll()
         {

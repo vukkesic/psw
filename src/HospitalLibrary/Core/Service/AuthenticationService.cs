@@ -15,9 +15,9 @@ namespace HospitalLibrary.Core.Service
         {
             _jWTManager = jWTManager;
         }
-        public Tokens Authenticate(string name, Role r)
+        public Tokens Authenticate(string name, Role r, Gender g)
         {
-            return _jWTManager.Authenticate(name, r);
+            return _jWTManager.Authenticate(name, r, g);
         }
     }
 }

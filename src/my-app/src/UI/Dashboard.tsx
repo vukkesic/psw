@@ -64,7 +64,11 @@ const Dashboard: FC = () => {
 
     const getUserData = (userId: Number) => {
         axios.get('http://localhost:16177/api/HealthData/getHealthData', {
-            params: { userId: userId }
+            params: { userId: userId },
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.userToken.slice(1, -1)}`
+            }
         })
             .then(function (response) {
                 console.log(response.data)
@@ -76,7 +80,14 @@ const Dashboard: FC = () => {
     }
 
     const getCurrentUser = (userId: Number) => {
-        axios.get('http://localhost:16177/api/Users/getCurrentUser', { params: { id: userId } })
+        axios.get('http://localhost:16177/api/Users/getCurrentUser',
+            {
+                params: { id: userId },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.userToken.slice(1, -1)}`
+                }
+            })
             .then(function (response) {
                 console.log(response.data)
                 setName(response.data.name);
@@ -103,10 +114,17 @@ const Dashboard: FC = () => {
             let bp = `${presureHigh}/${presureLow}`;
             let d = { id: healthDataId, bloodPresure: bp, bloodSugar: bloodSugar, bodyFatPercentage: bodyFatPercentage, weight: weight, userId: userId, measurementTime: new Date() };
             console.log(d)
-            axios.post('http://localhost:16177/api/HealthData', d)
+            axios.post('http://localhost:16177/api/HealthData', d,
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.userToken.slice(1, -1)}`
+                    }
+                })
                 .then(function (response) {
                     setEditMode(!editMode);
                     setBloodPresureCheck(!bloodPresureCheck);
+                    getUserData(localStorage.id);
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -139,6 +157,15 @@ const Dashboard: FC = () => {
     useEffect(() => {
         BloodPresureCheck(presureHigh, presureLow);
     }, [presureHigh, presureLow]);
+
+    useEffect(() => {
+        if (healthData.length > 0) {
+            setBloodPresure(healthData[healthData.length - 1].bloodPresure)
+            setBloodSugar(healthData[healthData.length - 1].bloodSugar)
+            setBodyFatPercentage(healthData[healthData.length - 1].bodyFatPercentage)
+            setWeight(healthData[healthData.length - 1].weight)
+        }
+    }, [healthData]);
 
     return (
         <section className="container" style={{ height: '88vh', backgroundColor: '#eee' }}>

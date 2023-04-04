@@ -29,7 +29,7 @@ namespace HospitalAPI.Controllers
             User u = _userService.GetByCredentials(authenticationDTO.Username, authenticationDTO.Password);
             if (u != null)
             {
-                Tokens t = _authenticationService.Authenticate(u.Name, u.Role);
+                Tokens t = _authenticationService.Authenticate(u.Name, u.Role, u.Gender);
                 AuthenticatedUserDTO dto = _authenticationMapper.UserToAuthenticatedUserDTO(u, t.Token);
                 if (dto.Blocked == true)
                     return BadRequest("You are blocked and can't access system.");

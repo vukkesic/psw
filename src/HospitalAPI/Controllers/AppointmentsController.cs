@@ -2,9 +2,11 @@
 using HospitalLibrary.Core.Mapper;
 using HospitalLibrary.Core.Model;
 using HospitalLibrary.Core.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Data;
 using System.Linq;
 
 namespace HospitalAPI.Controllers
@@ -46,6 +48,7 @@ namespace HospitalAPI.Controllers
             return null;
         }
 
+        [Authorize(Roles = "PATIENT")]
         [HttpPost("checkPeriod")]
         public SuggestionDTO CheckPeriod(Period period)
         {
@@ -100,6 +103,7 @@ namespace HospitalAPI.Controllers
             return null;
         }
 
+        [Authorize(Roles = "PATIENT")]
         [HttpPost("addAppointment")]
         public ActionResult AddAppointment(AppointmentDTO dto)
         {
@@ -109,6 +113,7 @@ namespace HospitalAPI.Controllers
 
         }
 
+        [Authorize(Roles = "PATIENT")]
         [HttpPut("cancel/{id}")]
         public ActionResult Cancel(int id)
         {
@@ -134,6 +139,7 @@ namespace HospitalAPI.Controllers
             return Ok(appointment);
         }
 
+        [Authorize]
         [HttpGet("getAppointmentsByPatient")]
         public ActionResult GetByPatient(int patientId)
         {

@@ -18,7 +18,7 @@ namespace HospitalLibrary.Core.Repository
         {
             _iconfiguration = iconfiguration;
         }
-        public Tokens Authenticate(string name, Role r)
+        public Tokens Authenticate(string name, Role r, Gender g)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var tokenKey = Encoding.UTF8.GetBytes(_iconfiguration["JWT:Key"]);
@@ -27,7 +27,8 @@ namespace HospitalLibrary.Core.Repository
                 Subject = new ClaimsIdentity(new Claim[]
               {
              new Claim(ClaimTypes.Name, name),
-             new Claim(ClaimTypes.Role, r.ToString())
+             new Claim(ClaimTypes.Role, r.ToString()),
+             new Claim(ClaimTypes.Gender, g.ToString())
               }),
                 Expires = DateTime.UtcNow.AddHours(1),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(tokenKey), SecurityAlgorithms.HmacSha256Signature)

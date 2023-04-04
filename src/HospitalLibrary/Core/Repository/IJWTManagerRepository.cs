@@ -9,6 +9,6 @@ namespace HospitalLibrary.Core.Repository
 {
     public interface IJWTManagerRepository
     {
-        Tokens Authenticate(string name, Role r);
+        Tokens Authenticate(string name, Role r, Gender g);
     }
 }
