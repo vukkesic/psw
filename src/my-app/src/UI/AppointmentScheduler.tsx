@@ -30,7 +30,13 @@ const AppointmentScheduler: FC = () => {
         if (selectedReferralLetter) {
             spec = selectedReferralLetter.specializationId;
         }
-        axios.get('http://localhost:16177/api/Users/getAllSpecialist', { params: { specializationId: spec } })
+        axios.get('http://localhost:16177/api/Users/getAllSpecialist', {
+            params: { specializationId: spec },
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.userToken.slice(1, -1)}`
+            }
+        })
             .then(function (response) {
                 console.log(response.data)
                 setDoctors(response.data);
@@ -50,7 +56,13 @@ const AppointmentScheduler: FC = () => {
         let data = { startTime: startTime?.toJSON(), endTime: endTime?.toJSON(), doctorId: selectedDoctor?.id, patientId: localStorage.id, priority: selectedPriority };
         console.log(data);
         if (dateCheck) {
-            axios.post('http://localhost:16177/api/Appointments/checkPeriod', data)
+            axios.post('http://localhost:16177/api/Appointments/checkPeriod', data,
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.userToken.slice(1, -1)}`
+                    }
+                })
                 .then(function (response) {
                     setRecommendedAppointment(response.data);
                     setShowAppointment(true);
@@ -75,7 +87,13 @@ const AppointmentScheduler: FC = () => {
     const submitAppointment = () => {
         let refId = selectedReferralLetter?.id;
         const newAppointment = { id: 0, startTime: recommendedAppointment?.startTime, endTime: recommendedAppointment?.endTime, doctorId: recommendedAppointment?.doctorId, patientId: recommendedAppointment?.patientId, canceled: false, cancelationDate: new Date(), used: false }
-        axios.post('http://localhost:16177/api/Appointments/addAppointment', newAppointment)
+        axios.post('http://localhost:16177/api/Appointments/addAppointment', newAppointment,
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.userToken.slice(1, -1)}`
+                }
+            })
             .then(function (response) {
                 console.log(response);
             })
@@ -103,7 +121,13 @@ const AppointmentScheduler: FC = () => {
     const CancelationHandler = () => {
         if (selctedCancelAppointment) {
             const idsa = selctedCancelAppointment.id;
-            axios.put(`http://localhost:16177/api/Appointments/cancel/${idsa}`, {})
+            axios.put(`http://localhost:16177/api/Appointments/cancel/${idsa}`, {},
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.userToken.slice(1, -1)}`
+                    }
+                })
                 .then(function (response) {
                     console.log(response.data)
                 })
@@ -116,7 +140,11 @@ const AppointmentScheduler: FC = () => {
 
     const getPatientAppointments = () => {
         axios.get('http://localhost:16177/api/Appointments/getAppointmentsByPatient', {
-            params: { patientId: localStorage.id }
+            params: { patientId: localStorage.id },
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.userToken.slice(1, -1)}`
+            }
         })
             .then(function (response) {
                 setScheduledAppointments(response.data);

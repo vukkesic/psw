@@ -23,7 +23,11 @@ const MenstrualCalendar: FC = () => {
 
     const getMenstrualDataByPatientId = (patientId: Number) => {
         axios.get('http://localhost:16177/api/MenstrualData/getMyMenstrualData', {
-            params: { patientId: localStorage.id }
+            params: { patientId: localStorage.id },
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.userToken.slice(1, -1)}`
+            }
         })
             .then(function (response) {
                 console.log(response.data)
@@ -47,7 +51,13 @@ const MenstrualCalendar: FC = () => {
     const submitHandler = () => {
         const idmd = myMenstrualData?.id;
         let data = { id: idmd, lastPeriod: selectedLastPeriod, nextPeriod: selectedNextPeriod, approxOvulationDay: SelectedApproxOvulationDay, patientId: myMenstrualData?.patientId }
-        axios.put(`http://localhost:16177/api/MenstrualData/${idmd}`, data)
+        axios.put(`http://localhost:16177/api/MenstrualData/${idmd}`, data,
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.userToken.slice(1, -1)}`
+                }
+            })
             .then(function (response) {
                 console.log(response.data)
             })

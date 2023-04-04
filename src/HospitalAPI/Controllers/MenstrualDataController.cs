@@ -2,6 +2,7 @@
 using HospitalLibrary.Core.Mapper;
 using HospitalLibrary.Core.Model;
 using HospitalLibrary.Core.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -20,6 +21,7 @@ namespace HospitalAPI.Controllers
             _menstrualDataService = menstrualDataService;
             _menstrualDataMapper = new MenstrualDataMapper(patientService);
         }
+        [Authorize(Roles = "PATIENT")]
         [HttpGet("getMyMenstrualData")]
         public ActionResult getHealthDataForUser(int patientId)
         {
@@ -27,6 +29,7 @@ namespace HospitalAPI.Controllers
             return Ok(data);
         }
 
+        [Authorize(Roles = "PATIENT")]
         [HttpPut("{id}")]
         public ActionResult Update(int id, MenstrualDataDTO dto)
         {
