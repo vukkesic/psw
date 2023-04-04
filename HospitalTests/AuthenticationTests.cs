@@ -18,7 +18,7 @@ namespace HospitalTests
         public void User_authenticated()
         {
             AuthenticationService service = new AuthenticationService(CreateStubRepository());
-            Tokens t = service.Authenticate("Maria", Role.PATIENT);
+            Tokens t = service.Authenticate("Maria", Role.PATIENT, Gender.FEMALE);
             t.ShouldNotBeNull();
         }
 
@@ -32,7 +32,7 @@ namespace HospitalTests
                 RefreshToken = "bbbbbbbbbbbbbbbbbbbbbbb"
             };
 
-            stubRepository.Setup(m => m.Authenticate("Maria", Role.PATIENT)).Returns(t);
+            stubRepository.Setup(m => m.Authenticate("Maria", Role.PATIENT, Gender.FEMALE)).Returns(t);
             return stubRepository.Object;
         }
     }

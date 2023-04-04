@@ -153,6 +153,31 @@ namespace HospitalLibrary.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "examinations",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    DiagnosisCode = table.Column<string>(type: "text", nullable: true),
+                    DiagnosisDescription = table.Column<string>(type: "text", nullable: true),
+                    DoctorId = table.Column<int>(type: "integer", nullable: false),
+                    PatientId = table.Column<int>(type: "integer", nullable: false),
+                    Date = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    HealthDataId = table.Column<int>(type: "integer", nullable: true),
+                    Prescription = table.Column<string>(type: "text", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_examinations", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_examinations_healthdata_HealthDataId",
+                        column: x => x.HealthDataId,
+                        principalTable: "healthdata",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
             migrationBuilder.InsertData(
                 table: "appointments",
                 columns: new[] { "Id", "CancelationTime", "Canceled", "DoctorId", "EndTime", "PatientId", "StartTime", "Used" },
@@ -230,6 +255,16 @@ namespace HospitalLibrary.Migrations
                     { 6, new DateTime(1995, 5, 8, 0, 0, 0, 0, DateTimeKind.Unspecified), "Doctor", "dunja@gmail.com", 1, "138r2014", "Dunja", "123", "0656757304", "", 1, 6, "Jovanovic", "dunja@gmail.com" }
                 });
 
+            migrationBuilder.InsertData(
+                table: "examinations",
+                columns: new[] { "Id", "Date", "DiagnosisCode", "DiagnosisDescription", "DoctorId", "HealthDataId", "PatientId", "Prescription" },
+                values: new object[] { 1, new DateTime(2023, 1, 24, 10, 0, 0, 0, DateTimeKind.Unspecified), "1AFA", "Dijabetes tipa 2", 2, 1, 1, "Ishrana za dijabeticare." });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_examinations_HealthDataId",
+                table: "examinations",
+                column: "HealthDataId");
+
             migrationBuilder.CreateIndex(
                 name: "IX_healthdata_PatientId",
                 table: "healthdata",
@@ -257,7 +292,7 @@ namespace HospitalLibrary.Migrations
                 name: "appointments");
 
             migrationBuilder.DropTable(
-                name: "healthdata");
+                name: "examinations");
 
             migrationBuilder.DropTable(
                 name: "menstrualdata");
@@ -267,6 +302,9 @@ namespace HospitalLibrary.Migrations
 
             migrationBuilder.DropTable(
                 name: "rooms");
+
+            migrationBuilder.DropTable(
+                name: "healthdata");
 
             migrationBuilder.DropTable(
                 name: "users");

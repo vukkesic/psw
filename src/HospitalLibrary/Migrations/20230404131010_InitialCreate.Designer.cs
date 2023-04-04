@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace HospitalLibrary.Migrations
 {
     [DbContext(typeof(HospitalDbContext))]
-    [Migration("20230403123340_InitialCreate")]
+    [Migration("20230404131010_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -64,6 +64,54 @@ namespace HospitalLibrary.Migrations
                             PatientId = 1,
                             StartTime = new DateTime(2023, 5, 20, 9, 30, 0, 0, DateTimeKind.Unspecified),
                             Used = false
+                        });
+                });
+
+            modelBuilder.Entity("HospitalLibrary.Core.Model.ExaminationReport", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("DiagnosisCode")
+                        .HasColumnType("text");
+
+                    b.Property<string>("DiagnosisDescription")
+                        .HasColumnType("text");
+
+                    b.Property<int>("DoctorId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("HealthDataId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("PatientId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Prescription")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("HealthDataId");
+
+                    b.ToTable("examinations");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Date = new DateTime(2023, 1, 24, 10, 0, 0, 0, DateTimeKind.Unspecified),
+                            DiagnosisCode = "1AFA",
+                            DiagnosisDescription = "Dijabetes tipa 2",
+                            DoctorId = 2,
+                            HealthDataId = 1,
+                            PatientId = 1,
+                            Prescription = "Ishrana za dijabeticare."
                         });
                 });
 
@@ -504,6 +552,15 @@ namespace HospitalLibrary.Migrations
                             Username = "maria@mail.com",
                             Blocked = false
                         });
+                });
+
+            modelBuilder.Entity("HospitalLibrary.Core.Model.ExaminationReport", b =>
+                {
+                    b.HasOne("HospitalLibrary.Core.Model.PatientHealthData", "HealthData")
+                        .WithMany()
+                        .HasForeignKey("HealthDataId");
+
+                    b.Navigation("HealthData");
                 });
 
             modelBuilder.Entity("HospitalLibrary.Core.Model.MenstrualData", b =>

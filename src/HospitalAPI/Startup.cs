@@ -56,7 +56,8 @@ namespace HospitalAPI
             services.AddScoped<IReferralLetterRepository, ReferralLetterRepository>();
             services.AddScoped<IMenstrualDataService, MenstrualDataService>();
             services.AddScoped<IMenstrualDataRepository, MenstrualDataRepository>();
-
+            services.AddScoped<IExaminationService, ExaminationService>();
+            services.AddScoped<IExaminationRepository, ExaminationRepository>();
 
             services.AddCors(options =>
             {

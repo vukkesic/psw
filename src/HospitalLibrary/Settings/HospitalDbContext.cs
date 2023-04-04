@@ -16,6 +16,7 @@ namespace HospitalLibrary.Settings
         public DbSet<Specialization> specializations { get; set; }
         public DbSet<ReferralLetter> referralletters { get; set; }
         public DbSet<MenstrualData> menstrualdata { get; set; }
+        public DbSet<ExaminationReport> examinations { get; set; }
 
         public HospitalDbContext(DbContextOptions<HospitalDbContext> options) : base(options) { }
 
@@ -172,9 +173,14 @@ namespace HospitalLibrary.Settings
             modelBuilder.Entity<ReferralLetter>().HasData(
                 new ReferralLetter() { Id = 1, IsActive = true, PatientId = 1, SpecializationId= 1 }
                 );
+
             modelBuilder.Entity<MenstrualData>().HasData(
                new MenstrualData() { Id = 1, LastPeriod = new DateTime(2023, 03, 20, 9, 30, 0), NextPeriod = new DateTime(2023, 04, 23, 10, 00, 0), ApproxOvulationDay = new DateTime(2023, 04, 03, 10, 00, 0), PatientId = 5}
            );
+
+            modelBuilder.Entity<ExaminationReport>().HasData(
+               new ExaminationReport() { Id = 1, DiagnosisCode = "1AFA", DiagnosisDescription = "Dijabetes tipa 2", DoctorId = 2, PatientId = 1, Date = new DateTime(2023, 01, 24, 10, 00, 0), HealthDataId = 1, Prescription = "Ishrana za dijabeticare." }
+               );
 
             base.OnModelCreating(modelBuilder);
         }
