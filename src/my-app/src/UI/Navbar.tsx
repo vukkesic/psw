@@ -7,39 +7,55 @@ import {
     Nav,
     NavItem,
     NavLink,
+    NavbarText,
 } from 'reactstrap';
 
 const NavigationBar: FC = () => {
     const navigate = useNavigate();
+
+    const logout = () => {
+        localStorage.removeItem("userToken");
+        localStorage.removeItem("id");
+        localStorage.removeItem("role");
+        console.log(localStorage.getItem("id"));
+        navigate("/login")
+    }
+
     return (
         <div>
             <Navbar className="navbar">
                 <Nav className="navl" navbar>
-                    <NavItem>
-                        <NavLink href="/dashboard">
-                            Profile
-                        </NavLink>
-                    </NavItem>
-                    <NavItem>
-                        <NavLink href="/scheduling">
-                            Scheduling
-                        </NavLink>
-                    </NavItem>
+                    {localStorage.role == 0 &&
+                        <NavItem>
+                            <NavLink href="/dashboard">
+                                Profile
+                            </NavLink>
+                        </NavItem>}
+                    {localStorage.role == 0 &&
+                        <NavItem>
+                            <NavLink href="/scheduling">
+                                Scheduling
+                            </NavLink>
+                        </NavItem>}
                 </Nav>
                 <Nav className="nav" navbar>
                     <NavbarBrand className="brand" href="/">Home</NavbarBrand>
                 </Nav>
-                <Nav>
-                    <NavItem>
-                        <NavLink href="/login/">
-                            Login
-                        </NavLink>
-                    </NavItem>
-                    <NavItem>
-                        <NavLink href="/signup">
-                            Signup
-                        </NavLink>
-                    </NavItem>
+                <Nav className="navr" navbar>
+                    {localStorage.id == null &&
+                        <NavItem>
+                            <NavLink href="/login/">
+                                Login
+                            </NavLink>
+                        </NavItem>}
+                    {localStorage.id == null &&
+                        <NavItem>
+                            <NavLink href="/signup">
+                                Signup
+                            </NavLink>
+                        </NavItem>}
+                    {localStorage.id != null &&
+                        <NavbarText onClick={logout}>Logout</NavbarText>}
                 </Nav>
             </Navbar>
         </div>

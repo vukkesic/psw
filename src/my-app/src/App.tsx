@@ -24,10 +24,10 @@ function App() {
         <Routes>
           <Route path="/signup" element={<RegistrationForm />} />
           <Route path="/login" element={<LoginForm />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path='dashboard/chart' element={<ChartDisplay />} />
-          <Route path='/scheduling' element={<AppointmentScheduler />} />
-          <Route path='/calendar' element={<MenstrualCalendar />} />
+          <Route path='/dashboard' element={localStorage.role == 0 ? <Dashboard /> : <Navigate to="/" />} />
+          <Route path='/scheduling' element={localStorage.role == 0 ? <AppointmentScheduler /> : <Navigate to="/" />} />
+          <Route path='dashboard/chart' element={localStorage.role == 0 ? <ChartDisplay /> : <Navigate to="/" />} />
+          <Route path='/calendar' element={localStorage.role == 0 ? <MenstrualCalendar /> : <Navigate to="/" />} />
           <Route path="/*" element={<HomePage />} />
         </Routes>
       </Router>

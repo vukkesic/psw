@@ -32,3 +32,25 @@ nav {
     justify-content: center;
     width: 33%;
 }
+
+.navbar-navl {
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    width: 33%;
+}
+
+.navbar-navr {
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+    width: 33%;
+}
+
+.navbar-brand {
+    text-align: center;
+}
+
+.nav-link {
+    margin-right: 50px;
+}
