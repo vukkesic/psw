@@ -72,7 +72,7 @@ namespace HospitalAPI.Controllers
             }
         }
 
-        [AllowAnonymous]
+        [Authorize]
         [HttpGet("getCurrentUser")]
         public ActionResult getCurrentUser(int id)
         {
@@ -82,6 +82,19 @@ namespace HospitalAPI.Controllers
                 return NotFound();
             }
             return Ok(user);
+        }
+
+        [Authorize(Roles = "DOCTOR")]
+        [HttpGet("{id}")]
+        public ActionResult GetById(int id)
+        {
+            var room = _doctorService.GetById(id);
+            if (room == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(room);
         }
 
         [Authorize]
