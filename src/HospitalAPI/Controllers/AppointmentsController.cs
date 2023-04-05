@@ -103,7 +103,7 @@ namespace HospitalAPI.Controllers
             return null;
         }
 
-        [Authorize(Roles = "PATIENT")]
+        //[Authorize(Roles = "PATIENT")]
         [HttpPost("addAppointment")]
         public ActionResult AddAppointment(AppointmentDTO dto)
         {
@@ -144,6 +144,30 @@ namespace HospitalAPI.Controllers
         public ActionResult GetByPatient(int patientId)
         {
             return Ok(_appointmentService.GetByPatient(patientId));
+        }
+
+        [Authorize(Roles = "DOCTOR")]
+        [HttpGet("getDoctorTodayAppointments")]
+        public ActionResult GetTodayAppointments(DateTime today, int doctorId)
+        {
+            return Ok(_appointmentService.GetDoctorTodayAppointments(today, doctorId));
+        }
+
+        [Authorize(Roles = "DOCTOR")]
+        [HttpPut("use/{id}")]
+        public ActionResult Use(int id)
+        {
+            Appointment appointment = _appointmentService.GetById(id);
+            appointment.Used = true;
+            try
+            {
+                _appointmentService.Update(appointment);
+            }
+            catch
+            {
+                return BadRequest();
+            }
+            return Ok(appointment);
         }
     }
 }

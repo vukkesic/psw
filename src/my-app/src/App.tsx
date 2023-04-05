@@ -15,6 +15,7 @@ import Dashboard from './UI/Dashboard';
 import ChartDisplay from './UI/ChartDisplay';
 import AppointmentScheduler from './UI/AppointmentScheduler';
 import MenstrualCalendar from './UI/MenstrualCalendar';
+import Examination from './UI/Examination';
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
           <Route path='/scheduling' element={localStorage.role == 0 ? <AppointmentScheduler /> : <Navigate to="/" />} />
           <Route path='dashboard/chart' element={localStorage.role == 0 ? <ChartDisplay /> : <Navigate to="/" />} />
           <Route path='/calendar' element={localStorage.role == 0 ? <MenstrualCalendar /> : <Navigate to="/" />} />
+          <Route path='/examination' element={localStorage.role == 1 ? <Examination /> : <Navigate to="/" />} />
           <Route path="/*" element={<HomePage />} />
         </Routes>
       </Router>

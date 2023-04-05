@@ -50,5 +50,10 @@ namespace HospitalLibrary.Core.Service
         {
             return _appointmentRepository.GetByPatient(patientId);
         }
+
+        public IEnumerable<Appointment> GetDoctorTodayAppointments(DateTime today, int doctorId)
+        {
+            return _appointmentRepository.GetDoctorTodayAppointments(today, doctorId);
+        }
     }
 }

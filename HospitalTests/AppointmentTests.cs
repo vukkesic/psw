@@ -49,6 +49,22 @@ namespace HospitalTests
         }
 
         [Fact]
+        public void Get_doctor_today_appointments()
+        {
+            AppointmentService service = new AppointmentService(CreateStubRepository());
+            IEnumerable<Appointment> a = service.GetDoctorTodayAppointments(new DateTime(), 4);
+            a.ShouldNotBeEmpty();
+        }
+
+
+        [Fact]
+        public void Get_doctor_today_appointments_not_found()
+        {
+            AppointmentService service = new AppointmentService(CreateStubRepository());
+            IEnumerable<Appointment> a = service.GetDoctorTodayAppointments(new DateTime(), 3);
+            a.ShouldBeEmpty();
+        }
+        [Fact]
         public void Start_time_equals()
         {
             AppointmentService service = new AppointmentService(CreateStubRepository());
@@ -65,6 +81,8 @@ namespace HospitalTests
             bool b = a.CompareStartTime(new DateTime(2023, 05, 20, 9, 31, 0));
             b.ShouldBeFalse();
         }
+
+
         private static IAppointmentRepository CreateStubRepository()
         {
             var stubRepository = new Mock<IAppointmentRepository>();
@@ -72,10 +90,16 @@ namespace HospitalTests
 
             var app1 = new Appointment(1, new DateTime(2023, 05, 20, 9, 30, 0), new DateTime(2023, 05, 20, 10, 00, 0), 2, 1, false, new DateTime(), false);
             var app2 = new Appointment(2, new DateTime(2023, 04, 20, 9, 30, 0), new DateTime(2023, 04, 20, 10, 00, 0), 4, 3, false, new DateTime(), false);
+            var app3 = new Appointment(3, new DateTime(), new DateTime(), 4, 3, false, new DateTime(), false);
             appointments.Add(app1);
             appointments.Add(app2);
+            appointments.Add(app3);
+            var list3 = new List<Appointment>();
+            list3.Add(app3);
+            IEnumerable<Appointment> res3 = list3;
             var list2 = new List<Appointment>();
             list2.Add(app2);
+            list2.Add(app3);
             IEnumerable<Appointment> res2 = list2;
             var list1 = new List<Appointment>();
             list1.Add(app1);
@@ -87,6 +111,7 @@ namespace HospitalTests
             stubRepository.Setup(m => m.GetByDoctor(4)).Returns(res2);
             stubRepository.Setup(m => m.GetById(1)).Returns(app1);
             stubRepository.Setup(m => m.GetById(2)).Returns(app2);
+            stubRepository.Setup(m => m.GetDoctorTodayAppointments(new DateTime(), 4)).Returns(res3);
             return stubRepository.Object;
         }
     }
