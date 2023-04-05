@@ -8,6 +8,12 @@ const Examination: FC = () => {
     const [prescription, setPrescription] = useState<string>('');
     const [myAppointments, setMyAppointments] = useState<Appointment[]>([]);
     const [selectedAppointment, setSelectedAppointment] = useState<Appointment>();
+    const [showDialog, setShowDialog] = useState<boolean>(false);
+    const [presureHigh, setPresureHigh] = useState<string>('');
+    const [presureLow, setPresureLow] = useState<string>('');
+    const [bloodSugar, setBloodSugar] = useState<string>('');
+    const [bodyFatPercentage, setBodyFatPercentage] = useState<string>('');
+    const [weight, setWeight] = useState<string>('');
 
     const getMyAppointments = () => {
         axios.get('http://localhost:16177/api/Appointments/getDoctorTodayAppointments',
@@ -29,21 +35,54 @@ const Examination: FC = () => {
     const submitHandler = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         console.log(selectedAppointment)
+        let bp = `${presureHigh}/${presureLow}`;
         if (selectedAppointment !== undefined) {
-            let responseId = 0;
-            let e = { id: 0, diagnosisCode: diagnosisCode, diagnosisDescription: diagnosisDescription, doctorId: selectedAppointment?.doctorId, patientId: selectedAppointment?.patientId, date: new Date(), healthDataId: responseId, prescription: prescription }
-            axios.post('http://localhost:16177/api/Examinations', e, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.userToken.slice(1, -1)}`
-                }
-            })
-                .then(function (response) {
-                    console.log(response)
+            if (showDialog == true) {
+                let d = { id: 0, bloodPresure: bp, bloodSugar: bloodSugar, bodyFatPercentage: bodyFatPercentage, weight: weight, userId: selectedAppointment.patientId.toString(), measurementTime: new Date() };
+                console.log(d)
+                axios.post('http://localhost:16177/api/HealthData', d,
+                    {
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${localStorage.userToken.slice(1, -1)}`
+                        }
+                    })
+                    .then(function (response) {
+                        let responseId = response.data.id;
+                        let e = { id: 0, diagnosisCode: diagnosisCode, diagnosisDescription: diagnosisDescription, doctorId: selectedAppointment?.doctorId, patientId: selectedAppointment?.patientId, date: new Date(), healthDataId: responseId, prescription: prescription }
+                        axios.post('http://localhost:16177/api/Examinations', e, {
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${localStorage.userToken.slice(1, -1)}`
+                            }
+                        })
+                            .then(function (response) {
+                                console.log(response)
+                            })
+                            .catch(function (error) {
+                                console.log(error);
+                            });
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            }
+            else {
+                let responseId = 0;
+                let e = { id: 0, diagnosisCode: diagnosisCode, diagnosisDescription: diagnosisDescription, doctorId: selectedAppointment?.doctorId, patientId: selectedAppointment?.patientId, date: new Date(), healthDataId: responseId, prescription: prescription }
+                axios.post('http://localhost:16177/api/Examinations', e, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.userToken.slice(1, -1)}`
+                    }
                 })
-                .catch(function (error) {
-                    console.log(error);
-                });
+                    .then(function (response) {
+                        console.log(response)
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            }
             const idsa = selectedAppointment.id;
             axios.put(`http://localhost:16177/api/Appointments/use/${idsa}`, {}, {
                 headers: {
@@ -116,6 +155,14 @@ const Examination: FC = () => {
                             setPrescription(event.target.value)
                         }}
                     />
+                    <label>
+                        <input
+                            type="checkbox"
+                            checked={showDialog}
+                            onChange={() => setShowDialog(!showDialog)}
+                        />
+                        Health data required
+                    </label>
                     <div className="login-form__actions">
                         <button
                             type="submit"
@@ -125,6 +172,78 @@ const Examination: FC = () => {
                         </button>
                     </div>
                 </form>
+                {showDialog === true &&
+
+                    <form className="form-style-5">
+                        <label>
+                            Blood pressure(mmHg)
+                        </label>
+                        <div style={{ display: 'flex' }}>
+                            <input style={{ width: '45%' }}
+                                max={400}
+                                min={30}
+                                placeholder="Presure high"
+                                type="number"
+                                value={presureHigh}
+                                onChange={event => {
+                                    setPresureHigh(event.target.value);
+                                }}
+                            />
+                            <label style={{ width: '10%', padding: '10px' }}>
+                                /
+                            </label>
+                            <input style={{ width: '45%' }}
+                                max={400}
+                                min={30}
+                                placeholder="Presure low"
+                                type="number"
+                                value={presureLow}
+                                onChange={event => {
+                                    setPresureLow(event.target.value);
+                                }}
+                            />
+                        </div>
+                        <label>
+                            Blood sugar(mmol/L)
+                        </label>
+                        <input
+                            max={50}
+                            min={0}
+                            placeholder="Blood sugar"
+                            type="number"
+                            value={bloodSugar}
+                            onChange={event => {
+                                setBloodSugar(event.target.value);
+                            }}
+                        />
+                        <label>
+                            Body fat percentage(%)
+                        </label>
+                        <input
+                            max={70}
+                            min={0}
+                            placeholder="bodyFatPercentage"
+                            type="number"
+                            value={bodyFatPercentage}
+                            onChange={event => {
+                                setBodyFatPercentage(event.target.value)
+                            }}
+                        />
+                        <label>
+                            Weight(kg)
+                        </label>
+                        <input
+                            max={999}
+                            min={0}
+                            placeholder="weight"
+                            type="number"
+                            value={weight}
+                            onChange={event => {
+                                setWeight(event.target.value)
+                            }}
+                        />
+                    </form>
+                }
             </section>
         </div>
     )
