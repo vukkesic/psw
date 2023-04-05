@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { FC, useEffect, useState } from "react";
 import { Appointment } from "../Models/Appointment";
+import { Specialization } from "../Models/Specialization";
 
 const Examination: FC = () => {
     const [diagnosisCode, setDiagnosisCode] = useState<string>('');
@@ -14,6 +15,9 @@ const Examination: FC = () => {
     const [bloodSugar, setBloodSugar] = useState<string>('');
     const [bodyFatPercentage, setBodyFatPercentage] = useState<string>('');
     const [weight, setWeight] = useState<string>('');
+    const [specializations, setSpecializations] = useState<Specialization[]>([]);
+    const [selectedSpecialization, setSelectedSpecialization] = useState<Specialization>();
+    const [showRLDialog, setShowRLDialog] = useState<boolean>(false);
 
     const getMyAppointments = () => {
         axios.get('http://localhost:16177/api/Appointments/getDoctorTodayAppointments',
@@ -27,6 +31,21 @@ const Examination: FC = () => {
             .then(function (response) {
                 console.log(response.data)
                 setMyAppointments(response.data);
+            }).catch(function (error) {
+                console.log(error);
+            });
+    }
+
+    const getSpecializations = () => {
+        axios.get('http://localhost:16177/api/Specializations/getAllSpecializations', {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.userToken.slice(1, -1)}`
+            }
+        })
+            .then(function (response) {
+                console.log(response.data)
+                setSpecializations(response.data);
             }).catch(function (error) {
                 console.log(error);
             });
@@ -100,8 +119,28 @@ const Examination: FC = () => {
         }
     }
 
+    const RLSubmitHandler = (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        if (selectedAppointment !== undefined && selectedSpecialization !== undefined) {
+            let rl = { id: 0, patientId: selectedAppointment.patientId, isActive: true, specializationId: selectedSpecialization.id };
+            axios.post('http://localhost:16177/api/ReferralLetters', rl, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.userToken.slice(1, -1)}`
+                }
+            })
+                .then(function (response) {
+                    console.log(response)
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        }
+    }
+
     useEffect(() => {
         getMyAppointments();
+        getSpecializations();
     }, []);
 
     return (
@@ -162,6 +201,14 @@ const Examination: FC = () => {
                             onChange={() => setShowDialog(!showDialog)}
                         />
                         Health data required
+                    </label>
+                    <label>
+                        <input
+                            type="checkbox"
+                            checked={showRLDialog}
+                            onChange={() => setShowRLDialog(!showRLDialog)}
+                        />
+                        Write referral letter
                     </label>
                     <div className="login-form__actions">
                         <button
@@ -242,6 +289,31 @@ const Examination: FC = () => {
                                 setWeight(event.target.value)
                             }}
                         />
+                    </form>
+                }
+                {showRLDialog === true &&
+                    <form className="form-style-5" onSubmit={RLSubmitHandler}>
+                        <label>
+                            Specialization
+                        </label>
+                        <select onChange={event => {
+                            setSelectedSpecialization(JSON.parse(event.target.value));
+                        }} style={styles.select}>
+                            {specializations.map((spec, index) =>
+                                <option key={index}
+                                    value={JSON.stringify(spec)}>
+                                    {spec.specName}
+                                </option>
+                            )}
+                        </select>
+                        <div className="referral-letter-form__actions">
+                            <button
+                                type="submit"
+                                color="primary"
+                            >
+                                Submit
+                            </button>
+                        </div>
                     </form>
                 }
             </section>
