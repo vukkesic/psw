@@ -28,6 +28,20 @@ namespace HospitalLibrary.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "blogs",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Title = table.Column<string>(type: "text", nullable: true),
+                    Text = table.Column<string>(type: "text", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_blogs", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "rooms",
                 columns: table => new
                 {
@@ -184,6 +198,11 @@ namespace HospitalLibrary.Migrations
                 values: new object[] { 1, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), false, 2, new DateTime(2023, 5, 20, 10, 0, 0, 0, DateTimeKind.Unspecified), 1, new DateTime(2023, 5, 20, 9, 30, 0, 0, DateTimeKind.Unspecified), false });
 
             migrationBuilder.InsertData(
+                table: "blogs",
+                columns: new[] { "Id", "Text", "Title" },
+                values: new object[] { 1, "If you are worried about whether your child needs to gain weight, it’s very important to check with your doctor before getting to work on fattening them up. It’s entirely possible that your child’s weight is absolutely fine. Given that one in five children in the US is obese and another one in six is overweight, it’s easy to see how a parent might think their child is too thin in comparison. One way to find out if your child’s weight is healthy is to check their body mass index, a calculation using height and weight that is used for children ages 2 and up.", "Does your child need to gain weight?" });
+
+            migrationBuilder.InsertData(
                 table: "rooms",
                 columns: new[] { "Id", "Floor", "Number" },
                 values: new object[,]
@@ -290,6 +309,9 @@ namespace HospitalLibrary.Migrations
         {
             migrationBuilder.DropTable(
                 name: "appointments");
+
+            migrationBuilder.DropTable(
+                name: "blogs");
 
             migrationBuilder.DropTable(
                 name: "examinations");
