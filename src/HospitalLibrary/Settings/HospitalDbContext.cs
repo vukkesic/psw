@@ -17,6 +17,7 @@ namespace HospitalLibrary.Settings
         public DbSet<ReferralLetter> referralletters { get; set; }
         public DbSet<MenstrualData> menstrualdata { get; set; }
         public DbSet<ExaminationReport> examinations { get; set; }
+        public DbSet<BlogPost> blogs { get; set; }
 
         public HospitalDbContext(DbContextOptions<HospitalDbContext> options) : base(options) { }
 
@@ -181,6 +182,10 @@ namespace HospitalLibrary.Settings
             modelBuilder.Entity<ExaminationReport>().HasData(
                new ExaminationReport() { Id = 1, DiagnosisCode = "1AFA", DiagnosisDescription = "Dijabetes tipa 2", DoctorId = 2, PatientId = 1, Date = new DateTime(2023, 01, 24, 10, 00, 0), HealthDataId = 1, Prescription = "Ishrana za dijabeticare." }
                );
+
+            modelBuilder.Entity<BlogPost>().HasData(
+               new BlogPost() { Id = 1, Title = "Does your child need to gain weight?", Text = "If you are worried about whether your child needs to gain weight, it’s very important to check with your doctor before getting to work on fattening them up. It’s entirely possible that your child’s weight is absolutely fine. Given that one in five children in the US is obese and another one in six is overweight, it’s easy to see how a parent might think their child is too thin in comparison. One way to find out if your child’s weight is healthy is to check their body mass index, a calculation using height and weight that is used for children ages 2 and up." }
+           );
 
             base.OnModelCreating(modelBuilder);
         }
