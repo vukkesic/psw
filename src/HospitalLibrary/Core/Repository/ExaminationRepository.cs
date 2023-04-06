@@ -51,5 +51,10 @@ namespace HospitalLibrary.Core.Repository
                 throw;
             }
         }
+
+        public IEnumerable<ExaminationReport> GetByPatientId(int patientId)
+        {
+            return GetAll().Where(x => x.PatientId == patientId);
+        }
     }
 }

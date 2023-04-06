@@ -8,6 +8,7 @@ import DateTimePicker from 'react-datetime-picker';
 import AppointmentModal from "./AppointmentModal";
 import AppointmentNotFoundModal from "./AppointmentNotFoundModal";
 import { ReferralLetter } from "../Models/ReferralLetter";
+import { Examination } from "../Models/Examination";
 
 const AppointmentScheduler: FC = () => {
     const [startTime, setStartTime] = useState<Date>();
@@ -24,6 +25,7 @@ const AppointmentScheduler: FC = () => {
     const [selctedCancelAppointment, setSelectedCancelAppointment] = useState<Appointment>();
     const [myRefferalLetters, setMyReferralLetters] = useState<ReferralLetter[]>([]);
     const [selectedReferralLetter, setSelectedReferralLetter] = useState<ReferralLetter>();
+    const [examinations, setExaminations] = useState<Examination[]>([]);
 
     const getAllDoctors = () => {
         var spec: Number = 6;
@@ -75,6 +77,22 @@ const AppointmentScheduler: FC = () => {
         else {
             console.log("error set valid date")
         }
+    }
+
+    const getPatientExaminations = () => {
+        axios.get('http://localhost:16177/api/Examinations/getExamination', {
+            params: { patientId: localStorage.id },
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.userToken.slice(1, -1)}`
+            }
+        })
+            .then(function (response) {
+                setExaminations(response.data);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
     }
 
     const validatePeriod = (st?: Date, et?: Date) => {
@@ -176,6 +194,7 @@ const AppointmentScheduler: FC = () => {
         getAllDoctors();
         getPatientAppointments();
         getMyReferralLetters();
+        getPatientExaminations();
     }, []);
 
     useEffect(() => {
@@ -265,6 +284,21 @@ const AppointmentScheduler: FC = () => {
                             <h6>{`Start time :  ${appointment.startTime}`}</h6>
                             <h6>{`End time:  ${appointment.endTime}`}</h6>
                             <h6>{`Doctor id:  ${appointment.doctorId}`}</h6>
+                        </li>
+                    )}
+                </ol>
+            </div>
+            <div className="card-container">
+                <h3>Past appointments and examination reports:</h3>
+                <ol>
+                    {examinations.map((examination, index) =>
+
+                        <li key={index} >
+                            <h6>{`Id: ${examination.id}`}</h6>
+                            <h6>{`Date :  ${examination.date}`}</h6>
+                            <h6>{`Diagnosis code :  ${examination.diagnosisCode}`}</h6>
+                            <h6>{`Diagnosis description:  ${examination.diagnosisDescription}`}</h6>
+                            <h6>{`Prescription:  ${examination.prescription}`}</h6>
                         </li>
                     )}
                 </ol>

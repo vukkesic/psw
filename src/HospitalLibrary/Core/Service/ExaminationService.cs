@@ -39,5 +39,10 @@ namespace HospitalLibrary.Core.Service
         {
             _examinationRepository.Update(examinationReport);
         }
+
+        public IEnumerable<ExaminationReport> GetByPatientId(int patientId)
+        {
+            return _examinationRepository.GetByPatientId(patientId);
+        }
     }
 }

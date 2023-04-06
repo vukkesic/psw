@@ -5,6 +5,7 @@ using HospitalLibrary.Core.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 
 namespace HospitalAPI.Controllers
 {
@@ -52,6 +53,14 @@ namespace HospitalAPI.Controllers
 
             _examinationService.Create(examination);
             return CreatedAtAction("GetById", new { id = examination.Id }, examination);
+        }
+
+        [Authorize(Roles = "PATIENT")]
+        [HttpGet("getExamination")]
+        public ActionResult getExaminationForUser(int patientId)
+        {
+            IEnumerable<ExaminationReport> data = _examinationService.GetByPatientId(patientId);
+            return Ok(data);
         }
     }
 }
