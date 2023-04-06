@@ -32,6 +32,7 @@ function App() {
           <Route path='/calendar' element={localStorage.role == 0 ? <MenstrualCalendar /> : <Navigate to="/" />} />
           <Route path='/doctorProfile' element={localStorage.role == 1 ? <DoctorProfile /> : <Navigate to="/" />} />
           <Route path='/examination' element={localStorage.role == 1 ? <Examination /> : <Navigate to="/" />} />
+          <Route path='examination/chart' element={localStorage.role == 1 ? <ChartDisplay /> : <Navigate to="/" />} />
           <Route path="/*" element={<HomePage />} />
         </Routes>
       </Router>

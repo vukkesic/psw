@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Gender } from "../Models/Gender";
 import axios from "axios";
+import "./UserProfile.css";
+import men from "../assets/men.jpg"
+import women from "../assets/women.jpg"
 
 const DoctorProfile = () => {
     const [userId, setUserId] = useState<string>(localStorage.id);
@@ -51,7 +54,8 @@ const DoctorProfile = () => {
         <section className="container" style={{ backgroundColor: '#eee' }}>
             <div className="card-container">
                 <span className="pro">Doctor</span>
-                <img className="round" src={profileImage} alt="user" />
+                {gender === 0 && <img className="round" src={men} alt={men} />}
+                {gender === 1 && <img className="round" src={women} alt={men} />}
                 <h3>{name} {surname}</h3>
                 <h6>{email}</h6>
                 <p>{phone} <br /> {genderString} <br /> {specializationString}</p>

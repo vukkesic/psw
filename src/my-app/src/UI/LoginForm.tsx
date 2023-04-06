@@ -21,7 +21,16 @@ const LoginForm: FC = () => {
                     localStorage.setItem("id", JSON.stringify(response.data.id));
                     localStorage.setItem("role", JSON.stringify(response.data.role));
                     console.log(localStorage);
-                    navigate("/dashboard");
+                    console.log(response)
+                    if (localStorage.role == 1) {
+                        navigate("/doctorProfile");
+                    }
+                    else if (localStorage.role == 2) {
+                        navigate("/");
+                    }
+                    else {
+                        navigate("/dashboard");
+                    }
 
                 }
             })

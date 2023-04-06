@@ -2,6 +2,8 @@ import axios from "axios";
 import React, { FC, useEffect, useState } from "react";
 import { Appointment } from "../Models/Appointment";
 import { Specialization } from "../Models/Specialization";
+import { HealthData } from "../Models/HealthData";
+import { useNavigate } from "react-router-dom";
 
 const Examination: FC = () => {
     const [diagnosisCode, setDiagnosisCode] = useState<string>('');
@@ -18,6 +20,15 @@ const Examination: FC = () => {
     const [specializations, setSpecializations] = useState<Specialization[]>([]);
     const [selectedSpecialization, setSelectedSpecialization] = useState<Specialization>();
     const [showRLDialog, setShowRLDialog] = useState<boolean>(false);
+    const [healthData, setHealthData] = useState<HealthData[]>([]);
+    const listId: Number[] = [];
+    const listPresureHigh: string[] = [];
+    const listPresureLow: string[] = [];
+    const listBloodSugar: string[] = [];
+    const listBodyFatPercentage: string[] = [];
+    const listWeight: string[] = [];
+    const listMeasurementTime: Date[] = [];
+    const navigate = useNavigate();
 
     const getMyAppointments = () => {
         axios.get('http://localhost:16177/api/Appointments/getDoctorTodayAppointments',
@@ -50,6 +61,59 @@ const Examination: FC = () => {
                 console.log(error);
             });
     }
+
+    const getPatientData = async (userId: Number) => {
+        axios.get('http://localhost:16177/api/HealthData/getHealthData', {
+            params: { userId: userId },
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.userToken.slice(1, -1)}`
+            }
+        })
+            .then(function (response) {
+                console.log(response.data)
+                setHealthData(response.data);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    }
+
+    const showGraph = async () => {
+        if (selectedAppointment) {
+            getPatientData(selectedAppointment.patientId);
+
+        }
+    }
+
+    const mapValuesForGraph = async () => {
+        console.log(healthData);
+        healthData.forEach((item, index) => {
+            listId.push(
+                item.id
+            );
+            listPresureHigh.push(
+                item.bloodPresure.split('/', 1)[0]
+            );
+            listPresureLow.push(
+                item.bloodPresure.split('/', 2)[1]
+            );
+            listBloodSugar.push(
+                item.bloodSugar
+            );
+            listBodyFatPercentage.push(
+                item.bodyFatPercentage
+            );
+            listWeight.push(
+                item.weight
+            );
+            listMeasurementTime.push(
+                item.measurementTime
+            );
+        });
+        console.log(listMeasurementTime, listPresureHigh, listPresureLow, listBloodSugar, listBodyFatPercentage, listWeight, listId);
+    }
+
 
     const submitHandler = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -143,6 +207,11 @@ const Examination: FC = () => {
         getSpecializations();
     }, []);
 
+    useEffect(() => {
+        healthData.length && mapValuesForGraph();
+        healthData.length && navigate('chart', { state: { arrayDates: listMeasurementTime, arrayHigh: listPresureHigh, arrayLow: listPresureLow, arraySugar: listBloodSugar, arrayFat: listBodyFatPercentage, arrayWeight: listWeight } })
+    }, [healthData]);
+
     return (
         <div>
             <section className="container" style={{ backgroundColor: '#eee' }}>
@@ -220,76 +289,81 @@ const Examination: FC = () => {
                     </div>
                 </form>
                 {showDialog === true &&
-
-                    <form className="form-style-5">
-                        <label>
-                            Blood pressure(mmHg)
-                        </label>
-                        <div style={{ display: 'flex' }}>
-                            <input style={{ width: '45%' }}
-                                max={400}
-                                min={30}
-                                placeholder="Presure high"
-                                type="number"
-                                value={presureHigh}
-                                onChange={event => {
-                                    setPresureHigh(event.target.value);
-                                }}
-                            />
-                            <label style={{ width: '10%', padding: '10px' }}>
-                                /
+                    <div>
+                        <form className="form-style-5">
+                            <h1>Health data</h1>
+                            <label>
+                                Blood pressure(mmHg)
                             </label>
-                            <input style={{ width: '45%' }}
-                                max={400}
-                                min={30}
-                                placeholder="Presure low"
+                            <div style={{ display: 'flex' }}>
+                                <input style={{ width: '45%' }}
+                                    max={400}
+                                    min={30}
+                                    placeholder="Presure high"
+                                    type="number"
+                                    value={presureHigh}
+                                    onChange={event => {
+                                        setPresureHigh(event.target.value);
+                                    }}
+                                />
+                                <label style={{ width: '10%', padding: '10px' }}>
+                                    /
+                                </label>
+                                <input style={{ width: '45%' }}
+                                    max={400}
+                                    min={30}
+                                    placeholder="Presure low"
+                                    type="number"
+                                    value={presureLow}
+                                    onChange={event => {
+                                        setPresureLow(event.target.value);
+                                    }}
+                                />
+                            </div>
+                            <label>
+                                Blood sugar(mmol/L)
+                            </label>
+                            <input
+                                max={50}
+                                min={0}
+                                placeholder="Blood sugar"
                                 type="number"
-                                value={presureLow}
+                                value={bloodSugar}
                                 onChange={event => {
-                                    setPresureLow(event.target.value);
+                                    setBloodSugar(event.target.value);
                                 }}
                             />
+                            <label>
+                                Body fat percentage(%)
+                            </label>
+                            <input
+                                max={70}
+                                min={0}
+                                placeholder="bodyFatPercentage"
+                                type="number"
+                                value={bodyFatPercentage}
+                                onChange={event => {
+                                    setBodyFatPercentage(event.target.value)
+                                }}
+                            />
+                            <label>
+                                Weight(kg)
+                            </label>
+                            <input
+                                max={999}
+                                min={0}
+                                placeholder="weight"
+                                type="number"
+                                value={weight}
+                                onChange={event => {
+                                    setWeight(event.target.value)
+                                }}
+                            />
+                        </form>
+                        <div>
+                            <button onClick={showGraph}>show graph</button>
                         </div>
-                        <label>
-                            Blood sugar(mmol/L)
-                        </label>
-                        <input
-                            max={50}
-                            min={0}
-                            placeholder="Blood sugar"
-                            type="number"
-                            value={bloodSugar}
-                            onChange={event => {
-                                setBloodSugar(event.target.value);
-                            }}
-                        />
-                        <label>
-                            Body fat percentage(%)
-                        </label>
-                        <input
-                            max={70}
-                            min={0}
-                            placeholder="bodyFatPercentage"
-                            type="number"
-                            value={bodyFatPercentage}
-                            onChange={event => {
-                                setBodyFatPercentage(event.target.value)
-                            }}
-                        />
-                        <label>
-                            Weight(kg)
-                        </label>
-                        <input
-                            max={999}
-                            min={0}
-                            placeholder="weight"
-                            type="number"
-                            value={weight}
-                            onChange={event => {
-                                setWeight(event.target.value)
-                            }}
-                        />
-                    </form>
+                    </div>
                 }
                 {showRLDialog === true &&
                     <form className="form-style-5" onSubmit={RLSubmitHandler}>
