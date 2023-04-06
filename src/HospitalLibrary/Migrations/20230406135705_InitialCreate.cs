@@ -217,6 +217,7 @@ namespace HospitalLibrary.Migrations
                 columns: new[] { "Id", "SpecName" },
                 values: new object[,]
                 {
+                    { 6, "Family medicine" },
                     { 18, "Radiation oncology" },
                     { 17, "Psychiatry" },
                     { 16, "Preventive medicine" },
@@ -227,16 +228,15 @@ namespace HospitalLibrary.Migrations
                     { 11, "Obstetrics and gynecology" },
                     { 10, "Nuclear medicine" },
                     { 9, "Neurology" },
+                    { 20, "Urology" },
                     { 7, "Internal medicine" },
                     { 19, "Surgery" },
-                    { 6, "Family medicine" },
                     { 5, "Emergency medicine" },
                     { 4, "Diagnostic radiology" },
                     { 3, "Dermatology" },
                     { 2, "Anesthesiology" },
                     { 1, "Allergy and immunology" },
-                    { 8, "Medical genetics" },
-                    { 20, "Urology" }
+                    { 8, "Medical genetics" }
                 });
 
             migrationBuilder.InsertData(
@@ -247,6 +247,11 @@ namespace HospitalLibrary.Migrations
                     { 5, false, new DateTime(1988, 2, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), "Patient", "maria@mail.com", 1, "Maria", "123", "06893232", "", 0, "Rossi", "maria@mail.com" },
                     { 1, false, new DateTime(2018, 7, 24, 0, 0, 0, 0, DateTimeKind.Unspecified), "Patient", "vuk@mail.com", 0, "Vuk", "123", "06312212", "", 0, "Kesic", "vuk@mail.com" }
                 });
+
+            migrationBuilder.InsertData(
+                table: "users",
+                columns: new[] { "Id", "DateOfBirth", "Discriminator", "Email", "Gender", "Name", "Password", "Phone", "ProfileImage", "Role", "Surname", "Username" },
+                values: new object[] { 4, new DateTime(1987, 11, 9, 0, 0, 0, 0, DateTimeKind.Unspecified), "Admin", "angel@mail.com", 0, "Angel", "123", "066119128", "", 2, "Di Maria", "angel@mail.com" });
 
             migrationBuilder.InsertData(
                 table: "healthdata",

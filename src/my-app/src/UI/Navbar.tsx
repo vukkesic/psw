@@ -45,6 +45,12 @@ const NavigationBar: FC = () => {
                         </NavItem>}
                     {localStorage.role == 1 &&
                         <NavItem>
+                            <NavLink href="/newblog">
+                                New blog post
+                            </NavLink>
+                        </NavItem>}
+                    {localStorage.role == 1 &&
+                        <NavItem>
                             <NavLink href="/examination">
                                 Start examination
                             </NavLink>

@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace HospitalLibrary.Migrations
 {
     [DbContext(typeof(HospitalDbContext))]
-    [Migration("20230406120325_InitialCreate")]
+    [Migration("20230406135705_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -455,6 +455,29 @@ namespace HospitalLibrary.Migrations
                     b.ToTable("users");
 
                     b.HasDiscriminator<string>("Discriminator").HasValue("User");
+                });
+
+            modelBuilder.Entity("HospitalLibrary.Core.Model.Admin", b =>
+                {
+                    b.HasBaseType("HospitalLibrary.Core.Model.User");
+
+                    b.HasDiscriminator().HasValue("Admin");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 4,
+                            DateOfBirth = new DateTime(1987, 11, 9, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "angel@mail.com",
+                            Gender = 0,
+                            Name = "Angel",
+                            Password = "123",
+                            Phone = "066119128",
+                            ProfileImage = "",
+                            Role = 2,
+                            Surname = "Di Maria",
+                            Username = "angel@mail.com"
+                        });
                 });
 
             modelBuilder.Entity("HospitalLibrary.Core.Model.Doctor", b =>

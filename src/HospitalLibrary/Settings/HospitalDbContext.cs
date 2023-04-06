@@ -162,6 +162,22 @@ namespace HospitalLibrary.Settings
                  }
             );
 
+            modelBuilder.Entity<Admin>().HasData(
+               new Patient()
+               {
+                   Id = 4,
+                   Name = "Angel",
+                   Surname = "Di Maria",
+                   DateOfBirth = new DateTime(1987, 11, 9),
+                   Email = "angel@mail.com",
+                   Username = "angel@mail.com",
+                   Phone = "066119128",
+                   Password = "123",
+                   ProfileImage = "",
+                   Gender = Gender.MALE,
+                   Role = Role.ADMIN
+               }
+               );
 
             modelBuilder.Entity<PatientHealthData>().HasData(
                   new PatientHealthData() { Id = 1, BloodPresure = "120/80", BodyFatPercentage = "17", BloodSugar = "12", Weight = "102", PatientId = 1 }
