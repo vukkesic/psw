@@ -55,6 +55,12 @@ const NavigationBar: FC = () => {
                                 Start examination
                             </NavLink>
                         </NavItem>}
+                    {localStorage.role == 2 &&
+                        <NavItem>
+                            <NavLink href="/blocking">
+                                Block user
+                            </NavLink>
+                        </NavItem>}
                 </Nav>
                 <Nav className="nav" navbar>
                     <NavbarBrand className="brand" href="/">Home</NavbarBrand>

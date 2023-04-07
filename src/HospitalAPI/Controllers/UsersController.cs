@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.IO;
 using System;
 using Microsoft.AspNetCore.Authorization;
+using System.Collections.Generic;
 
 namespace HospitalAPI.Controllers
 {
@@ -18,13 +19,15 @@ namespace HospitalAPI.Controllers
         private readonly IUserService _userService;
         private readonly IDoctorService _doctorService;
         private readonly IMenstrualDataService _menstrualDataService;
+        private readonly IAppointmentService _appointmentService;
 
-        public UsersController(IPatientService patientService, IUserService userService, IDoctorService doctorService, IMenstrualDataService menstrualDataService)
+        public UsersController(IPatientService patientService, IUserService userService, IDoctorService doctorService, IMenstrualDataService menstrualDataService, IAppointmentService appointentService)
         {
             _patientService = patientService;
             _userService = userService;
             _doctorService = doctorService;
             _menstrualDataService = menstrualDataService;
+            _appointmentService = appointentService;
         }
 
         [AllowAnonymous]
@@ -109,6 +112,33 @@ namespace HospitalAPI.Controllers
         public ActionResult GetAllSpecialist(int specializationId)
         {
             return Ok(_doctorService.GetAllSpecialist(specializationId));
+        }
+
+        [Authorize(Roles = "ADMIN")]
+        [HttpGet("getBlockablePatients")]
+        public ActionResult GetBlockablePatients()
+        {
+            IEnumerable<Appointment> appointments = _appointmentService.GetLastMonthCanceledAppointments();
+            List<Patient> blockablePatients = _patientService.GetAllBlockablePatients(appointments);
+            return Ok(blockablePatients);
+        }
+
+        [Authorize(Roles = "ADMIN")]
+        [HttpPut("block/{id}")]
+        public ActionResult Block(int id)
+        {
+            Patient patient = _patientService.GetById(id);
+            patient.Blocked = true;
+            try
+            {
+                _patientService.Update(patient);
+            }
+            catch
+            {
+                return BadRequest();
+            }
+
+            return Ok(patient);
         }
     }
 }
