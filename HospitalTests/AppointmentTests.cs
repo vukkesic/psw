@@ -82,6 +82,13 @@ namespace HospitalTests
             b.ShouldBeFalse();
         }
 
+        [Fact]
+        public void Get_last_month_canceled_appointments()
+        {
+            AppointmentService service = new AppointmentService(CreateStubRepository());
+            IEnumerable<Appointment> a = service.GetLastMonthCanceledAppointments();
+            a.ShouldBeEmpty();
+        }
 
         private static IAppointmentRepository CreateStubRepository()
         {

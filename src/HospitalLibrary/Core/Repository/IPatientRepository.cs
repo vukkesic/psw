@@ -17,6 +17,6 @@ namespace HospitalLibrary.Core.Repository
         void Delete(Patient user);
         bool ExistsById(int id);
         IEnumerable<Patient> GetBlockedPatients();
-
+        Patient GetActivePatientById(int id);
     }
 }

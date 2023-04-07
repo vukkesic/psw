@@ -82,5 +82,10 @@ namespace HospitalLibrary.Core.Repository
         {
             return GetAll().Where(u => u.Blocked == true);
         }
+
+        public Patient GetActivePatientById(int id)
+        {
+            return GetAll().FirstOrDefault(u => u.Id == id && u.Blocked == false);
+        }
     }
 }

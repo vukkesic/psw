@@ -17,5 +17,6 @@ namespace HospitalLibrary.Core.Repository
         IEnumerable<Appointment> GetByDoctor(int doctorId);
         IEnumerable<Appointment> GetByPatient(int patientId);
         IEnumerable<Appointment> GetDoctorTodayAppointments(DateTime today, int doctorId);
+        IEnumerable<Appointment> GetLastMonthCanceledAppointments(DateTime today);
     }
 }

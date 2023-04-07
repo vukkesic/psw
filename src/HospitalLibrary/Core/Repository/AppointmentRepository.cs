@@ -60,9 +60,15 @@ namespace HospitalLibrary.Core.Repository
         {
             return GetAll().Where(a => a.PatientId.Equals(patientId) && a.Canceled == false && a.Used == false);
         }
+
         public IEnumerable<Appointment> GetDoctorTodayAppointments(DateTime today, int doctorId)
         {
             return GetAll().Where(a => a.DoctorId == doctorId && a.StartTime.Date == today.Date && a.Canceled == false && a.Used == false);
+        }
+
+        public IEnumerable<Appointment> GetLastMonthCanceledAppointments(DateTime today)
+        {
+            return GetAll().Where(a => DateTime.Compare(a.CancelationTime, today.AddMonths(-1)) >= 0 && a.Canceled == true);
         }
     }
 }

@@ -44,5 +44,31 @@ namespace HospitalLibrary.Core.Service
         {
             _patientRepository.Update(user);
         }
+
+        public List<Patient> GetAllBlockablePatients(IEnumerable<Appointment> appointments)
+        {
+            var listPatientId = new List<int>();
+            var listBlockablePatientId = new List<int>();
+            var blockablePatients = new List<Patient>();
+            foreach (Appointment a in appointments)
+            {
+                listPatientId.Add(a.PatientId);
+            }
+            var g = listPatientId.GroupBy(i => i);
+            foreach (var grp in g)
+            {
+                if (grp.Count() > 2)
+                {
+                    listBlockablePatientId.Add(grp.Key);
+                }
+            }
+            foreach (var pid in listBlockablePatientId)
+            {
+                if (_patientRepository.GetActivePatientById(pid) != null)
+                    blockablePatients.Add(_patientRepository.GetActivePatientById(pid));
+            }
+            return blockablePatients;
+
+        }
     }
 }

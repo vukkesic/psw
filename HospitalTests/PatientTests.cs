@@ -47,6 +47,36 @@ namespace HospitalTests
             b.ShouldBeFalse();
         }
 
+        [Fact]
+        public void Blockable_patient_not_found()
+        {
+            var appointments = new List<Appointment>();
+            var app1 = new Appointment(1, new DateTime(2023, 29, 10, 9, 30, 0), new DateTime(2023, 03, 29, 10, 00, 0), 2, 1, true, new DateTime().AddDays(-17), false);
+            var app2 = new Appointment(2, new DateTime(2023, 04, 01, 9, 30, 0), new DateTime(2023, 04, 01, 10, 00, 0), 4, 1, true, new DateTime().AddDays(-10), false);
+            appointments.Add(app1);
+            appointments.Add(app2);
+            IEnumerable<Appointment> a = appointments;
+            PatientService service = new PatientService(CreateStubRepository());
+            List<Patient> bp = service.GetAllBlockablePatients(a);
+            bp.ShouldBeEmpty();
+        }
+
+        [Fact]
+        public void Blockable_patient_found()
+        {
+            var appointments = new List<Appointment>();
+            var app1 = new Appointment(1, new DateTime(2023, 03, 29, 9, 30, 0), new DateTime(2023, 03, 29, 10, 00, 0), 2, 1, true, new DateTime(2023, 03, 27, 10, 00, 0), false);
+            var app2 = new Appointment(2, new DateTime(2023, 04, 01, 9, 30, 0), new DateTime(2023, 04, 01, 10, 00, 0), 4, 1, true, new DateTime(2023, 03, 29, 10, 00, 0), false);
+            var app3 = new Appointment(3, new DateTime(2023, 04, 04, 9, 30, 0), new DateTime(2023, 04, 04, 10, 00, 0), 4, 1, true, new DateTime(2023, 03, 29, 10, 00, 0), false);
+            appointments.Add(app1);
+            appointments.Add(app2);
+            appointments.Add(app3);
+            IEnumerable<Appointment> a = appointments;
+            PatientService service = new PatientService(CreateStubRepository());
+            List<Patient> bp = service.GetAllBlockablePatients(a);
+            bp.ShouldNotBeEmpty();
+        }
+
         private static IPatientRepository CreateStubRepository()
         {
             var stubRepository = new Mock<IPatientRepository>();
@@ -89,6 +119,7 @@ namespace HospitalTests
             stubRepository.Setup(m => m.GetById(5)).Returns(p2);
             stubRepository.Setup(m => m.ExistsById(1)).Returns(true);
             stubRepository.Setup(m => m.ExistsById(5)).Returns(true);
+            stubRepository.Setup(m => m.GetActivePatientById(1)).Returns(p1);
             stubRepository.Setup(m => m.GetAll()).Returns(patients);
             return stubRepository.Object;
         }

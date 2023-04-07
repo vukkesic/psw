@@ -15,5 +15,6 @@ namespace HospitalLibrary.Core.Service
         void Update(Patient user);
         void Delete(Patient user);
         bool ExistsById(int id);
+        List<Patient> GetAllBlockablePatients(IEnumerable<Appointment> appointments);
     }
 }

@@ -55,5 +55,11 @@ namespace HospitalLibrary.Core.Service
         {
             return _appointmentRepository.GetDoctorTodayAppointments(today, doctorId);
         }
+
+        public IEnumerable<Appointment> GetLastMonthCanceledAppointments()
+        {
+            DateTime today = DateTime.Now;
+            return _appointmentRepository.GetLastMonthCanceledAppointments(today);
+        }
     }
 }
