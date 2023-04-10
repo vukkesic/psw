@@ -74,14 +74,27 @@ namespace HospitalLibrary.Core.Service
                     blockablePatients.Add(_patientRepository.GetActivePatientById(pid));
             }
             return blockablePatients;
-
         }
+
         public void BlockPatient(int id)
         {
             Patient patient = _patientRepository.GetById(id);
             patient.Blocked = true;
             _patientRepository.Update(patient);
             _mailService.SendBlockedEmailAsync(patient.Email, patient.Name);
+        }
+
+        public IEnumerable<Patient> GetBlockedPatients()
+        {
+            return _patientRepository.GetBlockedPatients();
+        }
+
+        public void UnblockPatient(int id)
+        {
+            Patient patient = _patientRepository.GetById(id);
+            patient.Blocked = false;
+            _patientRepository.Update(patient);
+            _mailService.SendUnblockedEmailAsync(patient.Email, patient.Name);
         }
     }
 }

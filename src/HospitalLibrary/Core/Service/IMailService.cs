@@ -9,5 +9,6 @@ namespace HospitalLibrary.Core.Service
     public interface IMailService
     {
         Task SendBlockedEmailAsync(string mail, string name);
+        Task SendUnblockedEmailAsync(string mail, string name);
     }
 }

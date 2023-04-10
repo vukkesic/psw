@@ -123,13 +123,36 @@ namespace HospitalAPI.Controllers
             return Ok(blockablePatients);
         }
 
-        //[Authorize(Roles = "ADMIN")]
+        [Authorize(Roles = "ADMIN")]
+        [HttpGet("getBlockedPatients")]
+        public ActionResult GetBlockedPatients()
+        {
+            return Ok(_patientService.GetBlockedPatients());
+        }
+
+        [Authorize(Roles = "ADMIN")]
         [HttpPut("block/{id}")]
         public ActionResult Block(int id)
         {
             try
             {
                 _patientService.BlockPatient(id);
+            }
+            catch
+            {
+                return BadRequest();
+            }
+            Patient patient = _patientService.GetById(id);
+            return Ok(patient);
+        }
+
+        [Authorize(Roles = "ADMIN")]
+        [HttpPut("unblock/{id}")]
+        public ActionResult Unblock(int id)
+        {
+            try
+            {
+                _patientService.UnblockPatient(id);
             }
             catch
             {

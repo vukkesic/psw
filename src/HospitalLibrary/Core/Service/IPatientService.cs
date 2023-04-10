@@ -17,5 +17,7 @@ namespace HospitalLibrary.Core.Service
         bool ExistsById(int id);
         List<Patient> GetAllBlockablePatients(IEnumerable<Appointment> appointments);
         void BlockPatient(int id);
+        IEnumerable<Patient> GetBlockedPatients();
+        void UnblockPatient(int id);
     }
 }

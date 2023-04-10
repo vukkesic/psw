@@ -88,6 +88,24 @@ namespace HospitalTests
             mockMail.Verify(n => n.SendBlockedEmailAsync("vuk@mail.com", "Vuk"));
         }
 
+        [Fact]
+        public void Send_email_when_unblocking_patient()
+        {
+            var mockMail = new Mock<IMailService>();
+            PatientService service = new PatientService(CreateStubRepository(), mockMail.Object);
+
+            service.UnblockPatient(1);
+
+            mockMail.Verify(n => n.SendUnblockedEmailAsync("vuk@mail.com", "Vuk"));
+        }
+
+        [Fact]
+        public void Blocked_patient_not_found()
+        {
+            PatientService service = new PatientService(CreateStubRepository());
+            IEnumerable<Patient> p = service.GetBlockedPatients();
+            p.ShouldBeEmpty();
+        }
 
         private static IPatientRepository CreateStubRepository()
         {
