@@ -123,7 +123,7 @@ namespace HospitalAPI.Controllers
             return Ok(blockablePatients);
         }
 
-        [Authorize(Roles = "ADMIN")]
+        //[Authorize(Roles = "ADMIN")]
         [HttpPut("block/{id}")]
         public ActionResult Block(int id)
         {

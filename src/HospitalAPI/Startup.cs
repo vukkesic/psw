@@ -1,3 +1,4 @@
+using HospitalLibrary.Core.Model;
 using HospitalLibrary.Core.Repository;
 using HospitalLibrary.Core.Service;
 using HospitalLibrary.Settings;
@@ -60,7 +61,7 @@ namespace HospitalAPI
             services.AddScoped<IExaminationRepository, ExaminationRepository>();
             services.AddScoped<IBlogPostRepository, BlogPostRepository>();
             services.AddScoped<IBlogPostService, BlogPostService>();
-            services.AddScoped<IMailService, MailService>();
+            services.AddTransient<IMailService, MailService>();
 
             services.AddCors(options =>
             {
@@ -92,6 +93,7 @@ namespace HospitalAPI
                     IssuerSigningKey = new SymmetricSecurityKey(Key)
                 };
             });
+            services.Configure<MailSettings>(Configuration.GetSection("MailSettings"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
