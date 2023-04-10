@@ -11,6 +11,12 @@ namespace HospitalLibrary.Core.Service
     public class PatientService : IPatientService
     {
         private readonly IPatientRepository _patientRepository;
+        private readonly IMailService _mailService;
+        public PatientService(IPatientRepository patientRepository, IMailService mailService)
+        {
+            _patientRepository = patientRepository;
+            _mailService = mailService;
+        }
         public PatientService(IPatientRepository patientRepository)
         {
             _patientRepository = patientRepository;
@@ -69,6 +75,13 @@ namespace HospitalLibrary.Core.Service
             }
             return blockablePatients;
 
+        }
+        public void BlockPatient(int id)
+        {
+            Patient patient = _patientRepository.GetById(id);
+            patient.Blocked = true;
+            _patientRepository.Update(patient);
+            _mailService.SendBlockedEmailAsync(patient.Email, patient.Name);
         }
     }
 }

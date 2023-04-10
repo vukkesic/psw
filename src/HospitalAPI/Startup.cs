@@ -60,6 +60,7 @@ namespace HospitalAPI
             services.AddScoped<IExaminationRepository, ExaminationRepository>();
             services.AddScoped<IBlogPostRepository, BlogPostRepository>();
             services.AddScoped<IBlogPostService, BlogPostService>();
+            services.AddScoped<IMailService, MailService>();
 
             services.AddCors(options =>
             {

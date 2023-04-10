@@ -127,17 +127,15 @@ namespace HospitalAPI.Controllers
         [HttpPut("block/{id}")]
         public ActionResult Block(int id)
         {
-            Patient patient = _patientService.GetById(id);
-            patient.Blocked = true;
             try
             {
-                _patientService.Update(patient);
+                _patientService.BlockPatient(id);
             }
             catch
             {
                 return BadRequest();
             }
-
+            Patient patient = _patientService.GetById(id);
             return Ok(patient);
         }
     }

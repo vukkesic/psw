@@ -50,9 +50,9 @@ namespace HospitalTests
         [Fact]
         public void Blockable_patient_not_found()
         {
-            var appointments = new List<Appointment>();
-            var app1 = new Appointment(1, new DateTime(2023, 29, 10, 9, 30, 0), new DateTime(2023, 03, 29, 10, 00, 0), 2, 1, true, new DateTime().AddDays(-17), false);
-            var app2 = new Appointment(2, new DateTime(2023, 04, 01, 9, 30, 0), new DateTime(2023, 04, 01, 10, 00, 0), 4, 1, true, new DateTime().AddDays(-10), false);
+            var appointments = new List<Appointment>(); 
+            var app1 = new Appointment(1, new DateTime(2023, 03, 29, 9, 30, 0), new DateTime(2023, 03, 29, 10, 00, 0), 2, 1, true, new DateTime(2023, 03, 27, 10, 00, 0), false);
+            var app2 = new Appointment(2, new DateTime(2023, 04, 01, 9, 30, 0), new DateTime(2023, 04, 01, 10, 00, 0), 4, 1, true, new DateTime(2023, 03, 29, 10, 00, 0), false);
             appointments.Add(app1);
             appointments.Add(app2);
             IEnumerable<Appointment> a = appointments;
@@ -76,6 +76,18 @@ namespace HospitalTests
             List<Patient> bp = service.GetAllBlockablePatients(a);
             bp.ShouldNotBeEmpty();
         }
+
+        [Fact]
+        public void Send_email_when_blocking_patient()
+        {
+            var mockMail = new Mock<IMailService>();
+            PatientService service = new PatientService(CreateStubRepository(), mockMail.Object);
+
+            service.BlockPatient(1);
+
+            mockMail.Verify(n => n.SendBlockedEmailAsync("vuk@mail.com", "Vuk"));
+        }
+
 
         private static IPatientRepository CreateStubRepository()
         {
