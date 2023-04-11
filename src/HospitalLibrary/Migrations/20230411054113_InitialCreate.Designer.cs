@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace HospitalLibrary.Migrations
 {
     [DbContext(typeof(HospitalDbContext))]
-    [Migration("20230406135705_InitialCreate")]
+    [Migration("20230411054113_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -175,6 +175,24 @@ namespace HospitalLibrary.Migrations
                             NextPeriod = new DateTime(2023, 4, 23, 10, 0, 0, 0, DateTimeKind.Unspecified),
                             PatientId = 5
                         });
+                });
+
+            modelBuilder.Entity("HospitalLibrary.Core.Model.Notification", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<string>("Text")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("notifications");
                 });
 
             modelBuilder.Entity("HospitalLibrary.Core.Model.PatientHealthData", b =>
