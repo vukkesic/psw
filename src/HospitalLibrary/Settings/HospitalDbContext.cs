@@ -18,6 +18,7 @@ namespace HospitalLibrary.Settings
         public DbSet<MenstrualData> menstrualdata { get; set; }
         public DbSet<ExaminationReport> examinations { get; set; }
         public DbSet<BlogPost> blogs { get; set; }
+        public DbSet<Notification> notifications { get; set; }
 
         public HospitalDbContext(DbContextOptions<HospitalDbContext> options) : base(options) { }
 
