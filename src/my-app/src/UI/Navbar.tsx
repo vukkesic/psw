@@ -57,6 +57,12 @@ const NavigationBar: FC = () => {
                         </NavItem>}
                     {localStorage.role == 2 &&
                         <NavItem>
+                            <NavLink href="/newnotification">
+                                New notification
+                            </NavLink>
+                        </NavItem>}
+                    {localStorage.role == 2 &&
+                        <NavItem>
                             <NavLink href="/blocking">
                                 Block user
                             </NavLink>

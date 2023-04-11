@@ -62,7 +62,9 @@ namespace HospitalAPI
             services.AddScoped<IBlogPostRepository, BlogPostRepository>();
             services.AddScoped<IBlogPostService, BlogPostService>();
             services.AddTransient<IMailService, MailService>();
-
+            services.AddScoped<INotificationService, NotificationService>();
+            services.AddScoped<INotificationRepository, NotificationRepository>();
+            
             services.AddCors(options =>
             {
                 options.AddPolicy("Policy1", builder =>

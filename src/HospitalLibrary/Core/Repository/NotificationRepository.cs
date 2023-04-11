@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace HospitalLibrary.Core.Repository
 {
-    internal class NotificationRepository : INotificationRepository
+    public class NotificationRepository : INotificationRepository
     {
         private readonly HospitalDbContext _context;
         public NotificationRepository(HospitalDbContext context)
