@@ -40,7 +40,7 @@ namespace HospitalAPI.Controllers
             return Ok(blog);
         }
 
-        //[Authorize(Roles = "DOCTOR")]
+        [Authorize(Roles = "DOCTOR")]
         [HttpPost]
         public IActionResult Create(BlogPostDTO blogPostDTO)
         {
