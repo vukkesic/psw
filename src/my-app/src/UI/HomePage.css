@@ -145,6 +145,7 @@ a.card-link.text-primary.read-more {
 
 .card-columns {
     padding-top: 15px;
+    display: grid;
 }
 
 .card-columns .card {
@@ -300,6 +301,17 @@ p.secondary {
     display: -webkit-box;
     -webkit-line-clamp: 4;
     -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+p.card-text-more {
+    font-size: 16px;
+    font-weight: 400;
+    font-style: normal;
+    opacity: 0.75;
+    line-height: 25px;
+    text-overflow: clip;
+    font-family: source sans pro;
     overflow: hidden;
 }
 

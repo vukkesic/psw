@@ -204,6 +204,13 @@ namespace HospitalLibrary.Settings
                new BlogPost() { Id = 1, Title = "Does your child need to gain weight?", Text = "If you are worried about whether your child needs to gain weight, it’s very important to check with your doctor before getting to work on fattening them up. It’s entirely possible that your child’s weight is absolutely fine. Given that one in five children in the US is obese and another one in six is overweight, it’s easy to see how a parent might think their child is too thin in comparison. One way to find out if your child’s weight is healthy is to check their body mass index, a calculation using height and weight that is used for children ages 2 and up." }
            );
 
+            modelBuilder.Entity<Notification>().HasData(
+            new BlogPost() { Id = 1, Title = "Quick scheduling", Text = "With our team, you recieve medical tests and physician consultations in just a few days. This means a diagnosis comes fast, and treatments, surgery included, can be scheduled very quickly. We take care of you during the entire treatment." }
+        );
+            modelBuilder.Entity<Notification>().HasData(
+           new BlogPost() { Id = 2, Title = "Your health is our concern", Text = "Taking a perspective of frontline health workers as internal clients within health systems, this study explored how perceived injustice in policy and organizational matters influence frontline health worker motivation and the consequent effect on workers' attitudes and performance in delivering maternal and neonatal health care in public hospitals. It consisted of an ethnographic study in two public hospitals in Southern Ghana. Participant observation, conversation and in-depth interviews were conducted over a 16-month period. Ethical approval and consent were obtained from relevant persons and authorities. Qualitative analysis software Nvivo 8 was used for coding and analysis of data. Main themes identified in the analysis form the basis for interpreting and reporting study findings. Findings showed that most workers perceived injustice in distributive, procedural and interactional dimensions at various levels in the health system. At the national policy level this included poor conditions of service. At the hospital level, it included perceived inequity in distribution of incentives, lack of protection and respect for workers." }
+       );
+
             base.OnModelCreating(modelBuilder);
         }
     }
