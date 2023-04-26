@@ -21,6 +21,7 @@ import NewBlogForm from './UI/NewBlogForm';
 import Blocking from './UI/Blocking';
 import NewNotification from './UI/NewNotification';
 import BloodDonationNews from './UI/BloodDonationNews';
+import BloodDonationScheduler from './UI/BloodDonationScheduler';
 
 function App() {
   return (
@@ -38,6 +39,7 @@ function App() {
           <Route path='/examination' element={localStorage.role == 1 ? <Examination /> : <Navigate to="/" />} />
           <Route path='examination/chart' element={localStorage.role == 1 ? <ChartDisplay /> : <Navigate to="/" />} />
           <Route path='/newblog' element={localStorage.role == 1 ? <NewBlogForm /> : <Navigate to="/" />} />
+          <Route path='/blooddonationscheduling' element={localStorage.role == 1 ? <BloodDonationScheduler /> : <Navigate to="/" />} />
           <Route path='/blocking' element={localStorage.role == 2 ? <Blocking /> : <Navigate to="/" />} />
           <Route path='/newnotification' element={localStorage.role == 2 ? <NewNotification /> : <Navigate to="/" />} />
           <Route path='/blooddonationnotifications' element={localStorage.role == 2 ? <BloodDonationNews /> : <Navigate to="/" />} />

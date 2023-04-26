@@ -18,6 +18,7 @@ namespace HospitalAPI.Controllers
             _bloodDonationNotificationService = bloodDonationNotificationService;
         }
         // GET: api/rooms
+        [Authorize(Roles ="DOCTOR")]
         [HttpGet]
         public ActionResult GetAll()
         {

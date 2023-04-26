@@ -161,5 +161,13 @@ namespace HospitalAPI.Controllers
             Patient patient = _patientService.GetById(id);
             return Ok(patient);
         }
+
+        //[Authorize(Roles = "DOCTOR")]
+        [AllowAnonymous]
+        [HttpGet("getAllPatients")]
+        public ActionResult GetAllPatients()
+        {
+            return Ok(_patientService.GetAll());
+        }
     }
 }

@@ -35,3 +35,18 @@ export type Doctor = {
     licenseNumber: string,
     specializationId: string
 }
+
+export type Patient = {
+    id: number,
+    name: string,
+    surname: string,
+    dateOfBirth: Date
+    email: string,
+    username: string
+    password: string,
+    phone: string
+    gender: Gender,
+    profileImage: string,
+    role: Role,
+    blocked: string
+}
