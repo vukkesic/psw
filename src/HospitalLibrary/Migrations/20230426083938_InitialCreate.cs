@@ -42,6 +42,23 @@ namespace HospitalLibrary.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "blooddonationnotifications",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Title = table.Column<string>(type: "text", nullable: true),
+                    Text = table.Column<string>(type: "text", nullable: true),
+                    StartTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    EndTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    Location = table.Column<string>(type: "text", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_blooddonationnotifications", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "notifications",
                 columns: table => new
                 {
@@ -217,12 +234,21 @@ namespace HospitalLibrary.Migrations
                 values: new object[] { 1, "If you are worried about whether your child needs to gain weight, it’s very important to check with your doctor before getting to work on fattening them up. It’s entirely possible that your child’s weight is absolutely fine. Given that one in five children in the US is obese and another one in six is overweight, it’s easy to see how a parent might think their child is too thin in comparison. One way to find out if your child’s weight is healthy is to check their body mass index, a calculation using height and weight that is used for children ages 2 and up.", "Does your child need to gain weight?" });
 
             migrationBuilder.InsertData(
+                table: "notifications",
+                columns: new[] { "Id", "Text", "Title" },
+                values: new object[,]
+                {
+                    { 1, "With our team, you recieve medical tests and physician consultations in just a few days. This means a diagnosis comes fast, and treatments, surgery included, can be scheduled very quickly. We take care of you during the entire treatment.", "Quick scheduling" },
+                    { 2, "Taking a perspective of frontline health workers as internal clients within health systems, this study explored how perceived injustice in policy and organizational matters influence frontline health worker motivation and the consequent effect on workers' attitudes and performance in delivering maternal and neonatal health care in public hospitals. It consisted of an ethnographic study in two public hospitals in Southern Ghana. Participant observation, conversation and in-depth interviews were conducted over a 16-month period. Ethical approval and consent were obtained from relevant persons and authorities. Qualitative analysis software Nvivo 8 was used for coding and analysis of data. Main themes identified in the analysis form the basis for interpreting and reporting study findings. Findings showed that most workers perceived injustice in distributive, procedural and interactional dimensions at various levels in the health system. At the national policy level this included poor conditions of service. At the hospital level, it included perceived inequity in distribution of incentives, lack of protection and respect for workers.", "Your health is our concern" }
+                });
+
+            migrationBuilder.InsertData(
                 table: "rooms",
                 columns: new[] { "Id", "Floor", "Number" },
                 values: new object[,]
                 {
-                    { 1, 1, "101A" },
                     { 2, 2, "204" },
+                    { 1, 1, "101A" },
                     { 3, 3, "305B" }
                 });
 
@@ -231,21 +257,21 @@ namespace HospitalLibrary.Migrations
                 columns: new[] { "Id", "SpecName" },
                 values: new object[,]
                 {
-                    { 6, "Family medicine" },
-                    { 18, "Radiation oncology" },
-                    { 17, "Psychiatry" },
-                    { 16, "Preventive medicine" },
-                    { 15, "Physical medicine and rehabilitation" },
-                    { 14, "Pediatrics" },
-                    { 13, "Pathology" },
-                    { 12, "Ophthalmology" },
                     { 11, "Obstetrics and gynecology" },
+                    { 12, "Ophthalmology" },
+                    { 13, "Pathology" },
+                    { 14, "Pediatrics" },
+                    { 5, "Emergency medicine" },
+                    { 16, "Preventive medicine" },
                     { 10, "Nuclear medicine" },
+                    { 17, "Psychiatry" },
+                    { 18, "Radiation oncology" },
+                    { 15, "Physical medicine and rehabilitation" },
                     { 9, "Neurology" },
                     { 20, "Urology" },
                     { 7, "Internal medicine" },
+                    { 6, "Family medicine" },
                     { 19, "Surgery" },
-                    { 5, "Emergency medicine" },
                     { 4, "Diagnostic radiology" },
                     { 3, "Dermatology" },
                     { 2, "Anesthesiology" },
@@ -331,6 +357,9 @@ namespace HospitalLibrary.Migrations
 
             migrationBuilder.DropTable(
                 name: "blogs");
+
+            migrationBuilder.DropTable(
+                name: "blooddonationnotifications");
 
             migrationBuilder.DropTable(
                 name: "examinations");

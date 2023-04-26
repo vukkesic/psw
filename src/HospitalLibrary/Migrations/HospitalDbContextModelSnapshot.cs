@@ -91,6 +91,33 @@ namespace HospitalLibrary.Migrations
                         });
                 });
 
+            modelBuilder.Entity("HospitalLibrary.Core.Model.BloodDonationNotification", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<DateTime>("EndTime")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("Location")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("StartTime")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("Text")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("blooddonationnotifications");
+                });
+
             modelBuilder.Entity("HospitalLibrary.Core.Model.ExaminationReport", b =>
                 {
                     b.Property<int>("Id")
@@ -191,6 +218,20 @@ namespace HospitalLibrary.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("notifications");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Text = "With our team, you recieve medical tests and physician consultations in just a few days. This means a diagnosis comes fast, and treatments, surgery included, can be scheduled very quickly. We take care of you during the entire treatment.",
+                            Title = "Quick scheduling"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Text = "Taking a perspective of frontline health workers as internal clients within health systems, this study explored how perceived injustice in policy and organizational matters influence frontline health worker motivation and the consequent effect on workers' attitudes and performance in delivering maternal and neonatal health care in public hospitals. It consisted of an ethnographic study in two public hospitals in Southern Ghana. Participant observation, conversation and in-depth interviews were conducted over a 16-month period. Ethical approval and consent were obtained from relevant persons and authorities. Qualitative analysis software Nvivo 8 was used for coding and analysis of data. Main themes identified in the analysis form the basis for interpreting and reporting study findings. Findings showed that most workers perceived injustice in distributive, procedural and interactional dimensions at various levels in the health system. At the national policy level this included poor conditions of service. At the hospital level, it included perceived inequity in distribution of incentives, lack of protection and respect for workers.",
+                            Title = "Your health is our concern"
+                        });
                 });
 
             modelBuilder.Entity("HospitalLibrary.Core.Model.PatientHealthData", b =>

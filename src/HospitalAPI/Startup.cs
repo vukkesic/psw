@@ -64,7 +64,9 @@ namespace HospitalAPI
             services.AddTransient<IMailService, MailService>();
             services.AddScoped<INotificationService, NotificationService>();
             services.AddScoped<INotificationRepository, NotificationRepository>();
-            
+            services.AddScoped<IBloodDonationNotificationService, BloodDonationNotificationService>();
+            services.AddScoped<IBloodDonationNotificationRepository, BloodDonationNotificationRepository>();
+
             services.AddCors(options =>
             {
                 options.AddPolicy("Policy1", builder =>
