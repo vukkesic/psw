@@ -1,12 +1,15 @@
 ﻿using HospitalLibrary.Core.Model;
 using HospitalLibrary.Core.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
 
 namespace HospitalAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "ADMIN")]
     public class BloodDonationController : ControllerBase
     {
         private readonly IBloodDonationNotificationService _bloodDonationNotificationService;
@@ -35,6 +38,7 @@ namespace HospitalAPI.Controllers
         }
 
         // POST api/rooms
+        [AllowAnonymous]
         [HttpPost]
         public ActionResult Create(BloodDonationNotification bdn)
         {

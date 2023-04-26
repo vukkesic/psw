@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Notification } from "./Notification";
-import "./HomePage.css"
+import { Notification } from "../Models/Notification";
+import "./HomePage.css";
 import { Blog } from "../Models/Blog";
 
 
