@@ -15,5 +15,6 @@ namespace HospitalLibrary.Core.Service
         void Create(PatientHealthData data);
         void Update(PatientHealthData data);
         void Delete(PatientHealthData data);
+        IEnumerable<PatientHealthData> GetLastTwoDaysHealthData(int patientId);
     }
 }

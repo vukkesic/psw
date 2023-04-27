@@ -2,12 +2,14 @@ import axios from "axios";
 import React, { FC, useEffect, useState } from "react";
 import { BloodDonationNotification } from "../Models/BloodDonationNotification";
 import { Patient } from "../Models/User";
+import { HealthData } from "../Models/HealthData";
 
 const BloodDonationScheduler: FC = () => {
     const [bloodDonationNotifications, setBloodDonationNotifications] = useState<BloodDonationNotification[]>([]);
     const [patients, setPatients] = useState<Patient[]>([]);
     const [selectedPatient, setSelectedPatient] = useState<Patient>();
     const [selectedBloodDonationNotification, setSelectedBloodDonationNotification] = useState<BloodDonationNotification>();
+    const [healthData, setHealthData] = useState<HealthData[]>();
 
     const getAllBloodDonationNotifications = () => {
         axios.get('http://localhost:16177/api/BloodDonation', {
@@ -36,6 +38,31 @@ const BloodDonationScheduler: FC = () => {
                 console.log(response.data)
                 setPatients(response.data());
                 setSelectedPatient(response.data[0]);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    }
+
+    const submitHandler = (event: React.MouseEvent) => {
+        event.preventDefault();
+    }
+
+    const checkHealthCondition = () => {
+
+    }
+
+    const getLastTwoDaysHealthData = (patientId: Number) => {
+        axios.get('http://localhost:16177/api/HealthData/getLastTwoDaysHealthData', {
+            params: { patientId: patientId },
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.userToken.slice(1, -1)}`
+            }
+        })
+            .then(function (response) {
+                console.log(response.data)
+                setHealthData(response.data());
             })
             .catch(function (error) {
                 console.log(error);
@@ -75,6 +102,9 @@ const BloodDonationScheduler: FC = () => {
                     </option>
                 )}
             </select>
+            <button onClick={submitHandler}>
+                submit
+            </button>
         </div>
     )
 }

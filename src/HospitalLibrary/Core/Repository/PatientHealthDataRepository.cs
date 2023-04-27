@@ -52,5 +52,10 @@ namespace HospitalLibrary.Core.Repository
                 throw;
             }
         }
+
+        public IEnumerable<PatientHealthData> GetLastTwoDaysHealthData(DateTime today, int patientId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

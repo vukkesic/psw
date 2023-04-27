@@ -29,6 +29,22 @@ namespace HospitalTests
             List<PatientHealthData> d = service.GetByUserId(2);
             d.ShouldBeEmpty();
         }
+
+        [Fact]
+        public void Get_last_two_days_health_data()
+        {
+            PatientHealthDataService service = new PatientHealthDataService(CreateStubRepository());
+            IEnumerable<PatientHealthData> d = service.GetLastTwoDaysHealthData(1);
+            d.ShouldNotBeEmpty();
+        }
+
+        [Fact]
+        public void Get_last_two_days_health_data_not_found()
+        {
+            PatientHealthDataService service = new PatientHealthDataService(CreateStubRepository());
+            IEnumerable<PatientHealthData> d = service.GetLastTwoDaysHealthData(2);
+            d.ShouldBeEmpty();
+        }
         private static IPatientHealthDataRepository CreateStubRepository()
         {
             var p = new Patient()
@@ -52,7 +68,9 @@ namespace HospitalTests
             var list = new List<PatientHealthData>();
             list.Add(phd);
             list.Add(phd2);
+            IEnumerable<PatientHealthData> res = list;
             stubRepository.Setup(m => m.GetAll()).Returns(list);
+            stubRepository.Setup(m => m.GetLastTwoDaysHealthData(DateTime.Now, 1)).Returns(res);
             return stubRepository.Object;
         }
     }
