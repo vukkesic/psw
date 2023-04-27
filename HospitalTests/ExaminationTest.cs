@@ -72,7 +72,7 @@ namespace HospitalTests
             list1.Add(ex1);
             list1.Add(ex2);
             var list2 = new List<ExaminationReport>();
-            list1.Add(ex2);
+            list2.Add(ex2);
             IEnumerable<ExaminationReport> res1 = list1;
             IEnumerable<ExaminationReport> res2 = list2;
             stubRepository.Setup(m => m.GetById(1)).Returns(ex1);

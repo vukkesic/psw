@@ -47,7 +47,8 @@ namespace HospitalLibrary.Core.Service
 
         public IEnumerable<ExaminationReport> GetLastTwoWeekFluReports(int patientId)
         {
-            throw new NotImplementedException();
+            DateTime d = DateTime.Now.Date;
+            return _examinationRepository.GetLastTwoWeekFluReports(patientId, d);
         }
     }
 }

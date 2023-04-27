@@ -59,7 +59,7 @@ namespace HospitalLibrary.Core.Repository
 
         public IEnumerable<ExaminationReport> GetLastTwoWeekFluReports(int patientId, DateTime today)
         {
-            throw new NotImplementedException();
+            return GetAll().Where(x => x.PatientId == patientId && DateTime.Compare(x.Date, today.AddDays(-14)) >= 0 && x.DiagnosisCode == "P123");
         }
     }
 }
