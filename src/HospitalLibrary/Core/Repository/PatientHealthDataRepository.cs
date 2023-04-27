@@ -55,7 +55,7 @@ namespace HospitalLibrary.Core.Repository
 
         public IEnumerable<PatientHealthData> GetLastTwoDaysHealthData(DateTime today, int patientId)
         {
-            throw new NotImplementedException();
+            return GetAll().Where(a => DateTime.Compare(a.MeasurementTime, today.AddDays(-2)) >= 0 && a.PatientId == patientId);
         }
     }
 }

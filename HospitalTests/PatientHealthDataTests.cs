@@ -63,14 +63,14 @@ namespace HospitalTests
                 Blocked = false
             };
             var stubRepository = new Mock<IPatientHealthDataRepository>();
-            var phd = new PatientHealthData() { Id = 1, BloodPresure = "120/80", BodyFatPercentage = "17", BloodSugar = "12", Weight = "102", PatientId = 1, Patient = p };
-            var phd2 = new PatientHealthData() { Id = 1, BloodPresure = "120/80", BodyFatPercentage = "7", BloodSugar = "8", Weight = "82", PatientId = 1, Patient = p };
+            var phd = new PatientHealthData() { Id = 1, BloodPresure = "120/80", BodyFatPercentage = "17", BloodSugar = "12", Weight = "102", PatientId = 1, Patient = p, MeasurementTime = DateTime.Now };
+            var phd2 = new PatientHealthData() { Id = 1, BloodPresure = "120/80", BodyFatPercentage = "7", BloodSugar = "8", Weight = "82", PatientId = 1, Patient = p, MeasurementTime = DateTime.Now };
             var list = new List<PatientHealthData>();
             list.Add(phd);
             list.Add(phd2);
             IEnumerable<PatientHealthData> res = list;
             stubRepository.Setup(m => m.GetAll()).Returns(list);
-            stubRepository.Setup(m => m.GetLastTwoDaysHealthData(DateTime.Now, 1)).Returns(res);
+            stubRepository.Setup(m => m.GetLastTwoDaysHealthData(DateTime.Now.Date, 1)).Returns(res);
             return stubRepository.Object;
         }
     }

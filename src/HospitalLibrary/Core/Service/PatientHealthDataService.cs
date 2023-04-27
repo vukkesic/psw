@@ -59,7 +59,8 @@ namespace HospitalLibrary.Core.Service
 
         public IEnumerable<PatientHealthData> GetLastTwoDaysHealthData(int patientId)
         {
-            throw new NotImplementedException();
+            DateTime d = DateTime.Now.Date;
+            return _patientHealthDataRepositoty.GetLastTwoDaysHealthData(d, patientId);
         }
     }
 }
