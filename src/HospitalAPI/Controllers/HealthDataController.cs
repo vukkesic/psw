@@ -48,6 +48,13 @@ namespace HospitalAPI.Controllers
             return Ok(data);
         }
 
+        [HttpGet("getLastTwoDaysHealthData")]
+        public ActionResult getLastTwoDaysHealthData(int patientId)
+        {
+            IEnumerable<PatientHealthData> data = _patientHealthDataService.GetLastTwoDaysHealthData(patientId);
+            return Ok(data);
+        }
+
         [HttpPost]
         public ActionResult Create(PatientHealthDataDTO dto)
         {
