@@ -62,5 +62,12 @@ namespace HospitalAPI.Controllers
             IEnumerable<ExaminationReport> data = _examinationService.GetByPatientId(patientId);
             return Ok(data);
         }
+        [Authorize(Roles = "DOCTOR")]
+        [HttpGet("getLastTwoWeeksFluReports")]
+        public ActionResult getLastTwoWeeksFluReports(int patientId)
+        {
+            IEnumerable<ExaminationReport> data = _examinationService.GetLastTwoWeekFluReports(patientId);
+            return Ok(data);
+        }
     }
 }

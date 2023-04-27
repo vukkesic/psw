@@ -4,6 +4,7 @@ import { BloodDonationNotification } from "../Models/BloodDonationNotification";
 import { Patient } from "../Models/User";
 import { HealthData } from "../Models/HealthData";
 import { MenstrualData } from "../Models/MenstrualData";
+import { Examination } from "../Models/Examination";
 
 const BloodDonationScheduler: FC = () => {
     const [bloodDonationNotifications, setBloodDonationNotifications] = useState<BloodDonationNotification[]>([]);
@@ -12,6 +13,7 @@ const BloodDonationScheduler: FC = () => {
     const [selectedBloodDonationNotification, setSelectedBloodDonationNotification] = useState<BloodDonationNotification>();
     const [healthData, setHealthData] = useState<HealthData[]>();
     const [menstrualData, setMenstrualData] = useState<MenstrualData[]>();
+    const [fluReports, setFluReports] = useState<Examination[]>();
 
     const getAllBloodDonationNotifications = () => {
         axios.get('http://localhost:16177/api/BloodDonation', {
@@ -71,6 +73,23 @@ const BloodDonationScheduler: FC = () => {
             });
     }
 
+    const getLastTwoWeeksFluReports = (patientId: Number) => {
+        axios.get('http://localhost:16177/api/Examinations/getLastTwoWeeksFluReports', {
+            params: { patientId: patientId },
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.userToken.slice(1, -1)}`
+            }
+        })
+            .then(function (response) {
+                console.log(response.data)
+                setFluReports(response.data());
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    }
+
     const getMenstrualData = (patientId: Number) => {
         axios.get('http://localhost:16177/api/HealthData/getLastTwoDaysHealthData', {
             params: { patientId: patientId },
@@ -91,7 +110,7 @@ const BloodDonationScheduler: FC = () => {
     useEffect(() => {
         getAllBloodDonationNotifications();
         getAllPatients();
-    })
+    });
     return (
         <div style={styles.container}>
             <label>
