@@ -15,5 +15,6 @@ namespace HospitalLibrary.Core.Repository
         void Update(ExaminationReport examinationReport);
         void Delete(ExaminationReport examinationReport);
         IEnumerable<ExaminationReport> GetByPatientId(int patientId);
+        IEnumerable<ExaminationReport> GetLastTwoWeekFluReports(int patientId, DateTime today);
     }
 }

@@ -56,5 +56,10 @@ namespace HospitalLibrary.Core.Repository
         {
             return GetAll().Where(x => x.PatientId == patientId);
         }
+
+        public IEnumerable<ExaminationReport> GetLastTwoWeekFluReports(int patientId, DateTime today)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

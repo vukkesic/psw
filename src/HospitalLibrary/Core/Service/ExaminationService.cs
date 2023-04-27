@@ -44,5 +44,10 @@ namespace HospitalLibrary.Core.Service
         {
             return _examinationRepository.GetByPatientId(patientId);
         }
+
+        public IEnumerable<ExaminationReport> GetLastTwoWeekFluReports(int patientId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
