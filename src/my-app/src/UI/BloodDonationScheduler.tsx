@@ -55,6 +55,7 @@ const BloodDonationScheduler: FC = () => {
 
     const submitHandler = async (event: React.MouseEvent) => {
         event.preventDefault();
+        checkHealthCondition();
         if (error) {
             console.log(errorMessage);
         }
@@ -75,7 +76,7 @@ const BloodDonationScheduler: FC = () => {
         }
         if (healthData === undefined || healthData.length === 0) {
             setError(true);
-            setErrorMessage("You have not uploaded your helath data in last two days. Please enter it and trry again.");
+            setErrorMessage("You have not uploaded your helath data in last two days. Please enter it and try again.");
         }
         else {
             healthData.forEach((hd) => {
@@ -83,7 +84,7 @@ const BloodDonationScheduler: FC = () => {
                     setError(true);
                     setErrorMessage("Pressure too high in last two days, you can't donate blood.");
                 }
-                if (parseInt(hd.bloodPresure.split('/', 2)[1]) < 100) {
+                if (parseInt(hd.bloodPresure.split('/', 1)[0]) < 100) {
                     setError(true);
                     setErrorMessage("Pressure too low in last two days, you can't donate blood.");
                 }
@@ -111,10 +112,10 @@ const BloodDonationScheduler: FC = () => {
                 })
 
             }
-        }
-        else {
-            setError(true);
-            setErrorMessage("You have not uploaded your menstrual data. Please enter it and try again");
+            else {
+                setError(true);
+                setErrorMessage("You have not uploaded your menstrual data. Please enter it and try again");
+            }
         }
     }
 

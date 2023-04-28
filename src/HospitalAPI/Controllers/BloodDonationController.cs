@@ -50,7 +50,7 @@ namespace HospitalAPI.Controllers
             _bloodDonationNotificationService.Create(bdn);
             return CreatedAtAction("GetById", new { id = bdn.Id }, bdn);
         }
-        
+
         // PUT api/rooms/2
         [HttpPut("{id}")]
         public ActionResult Update(int id, BloodDonationNotification bloodDonationNotification)
