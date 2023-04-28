@@ -5,6 +5,8 @@ import { Patient } from "../Models/User";
 import { HealthData } from "../Models/HealthData";
 import { MenstrualData } from "../Models/MenstrualData";
 import { Examination } from "../Models/Examination";
+import { Gender } from "../Models/Gender";
+import moment from "moment";
 
 const BloodDonationScheduler: FC = () => {
     const [bloodDonationNotifications, setBloodDonationNotifications] = useState<BloodDonationNotification[]>([]);
@@ -14,6 +16,8 @@ const BloodDonationScheduler: FC = () => {
     const [healthData, setHealthData] = useState<HealthData[]>();
     const [menstrualData, setMenstrualData] = useState<MenstrualData[]>();
     const [fluReports, setFluReports] = useState<Examination[]>();
+    const [error, setError] = useState<boolean>(false);
+    const [errorMessage, setErrorMessage] = useState<string>();
 
     const getAllBloodDonationNotifications = () => {
         axios.get('http://localhost:16177/api/BloodDonation', {
@@ -24,7 +28,8 @@ const BloodDonationScheduler: FC = () => {
         })
             .then(function (response) {
                 console.log(response.data)
-                setBloodDonationNotifications(response.data.reverse());
+                setBloodDonationNotifications(response.data);
+                setSelectedBloodDonationNotification(response.data[0]);
             })
             .catch(function (error) {
                 console.log(error);
@@ -40,7 +45,7 @@ const BloodDonationScheduler: FC = () => {
         })
             .then(function (response) {
                 console.log(response.data)
-                setPatients(response.data());
+                setPatients(response.data);
                 setSelectedPatient(response.data[0]);
             })
             .catch(function (error) {
@@ -48,12 +53,69 @@ const BloodDonationScheduler: FC = () => {
             });
     }
 
-    const submitHandler = (event: React.MouseEvent) => {
+    const submitHandler = async (event: React.MouseEvent) => {
         event.preventDefault();
+        if (error) {
+            console.log(errorMessage);
+        }
+        else {
+            console.log("pozivanje grpc servisa");
+        }
     }
 
-    const checkHealthCondition = () => {
+    const checkHealthCondition = async () => {
 
+        setError(false);
+        if (selectedPatient) {
+            getLastTwoDaysHealthData(selectedPatient?.id);
+            getLastTwoWeeksFluReports(selectedPatient.id);
+            if (selectedPatient.gender === Gender.Female) {
+                getMenstrualData(selectedPatient.id);
+            }
+        }
+        if (healthData === undefined || healthData.length === 0) {
+            setError(true);
+            setErrorMessage("You have not uploaded your helath data in last two days. Please enter it and trry again.");
+        }
+        else {
+            healthData.forEach((hd) => {
+                if (parseInt(hd.bloodPresure.split('/', 1)[0]) > 180) {
+                    setError(true);
+                    setErrorMessage("Pressure too high in last two days, you can't donate blood.");
+                }
+                if (parseInt(hd.bloodPresure.split('/', 2)[1]) < 100) {
+                    setError(true);
+                    setErrorMessage("Pressure too low in last two days, you can't donate blood.");
+                }
+                if (parseInt(hd.bodyFatPercentage) > 32) {
+                    setError(true);
+                    setErrorMessage("Your body fat percentage is too high, you can't donate blood.");
+                }
+            });
+
+        }
+
+        if (fluReports !== undefined && fluReports?.length !== 0) {
+            setError(true);
+            setErrorMessage("You have been cold in last two week, you can't donate blood.");
+        }
+
+        if (selectedPatient !== undefined && selectedPatient.gender === Gender.Female) {
+            if (menstrualData !== undefined && menstrualData.length !== 0) {
+                var d = new Date();
+                menstrualData.forEach((md) => {
+                    if (md.lastPeriod.getTime() > (d.getTime() - (2 * 24 * 60 * 60 * 1000)) && md.lastPeriod.getTime() > (d.getTime() + (2 * 24 * 60 * 60 * 1000))) {
+                        setError(true);
+                        setErrorMessage("You are currently in period, you can't donate blood.");
+                    }
+                })
+
+            }
+        }
+        else {
+            setError(true);
+            setErrorMessage("You have not uploaded your menstrual data. Please enter it and try again");
+        }
     }
 
     const getLastTwoDaysHealthData = (patientId: Number) => {
@@ -66,7 +128,7 @@ const BloodDonationScheduler: FC = () => {
         })
             .then(function (response) {
                 console.log(response.data)
-                setHealthData(response.data());
+                setHealthData(response.data);
             })
             .catch(function (error) {
                 console.log(error);
@@ -83,7 +145,7 @@ const BloodDonationScheduler: FC = () => {
         })
             .then(function (response) {
                 console.log(response.data)
-                setFluReports(response.data());
+                setFluReports(response.data);
             })
             .catch(function (error) {
                 console.log(error);
@@ -100,7 +162,7 @@ const BloodDonationScheduler: FC = () => {
         })
             .then(function (response) {
                 console.log(response.data)
-                setMenstrualData(response.data());
+                setMenstrualData(response.data);
             })
             .catch(function (error) {
                 console.log(error);
@@ -110,7 +172,13 @@ const BloodDonationScheduler: FC = () => {
     useEffect(() => {
         getAllBloodDonationNotifications();
         getAllPatients();
-    });
+    }, []);
+
+    useEffect(() => {
+        checkHealthCondition();
+    }, [selectedPatient]);
+
+
     return (
         <div style={styles.container}>
             <label>
@@ -122,7 +190,7 @@ const BloodDonationScheduler: FC = () => {
                 {patients.map((patient, index) =>
                     <option key={index}
                         value={JSON.stringify(patient)}>
-                        {`${patient.name} + ${patient.surname}`}
+                        {`${patient.name} ${patient.surname}`}
                     </option>
                 )}
             </select>
@@ -132,7 +200,6 @@ const BloodDonationScheduler: FC = () => {
             <select onChange={event => {
                 setSelectedBloodDonationNotification(JSON.parse(event.target.value));
             }} style={styles.select}>
-                <option value='null'></option>
                 {bloodDonationNotifications.map((bdn, index) =>
                     <option key={index}
                         value={JSON.stringify(bdn)}>
