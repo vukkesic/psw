@@ -1,14 +1,23 @@
-﻿using HospitalLibrary.Core.Model;
+﻿using Google.Protobuf.WellKnownTypes;
+using Grpc.Core;
+using HospitalLibrary.Core.DTOs;
+using HospitalLibrary.Core.Model;
 using HospitalLibrary.Core.Service;
+using IntegrationApi.Protos;
+using IntegrationAPI;
+using IntegrationAPI.Protos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Data;
+using System.Threading.Tasks;
 
 namespace HospitalAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "DOCTOR")]
     public class BloodDonationController : ControllerBase
     {
         private readonly IBloodDonationNotificationService _bloodDonationNotificationService;
@@ -17,7 +26,7 @@ namespace HospitalAPI.Controllers
             _bloodDonationNotificationService = bloodDonationNotificationService;
         }
         // GET: api/rooms
-        [Authorize(Roles ="DOCTOR")]
+
         [HttpGet]
         public ActionResult GetAll()
         {
@@ -49,6 +58,25 @@ namespace HospitalAPI.Controllers
 
             _bloodDonationNotificationService.Create(bdn);
             return CreatedAtAction("GetById", new { id = bdn.Id }, bdn);
+        }
+
+        [AllowAnonymous]
+        [HttpPost ("makeBloodAppointment")]
+        public async Task<BloodDonationAppointment> MakeBloodDonationAppointment(BloodDonationRequestDTO bdn)
+        {
+            try
+            {
+                BloodDonationRequest b = new BloodDonationRequest() { StartTime = Timestamp.FromDateTime(bdn.StartTime.ToUniversalTime()), EndTime = Timestamp.FromDateTime(bdn.EndTime.ToUniversalTime()), PatientName = bdn.PatientName, Location = bdn.Location };
+                var channel = new Channel("localhost", 8787, ChannelCredentials.Insecure);
+                var client = new SpringGrpcService.SpringGrpcServiceClient(channel);
+                BloodDonationAppointment appointment = await client.makeBloodDonationAppointmentAsync(b);
+                return appointment;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return null;
+            }
         }
 
         // PUT api/rooms/2

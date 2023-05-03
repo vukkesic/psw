@@ -61,6 +61,22 @@ const BloodDonationScheduler: FC = () => {
         }
         else {
             console.log("pozivanje grpc servisa");
+            const spn = `${selectedPatient?.name} ${selectedPatient?.surname}`
+            const bloodDonatioReques = { startTime: selectedBloodDonationNotification?.startTime, endTime: selectedBloodDonationNotification?.endTime, patientName: spn, location: selectedBloodDonationNotification?.location };
+            axios.post('http://localhost:16177/api/BloodDonation/makeBloodAppointment', bloodDonatioReques,
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.userToken.slice(1, -1)}`
+                    }
+                })
+                .then(function (response) {
+                    console.log(response);
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+
         }
     }
 
@@ -154,7 +170,7 @@ const BloodDonationScheduler: FC = () => {
     }
 
     const getMenstrualData = (patientId: Number) => {
-        axios.get('http://localhost:16177/api/HealthData/getLastTwoDaysHealthData', {
+        axios.get('http://localhost:16177/api/MenstrualData/getMyMenstrualData', {
             params: { patientId: patientId },
             headers: {
                 'Content-Type': 'application/json',

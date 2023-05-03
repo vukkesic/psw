@@ -16,6 +16,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\HospitalLibrary\HospitalLibrary.csproj" />
+    <ProjectReference Include="..\IntegrationAPI\IntegrationAPI.csproj" />
+    <ProjectReference Include="..\IntegrationLibrary\IntegrationLibrary.csproj" />
   </ItemGroup>
 
 </Project>

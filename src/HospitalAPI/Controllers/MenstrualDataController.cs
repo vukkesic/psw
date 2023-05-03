@@ -21,9 +21,9 @@ namespace HospitalAPI.Controllers
             _menstrualDataService = menstrualDataService;
             _menstrualDataMapper = new MenstrualDataMapper(patientService);
         }
-        [Authorize(Roles = "PATIENT")]
+        [Authorize]
         [HttpGet("getMyMenstrualData")]
-        public ActionResult getHealthDataForUser(int patientId)
+        public ActionResult getMenstrualDataForUser(int patientId)
         {
             MenstrualData data = _menstrualDataService.GetByPatientId(patientId);
             return Ok(data);
