@@ -61,9 +61,10 @@ namespace HospitalAPI.Controllers
                 {
                     return BadRequest(ModelState);
                 }
-                _patientService.Create(patient);
+                Patient p = _patientService.Create(patient);
                 if(patient.Gender == Gender.FEMALE)
                 {
+                    data.PatientId = p.Id;
                     _menstrualDataService.Create(data);
                 }
                 //return CreatedAtAction("GetById", new { id = patient.Id }, patient);   Treba dodati get metodu 

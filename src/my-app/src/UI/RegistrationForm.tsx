@@ -18,41 +18,41 @@ const RegistrationForm: FC = () => {
     const [inputPhone, setInputPhone] = useState<string>('');
     const [inputProfileImage, setInputProfileImage] = useState<File>();
     const [inputProfileImageName, setInputProfileImageName] = useState<string>('');
-    const [isValidName, setIsValidName] = useState<boolean>(false);
-    const [isValidSurname, setIsValidSurname] = useState<boolean>(false);
-    const [isValidEmail, setIsValidEmail] = useState<boolean>(false);
-    const [isValidPassword, setIsValidPassword] = useState<boolean>(false);
-    const [isValidPhone, setIsValidPhone] = useState<boolean>(false);
     const [showErrorModal, setShowErrorModal] = useState<boolean>(false);
-    let errorMesage = '';
+    let errorMesage = "";
+    let isValidEmail = false;
+    let isValidName = false;
+    let isValidSurname = false;
+    let isValidPassword = false;
+    let isValidPhone = false;
 
     const validateEmail = (email: string) => {
         if (email.trim().length === 0 || /\S+@\S+\.\S+/.test(email) === false) {
-            setIsValidEmail(false);
-            errorMesage += 'Bad email, email should be example@mail.com.\n';
+            isValidEmail = false;
+            errorMesage = "Bad email, email should be example@mail.com.\n";
         }
         else {
-            setIsValidEmail(true);
+            isValidEmail = true;
         }
     }
 
     const validateName = (name: string) => {
         if (name.trim().length === 0) {
-            setIsValidName(false);
-            errorMesage += 'Name cannot be empty.\n';
+            isValidName = false;
+            errorMesage = "Name cannot be empty.\n";
         }
         else {
-            setIsValidName(true);
+            isValidName = true;
         }
     }
 
     const validateSurname = (surname: string) => {
         if (surname.trim().length === 0) {
-            setIsValidSurname(false);
-            errorMesage += 'Surname cannot be empty.\n';
+            isValidSurname = false;
+            errorMesage = "Surname cannot be empty.\n";
         }
         else {
-            setIsValidSurname(true);
+            isValidSurname = true;
         }
     }
 
@@ -65,21 +65,21 @@ const RegistrationForm: FC = () => {
         if (re.capital.test(password) &&
             re.digit.test(password) &&
             re.full.test(password)) {
-            setIsValidPassword(true);
+            isValidPassword = true;
         }
         else {
-            setIsValidPassword(false);
-            errorMesage = errorMesage + 'Password must contain at least one capital letter and number. Password lenght must be 7-13 characters.\n';
+            isValidPassword = false;
+            errorMesage = errorMesage + "Password must contain at least one capital letter and number. Password lenght must be 7-13 characters.\n";
         }
     }
 
     const validatePhone = (phone: string) => {
         if (phone.length < 6 || phone.length > 16) {
-            setIsValidPhone(false);
-            errorMesage = errorMesage + 'Phone number lenght must contain 6-16 digits.\n';
+            isValidPhone = false;
+            errorMesage = errorMesage + "Phone number lenght must contain 6-16 digits.\n";
         }
         else {
-            setIsValidPhone(true);
+            isValidPhone = true;
         }
     }
     const uploadImage = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -157,6 +157,8 @@ const RegistrationForm: FC = () => {
             }
         }
         else {
+            console.log(errorMesage);
+            console.log(isValidName);
             setShowErrorModal(true);
         }
     }
@@ -274,7 +276,6 @@ const RegistrationForm: FC = () => {
                     errMessage={errorMesage}
                     isOpen={showErrorModal}
                     setIsOpen={setShowErrorModal} />}
-                console.log(errorMesage);
             </div>
 
         </section>

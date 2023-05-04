@@ -16,8 +16,8 @@ const BloodDonationScheduler: FC = () => {
     const [healthData, setHealthData] = useState<HealthData[]>();
     const [menstrualData, setMenstrualData] = useState<MenstrualData>();
     const [fluReports, setFluReports] = useState<Examination[]>();
-    const [error, setError] = useState<boolean>(false);
-    const [errorMessage, setErrorMessage] = useState<string>();
+    var error = false;
+    var errorMessage = "";
 
     const getApprovedBloodDonationNotifications = () => {
         axios.get('http://localhost:16177/api/BloodDonation/getApproved', {
@@ -80,9 +80,7 @@ const BloodDonationScheduler: FC = () => {
         }
     }
 
-    const checkHealthCondition = async () => {
-
-        setError(false);
+    const checkHealthCondition = () => {
         if (selectedPatient) {
             getLastTwoDaysHealthData(selectedPatient?.id);
             getLastTwoWeeksFluReports(selectedPatient.id);
@@ -91,43 +89,44 @@ const BloodDonationScheduler: FC = () => {
             }
         }
         if (healthData === undefined || healthData.length === 0) {
-            setError(true);
-            setErrorMessage("You have not uploaded your helath data in last two days. Please enter it and try again.");
+            error = true;
+            errorMessage = "You have not uploaded your helath data in last two days. Please enter it and try again.";
         }
         else {
             healthData.forEach((hd) => {
                 if (parseInt(hd.bloodPresure.split('/', 1)[0]) > 180) {
-                    setError(true);
-                    setErrorMessage("Pressure too high in last two days, you can't donate blood.");
+                    error = true;
+                    errorMessage = "Pressure too high in last two days, you can't donate blood.";
                 }
                 if (parseInt(hd.bloodPresure.split('/', 1)[0]) < 100) {
-                    setError(true);
-                    setErrorMessage("Pressure too low in last two days, you can't donate blood.");
+                    error = true;
+                    errorMessage = "Pressure too low in last two days, you can't donate blood.";
                 }
                 if (parseInt(hd.bodyFatPercentage) > 32) {
-                    setError(true);
-                    setErrorMessage("Your body fat percentage is too high, you can't donate blood.");
+
+                    error = true;
+                    errorMessage = "Pressure too low in last two days, you can't donate blood.";
                 }
             });
 
         }
 
         if (fluReports !== undefined && fluReports?.length !== 0) {
-            setError(true);
-            setErrorMessage("You have been cold in last two week, you can't donate blood.");
+            error = true;
+            errorMessage = "You have been cold in last two week, you can't donate blood.";
         }
 
         if (selectedPatient !== undefined && selectedPatient.gender === Gender.Female) {
             if (menstrualData !== undefined) {
                 var d = new Date();
                 if (menstrualData.lastPeriod.valueOf() > (d.valueOf() - (2 * 24 * 60 * 60 * 1000)) && (menstrualData.lastPeriod.valueOf() < (d.valueOf() + (2 * 24 * 60 * 60 * 1000)))) {
-                    setError(true);
-                    setErrorMessage("You are currently in period, you can't donate blood.");
+                    error = true;
+                    errorMessage = "You are currently in period, you can't donate blood.";
                 }
             }
             else {
-                setError(true);
-                setErrorMessage("You have not uploaded your menstrual data. Please enter it and try again");
+                error = true;
+                errorMessage = "You have not uploaded your menstrual data. Please enter it and try again";
             }
         }
     }
