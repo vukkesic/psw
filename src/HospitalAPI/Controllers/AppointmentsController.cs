@@ -41,9 +41,7 @@ namespace HospitalAPI.Controllers
                         flag = true;
                 }
                 if (flag == false)
-                {
                     return (new SuggestionDTO(start, start.AddMinutes(30), d.Id, period.PatientId, d.Name, message));
-                }
             }
             return null;
         }
@@ -118,10 +116,9 @@ namespace HospitalAPI.Controllers
         public ActionResult Cancel(int id)
         {
             Appointment appointment = _appointmentService.GetById(id);
-            if (DateTime.Now <= appointment.StartTime.AddDays(-2))
+            if (appointment.IsCancelable())
             {
-                appointment.Canceled = true;
-                appointment.CancelationTime = DateTime.Now;
+                appointment.Cancel();
                 try
                 {
                     _appointmentService.Update(appointment);

@@ -38,9 +38,23 @@ namespace HospitalLibrary.Core.Model
             if (DateTime.Compare(StartTime, startTime) == 0)
             {
                 return true;
-
             }
             return false;
+        }
+        
+        public bool IsCancelable()
+        {
+            if (DateTime.Now.AddDays(2) <= StartTime)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public void Cancel()
+        {
+            Canceled = true;
+            CancelationTime = DateTime.Now;
         }
     }
 }
