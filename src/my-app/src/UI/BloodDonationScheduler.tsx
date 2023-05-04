@@ -14,13 +14,13 @@ const BloodDonationScheduler: FC = () => {
     const [selectedPatient, setSelectedPatient] = useState<Patient>();
     const [selectedBloodDonationNotification, setSelectedBloodDonationNotification] = useState<BloodDonationNotification>();
     const [healthData, setHealthData] = useState<HealthData[]>();
-    const [menstrualData, setMenstrualData] = useState<MenstrualData[]>();
+    const [menstrualData, setMenstrualData] = useState<MenstrualData>();
     const [fluReports, setFluReports] = useState<Examination[]>();
     const [error, setError] = useState<boolean>(false);
     const [errorMessage, setErrorMessage] = useState<string>();
 
-    const getAllBloodDonationNotifications = () => {
-        axios.get('http://localhost:16177/api/BloodDonation', {
+    const getApprovedBloodDonationNotifications = () => {
+        axios.get('http://localhost:16177/api/BloodDonation/getApproved', {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${localStorage.userToken.slice(1, -1)}`
@@ -118,15 +118,12 @@ const BloodDonationScheduler: FC = () => {
         }
 
         if (selectedPatient !== undefined && selectedPatient.gender === Gender.Female) {
-            if (menstrualData !== undefined && menstrualData.length !== 0) {
+            if (menstrualData !== undefined) {
                 var d = new Date();
-                menstrualData.forEach((md) => {
-                    if (md.lastPeriod.getTime() > (d.getTime() - (2 * 24 * 60 * 60 * 1000)) && md.lastPeriod.getTime() > (d.getTime() + (2 * 24 * 60 * 60 * 1000))) {
-                        setError(true);
-                        setErrorMessage("You are currently in period, you can't donate blood.");
-                    }
-                })
-
+                if (menstrualData.lastPeriod.valueOf() > (d.valueOf() - (2 * 24 * 60 * 60 * 1000)) && (menstrualData.lastPeriod.valueOf() < (d.valueOf() + (2 * 24 * 60 * 60 * 1000)))) {
+                    setError(true);
+                    setErrorMessage("You are currently in period, you can't donate blood.");
+                }
             }
             else {
                 setError(true);
@@ -187,7 +184,7 @@ const BloodDonationScheduler: FC = () => {
     }
 
     useEffect(() => {
-        getAllBloodDonationNotifications();
+        getApprovedBloodDonationNotifications();
         getAllPatients();
     }, []);
 

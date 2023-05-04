@@ -52,5 +52,15 @@ namespace HospitalLibrary.Core.Repository
                 throw;
             }
         }
+
+        public IEnumerable<BloodDonationNotification> GetPending()
+        {
+            return GetAll().Where(x => x.Status == "PENDING");
+        }
+
+        public IEnumerable<BloodDonationNotification> GetApproved()
+        {
+            return GetAll().Where(x => x.Status == "APPROVED");
+        }
     }
 }

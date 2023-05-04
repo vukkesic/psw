@@ -40,5 +40,14 @@ namespace HospitalLibrary.Core.Service
         {
             _bloodDonationNotificationRepository.Update(notification);
         }
+
+        public IEnumerable<BloodDonationNotification> GetPending()
+        {
+            return _bloodDonationNotificationRepository.GetPending();
+        }
+        public IEnumerable<BloodDonationNotification> GetApproved()
+        {
+            return _bloodDonationNotificationRepository.GetApproved();
+        }
     }
 }

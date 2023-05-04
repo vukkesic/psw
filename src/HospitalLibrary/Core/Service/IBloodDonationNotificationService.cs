@@ -14,5 +14,7 @@ namespace HospitalLibrary.Core.Service
         void Create(BloodDonationNotification notification);
         void Update(BloodDonationNotification notification);
         void Delete(BloodDonationNotification notification);
+        IEnumerable<BloodDonationNotification> GetPending();
+        IEnumerable<BloodDonationNotification> GetApproved();
     }
 }

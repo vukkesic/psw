@@ -27,8 +27,8 @@ const BloodDonationNews = () => {
             });
     }
 
-    const getAllBloodDonationNotifications = () => {
-        axios.get('http://localhost:16177/api/BloodDonation', {
+    const getAllPendingBloodDonationNotifications = () => {
+        axios.get('http://localhost:16177/api/BloodDonation/getPending', {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${localStorage.userToken.slice(1, -1)}`
@@ -43,10 +43,45 @@ const BloodDonationNews = () => {
             });
     }
 
+    const approveHandler = (notification: BloodDonationNotification) => {
+        axios.put(`http://localhost:16177/api/BloodDonation/approve/${notification.id}`, {}, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.userToken.slice(1, -1)}`
+            }
+        })
+            .then(function (response) {
+                console.log(response.data);
+                postNotification(notification);
+            })
+            .catch(function (error) {
+                console.log(error);
+
+            });
+
+
+    }
+
     useEffect(() => {
-        getAllBloodDonationNotifications();
+        getAllPendingBloodDonationNotifications();
     }, []);
 
+
+    function denyHandler(notification: BloodDonationNotification) {
+        axios.put(`http://localhost:16177/api/BloodDonation/deny/${notification.id}`, {}, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.userToken.slice(1, -1)}`
+            }
+        })
+            .then(function (response) {
+                console.log(response.data);
+            })
+            .catch(function (error) {
+                console.log(error);
+
+            });
+    }
 
     return (
         <div className="card-columns">
@@ -74,7 +109,8 @@ const BloodDonationNews = () => {
                     </div>
                     <div className="card-footer">
                         <div className="media align-items-center">
-                            <div className="media-body"><a className="card-link text-uppercase" onClick={() => { postNotification(notification) }}>Post notification</a></div>
+                            <div className="media-body"><a className="card-link text-uppercase" onClick={() => { approveHandler(notification) }}>Approve action</a></div>
+                            <div className="media-body"><a className="card-link text-uppercase" onClick={() => { denyHandler(notification) }}>Deny action</a></div>
                         </div>
                     </div>
 

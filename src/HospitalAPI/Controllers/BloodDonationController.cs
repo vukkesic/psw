@@ -17,7 +17,7 @@ namespace HospitalAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "DOCTOR")]
+    [Authorize]
     public class BloodDonationController : ControllerBase
     {
         private readonly IBloodDonationNotificationService _bloodDonationNotificationService;
@@ -44,6 +44,18 @@ namespace HospitalAPI.Controllers
             }
 
             return Ok(bdn);
+        }
+
+        [HttpGet("getPending")]
+        public ActionResult GetPending()
+        {
+            return Ok(_bloodDonationNotificationService.GetPending());
+        }
+
+        [HttpGet("getApproved")]
+        public ActionResult GetApproved()
+        {
+            return Ok(_bloodDonationNotificationService.GetApproved());
         }
 
         // POST api/rooms
@@ -117,6 +129,38 @@ namespace HospitalAPI.Controllers
 
             _bloodDonationNotificationService.Delete(bdn);
             return NoContent();
+        }
+
+        [HttpPut("approve/{id}")]
+        public ActionResult Use(int id)
+        {
+            BloodDonationNotification notification = _bloodDonationNotificationService.GetById(id);
+            notification.Status = "APPROVED";
+            try
+            {
+                _bloodDonationNotificationService.Update(notification);
+            }
+            catch
+            {
+                return BadRequest();
+            }
+            return Ok(notification);
+        }
+
+        [HttpPut("deny/{id}")]
+        public ActionResult Deny(int id)
+        {
+            BloodDonationNotification notification = _bloodDonationNotificationService.GetById(id);
+            notification.Status = "DENIED";
+            try
+            {
+                _bloodDonationNotificationService.Update(notification);
+            }
+            catch
+            {
+                return BadRequest();
+            }
+            return Ok(notification);
         }
     }
 }
