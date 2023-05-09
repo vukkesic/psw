@@ -27,7 +27,7 @@ namespace HospitalAPI.Controllers
             return Ok(_blogPostService.GetAll());
         }
 
-        // GET api/bloogs/2
+        // GET api/blogs/2
         [HttpGet("{id}")]
         public ActionResult GetById(int id)
         {

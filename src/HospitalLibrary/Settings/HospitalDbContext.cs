@@ -182,7 +182,7 @@ namespace HospitalLibrary.Settings
                );
 
             modelBuilder.Entity<PatientHealthData>().HasData(
-                  new PatientHealthData() { Id = 1, BloodPresure = "120/80", BodyFatPercentage = "17", BloodSugar = "12", Weight = "102", PatientId = 1 }
+                  new PatientHealthData() { Id = 1, BloodPresure = "120/80", BodyFatPercentage = "17", BloodSugar = "12", Weight = "102", PatientId = 1, MeasurementTime=DateTime.Now }
               );
 
             modelBuilder.Entity<Appointment>().HasData(

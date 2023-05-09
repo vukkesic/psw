@@ -10,6 +10,8 @@ const LoginForm: FC = () => {
     const [inputEmail, setInputEmail] = useState('');
     const [inputPassword, setInputPassword] = useState('');
     const navigate = useNavigate();
+    const [showErrorModal, setShowErrorModal] = useState<boolean>(false);
+    let errorMesage = 'Error.Username and password do not match.Please try again';
 
     const submitHandlerLogin = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -35,6 +37,7 @@ const LoginForm: FC = () => {
                 }
             })
             .catch(function (error) {
+                setShowErrorModal(true);
                 console.log(error);
             });
 
@@ -67,6 +70,7 @@ const LoginForm: FC = () => {
                             setInputPassword(event.target.value)
                         }}
                     />
+                    {showErrorModal && <p style={{ color: "#FF9494" }}>{errorMesage}</p>}
                     <div className="login-form__actions">
                         <Button
                             type="submit"

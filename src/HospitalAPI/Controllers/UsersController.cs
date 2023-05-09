@@ -36,12 +36,13 @@ namespace HospitalAPI.Controllers
         {
             try
             {
-                string path = Path.Combine(Directory.GetCurrentDirectory(), "images", file.FileName);
+                string directory = "C:\\Users\\Vuk\\Desktop\\repositoryPSW\\psw\\src\\my-app\\public";
+                string path = Path.Combine(directory, "images", file.FileName);
                 using (Stream stream = new FileStream(path, FileMode.Create))
                 {
                     file.FormFile.CopyTo(stream);
                 }
-                return Ok(path);
+                return Ok(file.FileName);
             }
             catch (Exception)
             {

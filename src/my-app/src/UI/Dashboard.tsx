@@ -100,7 +100,17 @@ const Dashboard: FC = () => {
                 } else {
                     setGenderString('Female');
                 }
-                setProfileImage(response.data.profileImage);
+                if (response.data.profileImage == "") {
+                    if (response.data.gender == 0) {
+                        setProfileImage("men.jpg");
+                    } else {
+                        setGenderString("women.jpg");
+                    }
+                }
+                else {
+                    setProfileImage(response.data.profileImage);
+                }
+
             })
             .catch(function (error) {
                 console.log(error);
@@ -171,8 +181,8 @@ const Dashboard: FC = () => {
         <section className="container" style={{ height: '88vh', backgroundColor: '#eee' }}>
             <div className="card-container">
                 <span className="pro">Patient</span>
-                {gender === 0 && <img className="round" src={men} alt={men} />}
-                {gender === 1 && <img className="round" src={women} alt={women} />}
+                {gender === 0 && <img className="round" src={`images/${profileImage}`} alt="men" />}
+                {gender === 1 && <img className="round" src={`images/${profileImage}`} alt="women" />}
                 <h2>{name} {surname}</h2>
                 <h4>{email}</h4>
                 <p>{phone} <br /> {genderString}</p>

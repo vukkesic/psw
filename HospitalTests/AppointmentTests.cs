@@ -98,6 +98,7 @@ namespace HospitalTests
             bool b = a.IsCancelable();
             b.ShouldBeTrue();
         }
+        [Fact]
         public void Appointment_is_not_cancelable()
         {
             AppointmentService service = new AppointmentService(CreateStubRepository());
