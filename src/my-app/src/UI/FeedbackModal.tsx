@@ -19,7 +19,7 @@ interface Props {
     setIsOpen: Function,
 }
 
-const RegistrationCheckModal = (props: Props) => {
+const FeedbackModal = (props: Props) => {
     let subtitle: HTMLHeadingElement;
 
     function openModal() {
@@ -59,4 +59,4 @@ const RegistrationCheckModal = (props: Props) => {
     );
 }
 
-export default RegistrationCheckModal;
+export default FeedbackModal;

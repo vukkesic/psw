@@ -6,7 +6,7 @@ import moment from "moment";
 import { Role } from "../Models/Role";
 import axios from "axios";
 import "./Form.css"
-import RegistrationCheckModal from "./RegistrationCheckModal";
+import RegistrationCheckModal from "./FeedbackModal";
 
 const RegistrationForm: FC = () => {
     const [inputEmail, setInputEmail] = useState<string>('');

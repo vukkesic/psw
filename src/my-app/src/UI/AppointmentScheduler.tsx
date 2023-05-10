@@ -9,6 +9,7 @@ import AppointmentModal from "./AppointmentModal";
 import AppointmentNotFoundModal from "./AppointmentNotFoundModal";
 import { ReferralLetter } from "../Models/ReferralLetter";
 import { Examination } from "../Models/Examination";
+import RegistrationCheckModal from "./FeedbackModal";
 
 const AppointmentScheduler: FC = () => {
     const [startTime, setStartTime] = useState<Date>();
@@ -26,6 +27,9 @@ const AppointmentScheduler: FC = () => {
     const [myRefferalLetters, setMyReferralLetters] = useState<ReferralLetter[]>([]);
     const [selectedReferralLetter, setSelectedReferralLetter] = useState<ReferralLetter>();
     const [examinations, setExaminations] = useState<Examination[]>([]);
+    const [showErrorModal, setShowErrorModal] = useState<boolean>(false);
+    const [showSuccessModal, setShowSuccessModal] = useState<boolean>(false);
+    const [errorMessage, setErrorMessage] = useState<string>("");
 
     const getAllDoctors = () => {
         var spec: Number = 6;
@@ -75,7 +79,8 @@ const AppointmentScheduler: FC = () => {
                 });
         }
         else {
-            console.log("error set valid date")
+            setErrorMessage("Period is not valid, please change start and end time and try again.");
+            setShowErrorModal(true);
         }
     }
 
@@ -100,6 +105,7 @@ const AppointmentScheduler: FC = () => {
         if (st != null && et != null && moment(et).isAfter(moment(st))) {
             setDateCheck(true);
         }
+
     }
 
     const submitAppointment = () => {
@@ -114,6 +120,10 @@ const AppointmentScheduler: FC = () => {
             })
             .then(function (response) {
                 console.log(response);
+                getAllDoctors();
+                getPatientAppointments();
+                getMyReferralLetters();
+                getPatientExaminations();
             })
             .catch(function (error) {
                 console.log(error);
@@ -129,6 +139,10 @@ const AppointmentScheduler: FC = () => {
             })
                 .then(function (response) {
                     console.log(response);
+                    getAllDoctors();
+                    getPatientAppointments();
+                    getMyReferralLetters();
+                    getPatientExaminations();
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -147,11 +161,17 @@ const AppointmentScheduler: FC = () => {
                     }
                 })
                 .then(function (response) {
-                    console.log(response.data)
+                    console.log(response.data);
+                    setShowSuccessModal(true);
+                    getAllDoctors();
+                    getPatientAppointments();
+                    getMyReferralLetters();
+                    getPatientExaminations();
                 })
                 .catch(function (error) {
                     console.log(error);
-
+                    setErrorMessage(error.response.data);
+                    setShowErrorModal(true);
                 });
         }
     }
@@ -323,6 +343,14 @@ const AppointmentScheduler: FC = () => {
                 </select>
                 <button onClick={CancelationHandler}>Cancel appointment</button>
             </div>
+            {showErrorModal && <RegistrationCheckModal
+                errMessage={errorMessage}
+                isOpen={showErrorModal}
+                setIsOpen={setShowErrorModal} />}
+            {showSuccessModal && <RegistrationCheckModal
+                errMessage={"Selected appointment is successfully canceled."}
+                isOpen={showSuccessModal}
+                setIsOpen={setShowSuccessModal} />}
         </div >
     )
 }
