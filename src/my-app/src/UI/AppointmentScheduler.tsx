@@ -209,6 +209,9 @@ const AppointmentScheduler: FC = () => {
         <div style={{ display: 'flex', justifyContent: 'space-around', }}>
             <div style={styles.container}>
                 <label>
+                    Working hours: Mon-Fri 8-16H
+                </label>
+                <label>
                     Referral letter
                 </label>
                 <select onChange={event => {

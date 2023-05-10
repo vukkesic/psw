@@ -19,7 +19,8 @@ const RegistrationForm: FC = () => {
     const [inputProfileImage, setInputProfileImage] = useState<File>();
     const [inputProfileImageName, setInputProfileImageName] = useState<string>('');
     const [showErrorModal, setShowErrorModal] = useState<boolean>(false);
-    let errorMesage = "";
+    const [showSuccessModal, setShowSuccessModal] = useState<boolean>(false);
+    const [errorMessage, setErrorMessage] = useState<string>("");
     let isValidEmail = false;
     let isValidName = false;
     let isValidSurname = false;
@@ -29,7 +30,7 @@ const RegistrationForm: FC = () => {
     const validateEmail = (email: string) => {
         if (email.trim().length === 0 || /\S+@\S+\.\S+/.test(email) === false) {
             isValidEmail = false;
-            errorMesage = "Bad email, email should be example@mail.com.\n";
+            setErrorMessage("Bad email, email should be example@mail.com.\n");
         }
         else {
             isValidEmail = true;
@@ -39,7 +40,7 @@ const RegistrationForm: FC = () => {
     const validateName = (name: string) => {
         if (name.trim().length === 0) {
             isValidName = false;
-            errorMesage = "Name cannot be empty.\n";
+            setErrorMessage("Name cannot be empty.\n");
         }
         else {
             isValidName = true;
@@ -49,7 +50,7 @@ const RegistrationForm: FC = () => {
     const validateSurname = (surname: string) => {
         if (surname.trim().length === 0) {
             isValidSurname = false;
-            errorMesage = "Surname cannot be empty.\n";
+            setErrorMessage("Surname cannot be empty.\n");
         }
         else {
             isValidSurname = true;
@@ -69,14 +70,14 @@ const RegistrationForm: FC = () => {
         }
         else {
             isValidPassword = false;
-            errorMesage = errorMesage + "Password must contain at least one capital letter and number. Password lenght must be 7-13 characters.\n";
+            setErrorMessage("Password must contain at least one capital letter and number. Password lenght must be 7-13 characters.\n");
         }
     }
 
     const validatePhone = (phone: string) => {
         if (phone.length < 6 || phone.length > 16) {
             isValidPhone = false;
-            errorMesage = errorMesage + "Phone number lenght must contain 6-16 digits.\n";
+            setErrorMessage("Phone number lenght must contain 6-16 digits.\n");
         }
         else {
             isValidPhone = true;
@@ -137,28 +138,33 @@ const RegistrationForm: FC = () => {
                 let data = { id: 0, name: inputName, surname: inputSurname, dateOfBirth: inputDateOfBirth, email: inputEmail, username: inputEmail, password: inputPassword, phone: inputPhone, gender: inputGender, profileImageName: imagePath, role: Role.Patient };
                 axios.post('http://localhost:16177/api/Users/userRegistration', data)
                     .then(function (response) {
-                        console.log(response)
-                        errorMesage = '';
+                        console.log(response);
+                        setErrorMessage("");
+                        setShowSuccessModal(true);
                     })
                     .catch(function (error) {
                         console.log(error);
+                        setErrorMessage(error.response.data);
+                        setShowErrorModal(true);
                     });
             }
             else {
                 let data = { id: 0, name: inputName, surname: inputSurname, dateOfBirth: inputDateOfBirth, email: inputEmail, username: inputEmail, password: inputPassword, phone: inputPhone, gender: inputGender, profileImageName: imagePath, role: Role.Patient };
                 axios.post('http://localhost:16177/api/Users/userRegistration', data)
                     .then(function (response) {
-                        console.log(response)
-                        errorMesage = '';
+                        console.log(response);
+                        setErrorMessage("");
+                        setShowSuccessModal(true);
                     })
                     .catch(function (error) {
                         console.log(error);
+                        setErrorMessage(error.response.data);
+                        setShowErrorModal(true);
                     });
             }
         }
         else {
-            console.log(errorMesage);
-            console.log(isValidName);
+            console.log(errorMessage);
             setShowErrorModal(true);
         }
     }
@@ -273,12 +279,16 @@ const RegistrationForm: FC = () => {
                     </div>
                 </form>
                 {showErrorModal && <RegistrationCheckModal
-                    errMessage={errorMesage}
+                    errMessage={errorMessage}
                     isOpen={showErrorModal}
                     setIsOpen={setShowErrorModal} />}
+                {showSuccessModal && <RegistrationCheckModal
+                    errMessage={"Registration successfull go to login page and log in with your credentials."}
+                    isOpen={showSuccessModal}
+                    setIsOpen={setShowSuccessModal} />}
             </div>
 
-        </section>
+        </section >
 
 
     );

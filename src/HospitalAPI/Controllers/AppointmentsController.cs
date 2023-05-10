@@ -34,16 +34,29 @@ namespace HospitalAPI.Controllers
         {
             for (DateTime start = tempStart; start < tempEnd; start = start.AddMinutes(30))
             {
-                Boolean flag = false;
-                foreach (Appointment a in appointments)
+                if (isWorkingTime(start) && isWorkday(start))
                 {
-                    if (a.CompareStartTime(start))
-                        flag = true;
+                    Boolean flag = false;
+                    foreach (Appointment a in appointments)
+                    {
+                        if (a.CompareStartTime(start))
+                            flag = true;
+                    }
+                    if (flag == false)
+                        return (new SuggestionDTO(start, start.AddMinutes(30), d.Id, period.PatientId, d.Name, message));
                 }
-                if (flag == false)
-                    return (new SuggestionDTO(start, start.AddMinutes(30), d.Id, period.PatientId, d.Name, message));
             }
             return null;
+        }
+
+        bool isWorkingTime(DateTime startTime)
+        {
+            return (startTime.TimeOfDay.Subtract(new TimeSpan(08, 00, 00)).Ticks >= 0 && startTime.TimeOfDay.Subtract(new TimeSpan(15, 30, 00)).Ticks <= 0);
+        }
+
+        bool isWorkday(DateTime startTime)
+        {
+            return (startTime.DayOfWeek != DayOfWeek.Saturday && startTime.DayOfWeek != DayOfWeek.Sunday);
         }
 
         [Authorize(Roles = "PATIENT")]
@@ -130,7 +143,7 @@ namespace HospitalAPI.Controllers
             }
             else
             {
-                return BadRequest();
+                return BadRequest("You can't cancel appointment scheduled in less than two days.");
             }
 
             return Ok(appointment);

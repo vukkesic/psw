@@ -58,7 +58,7 @@ namespace HospitalLibrary.Core.Repository
 
         public IEnumerable<Appointment> GetByPatient(int patientId)
         {
-            return GetAll().Where(a => a.PatientId.Equals(patientId) && a.Canceled == false && a.Used == false && DateTime.Compare(DateTime.Now, a.StartTime) >=0);
+            return GetAll().Where(a => a.PatientId.Equals(patientId) && a.Canceled == false && a.Used == false && DateTime.Compare(a.StartTime, DateTime.Now) >=0);
         }
 
         public IEnumerable<Appointment> GetDoctorTodayAppointments(DateTime today, int doctorId)
