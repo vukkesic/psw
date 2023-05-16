@@ -1,12 +1,16 @@
 import React, { FC, useState } from "react";
 import { RegisterData } from "../Models/User";
 import axios from "axios";
+import FeedbackModal from "./FeedbackModal";
 
 const Blocking: FC = () => {
     const [blockablePatients, setBlockablePatients] = useState<RegisterData[]>([]);
     const [selectedPatient, setSelectedPatient] = useState<RegisterData>();
     const [unblockablePatients, setUnblockablePatients] = useState<RegisterData[]>([]);
     const [selectedUnblockPatient, setSelectedUnblockPatient] = useState<RegisterData>();
+    const [showUnblockedModal, setShowUnblockedModal] = useState<boolean>(false);
+    const [showBlockedModal, setShowBlockedModal] = useState<boolean>(false);
+
 
     const getBlockableUsers = () => {
         axios.get('http://localhost:16177/api/Users/getBlockablePatients', {
@@ -55,6 +59,9 @@ const Blocking: FC = () => {
         })
             .then(function (response) {
                 console.log(response.data);
+                getBlockableUsers();
+                getBlockedUsers();
+                setShowBlockedModal(true);
             })
             .catch(function (error) {
                 console.log(error);
@@ -70,7 +77,10 @@ const Blocking: FC = () => {
             }
         })
             .then(function (response) {
-                console.log(response.data)
+                console.log(response.data);
+                getBlockableUsers();
+                getBlockedUsers();
+                setShowUnblockedModal(true);
             })
             .catch(function (error) {
                 console.log(error);
@@ -113,6 +123,14 @@ const Blocking: FC = () => {
                 </select>
                 <button onClick={unblockingHandler}> Unblock user </button>
             </div>
+            {showBlockedModal && <FeedbackModal
+                errMessage={"Blcoked successfully."}
+                isOpen={showBlockedModal}
+                setIsOpen={setShowBlockedModal} />}
+            {showUnblockedModal && <FeedbackModal
+                errMessage={"Unblocked successfully."}
+                isOpen={showUnblockedModal}
+                setIsOpen={setShowUnblockedModal} />}
         </div>
     )
 }

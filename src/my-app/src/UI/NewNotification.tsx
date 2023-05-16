@@ -1,28 +1,36 @@
 import axios from "axios";
 import React, { useState } from "react";
+import FeedbackModal from "./FeedbackModal";
 
 const NewNotification = () => {
     const [inputText, setInputText] = useState<string>("");
     const [inputTitle, setInputTitle] = useState<string>("");
+    const [showErrorModal, setShowErrorModal] = useState<boolean>(false);
+    const [showSuccessModal, setShowSuccessModal] = useState<boolean>(false);
+    const [errMessage, setErrMessage] = useState<string>("");
 
     const submitHandler = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        let notification = { id: 0, title: inputTitle, text: inputText }
-        axios.post('http://localhost:16177/api/Notification', notification, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${localStorage.userToken.slice(1, -1)}`
-            }
-        })
-            .then(function (response) {
-                console.log(response);
-                if (response.data.token) {
-                    console.log(response.data);
+        if (inputText !== '' && inputTitle !== '') {
+            let notification = { id: 0, title: inputTitle, text: inputText }
+            axios.post('http://localhost:16177/api/Notification', notification, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.userToken.slice(1, -1)}`
                 }
             })
-            .catch(function (error) {
-                console.log(error);
-            });
+                .then(function (response) {
+                    console.log(response);
+                    setShowSuccessModal(true);
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        }
+        else {
+            setErrMessage("You must enter title and text before submitting data.");
+            setShowErrorModal(true);
+        }
     }
     return (
         <div>
@@ -61,6 +69,14 @@ const NewNotification = () => {
                     </div>
                 </form>
             </section>
+            {showErrorModal && <FeedbackModal
+                errMessage={errMessage}
+                isOpen={showErrorModal}
+                setIsOpen={setShowErrorModal} />}
+            {showSuccessModal && <FeedbackModal
+                errMessage={"Successfully added."}
+                isOpen={showSuccessModal}
+                setIsOpen={setShowSuccessModal} />}
         </div>
     );
 }
