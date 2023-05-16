@@ -4,6 +4,7 @@ import { Appointment } from "../Models/Appointment";
 import { Specialization } from "../Models/Specialization";
 import { HealthData } from "../Models/HealthData";
 import { useNavigate } from "react-router-dom";
+import FeedbackModal from "./FeedbackModal";
 
 const Examination: FC = () => {
     const [diagnosisCode, setDiagnosisCode] = useState<string>('');
@@ -29,6 +30,10 @@ const Examination: FC = () => {
     const listWeight: string[] = [];
     const listMeasurementTime: Date[] = [];
     const navigate = useNavigate();
+    const [showErrorModal, setShowErrorModal] = useState<boolean>(false);
+    const [showSuccessModal, setShowSuccessModal] = useState<boolean>(false);
+    const [errMessage, setErrMessage] = useState<string>("");
+    const [bloodPresureCheck, setBloodPresureCheck] = useState<boolean>(false);
 
     const getMyAppointments = () => {
         axios.get('http://localhost:16177/api/Appointments/getDoctorTodayAppointments',
@@ -120,72 +125,96 @@ const Examination: FC = () => {
         console.log(selectedAppointment)
         let bp = `${presureHigh}/${presureLow}`;
         if (selectedAppointment !== undefined) {
-            if (showDialog == true) {
-                let d = { id: 0, bloodPresure: bp, bloodSugar: bloodSugar, bodyFatPercentage: bodyFatPercentage, weight: weight, userId: selectedAppointment.patientId.toString(), measurementTime: new Date() };
-                console.log(d)
-                axios.post('http://localhost:16177/api/HealthData', d,
-                    {
+            if (diagnosisCode !== '' && diagnosisDescription !== '' && prescription !== '') {
+                if (showDialog == true) {
+                    if (bloodPresureCheck === true) {
+                        let d = { id: 0, bloodPresure: bp, bloodSugar: bloodSugar, bodyFatPercentage: bodyFatPercentage, weight: weight, userId: selectedAppointment.patientId.toString(), measurementTime: new Date() };
+                        console.log(d)
+                        axios.post('http://localhost:16177/api/HealthData', d,
+                            {
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'Authorization': `Bearer ${localStorage.userToken.slice(1, -1)}`
+                                }
+                            })
+                            .then(function (response) {
+                                let responseId = response.data.id;
+                                let e = { id: 0, diagnosisCode: diagnosisCode, diagnosisDescription: diagnosisDescription, doctorId: selectedAppointment?.doctorId, patientId: selectedAppointment?.patientId, date: new Date(), healthDataId: responseId, prescription: prescription }
+                                axios.post('http://localhost:16177/api/Examinations', e, {
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'Authorization': `Bearer ${localStorage.userToken.slice(1, -1)}`
+                                    }
+                                })
+                                    .then(function (response) {
+                                        console.log(response)
+                                        setShowSuccessModal(true);
+                                        setBloodPresureCheck(!bloodPresureCheck);
+                                        getMyAppointments();
+                                    })
+                                    .catch(function (error) {
+                                        console.log(error);
+                                        setErrMessage(error.response.data);
+                                        setShowErrorModal(true);
+                                    });
+                            })
+                            .catch(function (error) {
+                                console.log(error);
+                            });
+                    }
+                    else {
+                        setErrMessage("You must enter all fields if you want to add health data.");
+                        setShowErrorModal(true);
+                    }
+                }
+                else {
+                    let responseId = 0;
+                    let e = { id: 0, diagnosisCode: diagnosisCode, diagnosisDescription: diagnosisDescription, doctorId: selectedAppointment?.doctorId, patientId: selectedAppointment?.patientId, date: new Date(), healthDataId: responseId, prescription: prescription }
+                    axios.post('http://localhost:16177/api/Examinations', e, {
                         headers: {
                             'Content-Type': 'application/json',
                             'Authorization': `Bearer ${localStorage.userToken.slice(1, -1)}`
                         }
                     })
-                    .then(function (response) {
-                        let responseId = response.data.id;
-                        let e = { id: 0, diagnosisCode: diagnosisCode, diagnosisDescription: diagnosisDescription, doctorId: selectedAppointment?.doctorId, patientId: selectedAppointment?.patientId, date: new Date(), healthDataId: responseId, prescription: prescription }
-                        axios.post('http://localhost:16177/api/Examinations', e, {
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'Authorization': `Bearer ${localStorage.userToken.slice(1, -1)}`
-                            }
+                        .then(function (response) {
+                            console.log(response)
+                            setShowSuccessModal(true);
+                            getMyAppointments();
                         })
-                            .then(function (response) {
-                                console.log(response)
-                            })
-                            .catch(function (error) {
-                                console.log(error);
-                            });
-                    })
-                    .catch(function (error) {
-                        console.log(error);
-                    });
-            }
-            else {
-                let responseId = 0;
-                let e = { id: 0, diagnosisCode: diagnosisCode, diagnosisDescription: diagnosisDescription, doctorId: selectedAppointment?.doctorId, patientId: selectedAppointment?.patientId, date: new Date(), healthDataId: responseId, prescription: prescription }
-                axios.post('http://localhost:16177/api/Examinations', e, {
+                        .catch(function (error) {
+                            console.log(error);
+                            setErrMessage(error.response.data);
+                            setShowErrorModal(true);
+                        });
+                }
+                const idsa = selectedAppointment.id;
+                axios.put(`http://localhost:16177/api/Appointments/use/${idsa}`, {}, {
                     headers: {
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${localStorage.userToken.slice(1, -1)}`
                     }
                 })
                     .then(function (response) {
-                        console.log(response)
+                        console.log(response.data)
                     })
                     .catch(function (error) {
                         console.log(error);
                     });
             }
-            const idsa = selectedAppointment.id;
-            axios.put(`http://localhost:16177/api/Appointments/use/${idsa}`, {}, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.userToken.slice(1, -1)}`
-                }
-            })
-                .then(function (response) {
-                    console.log(response.data)
-                })
-                .catch(function (error) {
-                    console.log(error);
-
-                });
+            else {
+                setErrMessage("You must enter all fields before submitting examination data.");
+                setShowErrorModal(true);
+            }
+        }
+        else {
+            setErrMessage("You must select appointment and enter examination data.");
+            setShowErrorModal(true);
         }
     }
 
     const RLSubmitHandler = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        if (selectedAppointment !== undefined && selectedSpecialization !== undefined) {
+        if (selectedAppointment !== undefined && selectedSpecialization !== undefined && selectedAppointment !== null && selectedSpecialization !== null) {
             let rl = { id: 0, patientId: selectedAppointment.patientId, isActive: true, specializationId: selectedSpecialization.id };
             axios.post('http://localhost:16177/api/ReferralLetters', rl, {
                 headers: {
@@ -195,10 +224,24 @@ const Examination: FC = () => {
             })
                 .then(function (response) {
                     console.log(response)
+                    setShowSuccessModal(true);
                 })
                 .catch(function (error) {
                     console.log(error);
                 });
+        }
+        else {
+            setErrMessage("You must select appointment and specialization.");
+            setShowErrorModal(true);
+        }
+    }
+
+    const BloodPresureCheck = (high: string, low: string) => {
+        if (Number(high) > Number(low) && low !== '' && high !== '') {
+            setBloodPresureCheck(true);
+        }
+        else {
+            setBloodPresureCheck(false);
         }
     }
 
@@ -211,6 +254,11 @@ const Examination: FC = () => {
         healthData.length && mapValuesForGraph();
         healthData.length && navigate('chart', { state: { arrayDates: listMeasurementTime, arrayHigh: listPresureHigh, arrayLow: listPresureLow, arraySugar: listBloodSugar, arrayFat: listBodyFatPercentage, arrayWeight: listWeight } })
     }, [healthData]);
+
+    useEffect(() => {
+        BloodPresureCheck(presureHigh, presureLow);
+    }, [presureHigh, presureLow]);
+
 
     return (
         <div>
@@ -373,6 +421,7 @@ const Examination: FC = () => {
                         <select onChange={event => {
                             setSelectedSpecialization(JSON.parse(event.target.value));
                         }} style={styles.select}>
+                            <option value='null'></option>
                             {specializations.map((spec, index) =>
                                 <option key={index}
                                     value={JSON.stringify(spec)}>
@@ -391,6 +440,14 @@ const Examination: FC = () => {
                     </form>
                 }
             </section>
+            {showErrorModal && <FeedbackModal
+                errMessage={errMessage}
+                isOpen={showErrorModal}
+                setIsOpen={setShowErrorModal} />}
+            {showSuccessModal && <FeedbackModal
+                errMessage={"Successfully added."}
+                isOpen={showSuccessModal}
+                setIsOpen={setShowSuccessModal} />}
         </div>
     )
 }

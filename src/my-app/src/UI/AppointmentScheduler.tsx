@@ -62,21 +62,27 @@ const AppointmentScheduler: FC = () => {
         let data = { startTime: startTime?.toJSON(), endTime: endTime?.toJSON(), doctorId: selectedDoctor?.id, patientId: localStorage.id, priority: selectedPriority };
         console.log(data);
         if (dateCheck) {
-            axios.post('http://localhost:16177/api/Appointments/checkPeriod', data,
-                {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${localStorage.userToken.slice(1, -1)}`
-                    }
-                })
-                .then(function (response) {
-                    setRecommendedAppointment(response.data);
-                    setShowAppointment(true);
-                    console.log(response.data);
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
+            if (selectedDoctor !== undefined) {
+                axios.post('http://localhost:16177/api/Appointments/checkPeriod', data,
+                    {
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${localStorage.userToken.slice(1, -1)}`
+                        }
+                    })
+                    .then(function (response) {
+                        setRecommendedAppointment(response.data);
+                        setShowAppointment(true);
+                        console.log(response.data);
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            }
+            else {
+                setErrorMessage("You must select doctor.");
+                setShowErrorModal(true);
+            }
         }
         else {
             setErrorMessage("Period is not valid, please change start and end time and try again.");

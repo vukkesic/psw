@@ -21,5 +21,17 @@ namespace HospitalAPI.Controllers
         {
             return Ok(_specializationService.GetAll());
         }
+
+        [Authorize]
+        [HttpGet("getSpecializationById")]
+        public ActionResult getSpecializationById(int id)
+        {
+            var spec = _specializationService.GetById(id);
+            if (spec == null)
+            {
+                return NotFound();
+            }
+            return Ok(spec);
+        }
     }
 }

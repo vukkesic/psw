@@ -145,7 +145,6 @@ namespace HospitalAPI.Controllers
             {
                 return BadRequest("You can't cancel appointment scheduled in less than two days.");
             }
-
             return Ok(appointment);
         }
 

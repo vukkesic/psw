@@ -7,6 +7,8 @@ import { MenstrualData } from "../Models/MenstrualData";
 import { Examination } from "../Models/Examination";
 import { Gender } from "../Models/Gender";
 import moment from "moment";
+import FeedbackModal from "./FeedbackModal";
+
 
 const BloodDonationScheduler: FC = () => {
     const [bloodDonationNotifications, setBloodDonationNotifications] = useState<BloodDonationNotification[]>([]);
@@ -18,6 +20,9 @@ const BloodDonationScheduler: FC = () => {
     const [fluReports, setFluReports] = useState<Examination[]>();
     var error = false;
     var errorMessage = "";
+    const [showErrorModal, setShowErrorModal] = useState<boolean>(false);
+    const [showSuccessModal, setShowSuccessModal] = useState<boolean>(false);
+    const [errMessage, setErrMessage] = useState<string>("");
 
     const getApprovedBloodDonationNotifications = () => {
         axios.get('http://localhost:16177/api/BloodDonation/getApproved', {
@@ -57,6 +62,8 @@ const BloodDonationScheduler: FC = () => {
         event.preventDefault();
         checkHealthCondition();
         if (error) {
+            setErrMessage(errorMessage);
+            setShowErrorModal(true);
             console.log(errorMessage);
         }
         else {
@@ -72,9 +79,12 @@ const BloodDonationScheduler: FC = () => {
                 })
                 .then(function (response) {
                     console.log(response);
+                    setShowSuccessModal(true);
                 })
                 .catch(function (error) {
                     console.log(error);
+                    setErrMessage(error.response.data);
+                    setShowErrorModal(true);
                 });
 
         }
@@ -89,8 +99,8 @@ const BloodDonationScheduler: FC = () => {
             }
         }
         if (healthData === undefined || healthData.length === 0) {
-            error = true;
             errorMessage = "You have not uploaded your helath data in last two days. Please enter it and try again.";
+            error = true;
         }
         else {
             healthData.forEach((hd) => {
@@ -125,8 +135,8 @@ const BloodDonationScheduler: FC = () => {
                 }
             }
             else {
-                error = true;
                 errorMessage = "You have not uploaded your menstrual data. Please enter it and try again";
+                error = true;
             }
         }
     }
@@ -223,6 +233,14 @@ const BloodDonationScheduler: FC = () => {
             <button onClick={submitHandler}>
                 submit
             </button>
+            {showErrorModal && <FeedbackModal
+                errMessage={errMessage}
+                isOpen={showErrorModal}
+                setIsOpen={setShowErrorModal} />}
+            {showSuccessModal && <FeedbackModal
+                errMessage={"Selected appointment is successfully created."}
+                isOpen={showSuccessModal}
+                setIsOpen={setShowSuccessModal} />}
         </div>
     )
 }

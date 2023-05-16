@@ -55,6 +55,12 @@ const NavigationBar: FC = () => {
                                 Start examination
                             </NavLink>
                         </NavItem>}
+                    {localStorage.role == 1 &&
+                        <NavItem>
+                            <NavLink href="/blooddonationscheduling">
+                                Schedule blood donation
+                            </NavLink>
+                        </NavItem>}
                     {localStorage.role == 2 &&
                         <NavItem>
                             <NavLink href="/newnotification">

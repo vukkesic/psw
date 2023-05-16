@@ -26,7 +26,18 @@ const DoctorProfile = () => {
             }
         })
             .then(function (response) {
-                console.log(response.data)
+                axios.get(`http://localhost:16177/api/Specializations/getSpecializationById`, {
+                    params: { id: response.data.specializationId }, headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.userToken.slice(1, -1)}`
+                    }
+                })
+                    .then(function (response) {
+                        setSpecializationString(response.data.specName)
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
                 setName(response.data.name);
                 setSurname(response.data.surname);
                 setEmail(response.data.email);
@@ -58,7 +69,7 @@ const DoctorProfile = () => {
                 {gender === 1 && <img className="round" src={women} alt={men} />}
                 <h3>{name} {surname}</h3>
                 <h6>{email}</h6>
-                <p>{phone} <br /> {genderString} <br /> {specializationString}</p>
+                <p>{phone} <br /> {genderString} <br /> {specializationString} </p>
             </div>
         </section>
     )

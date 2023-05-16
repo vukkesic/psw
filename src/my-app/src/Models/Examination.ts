@@ -5,6 +5,6 @@ export type Examination = {
     doctorId: Number,
     patientId: Number,
     date: Date,
-    healthDataId: number,
+    healthDataId: Number,
     prescription: string
 }
