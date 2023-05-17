@@ -40,11 +40,19 @@ const HomePage = () => {
 
 
     return (
-        <div className="container">
-            <label className="toggle" htmlFor="uniqueID">
-                <input type="checkbox" onChange={e => setShowBlogs(!showBlogs)} />
-                show blogs
-            </label>
+        <div className="toggle-container">
+            <div className="container">
+                <label style={{ width: '33%', fontSize: '24px' }}>
+                    Notifications
+                </label>
+                <label className="switch">
+                    <input type="checkbox" onChange={e => setShowBlogs(!showBlogs)} />
+                    <span className="slider round"></span>
+                </label>
+                <label style={{ width: '33%', fontSize: '24px' }}>
+                    Blog
+                </label>
+            </div>
             {!showBlogs && <div className="card-columns">
                 <h1>Notifications</h1>
                 {notifications?.map((notification, index) =>

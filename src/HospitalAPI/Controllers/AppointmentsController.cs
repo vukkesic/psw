@@ -100,7 +100,7 @@ namespace HospitalAPI.Controllers
             else if (period.Priority == 0)
             {
                 d = _doctorService.GetById(period.DoctorId);
-                Doctor[] doctors = _doctorService.GetAll().ToArray();
+                Doctor[] doctors = _doctorService.GetAllSpecialist(d.SpecializationId).ToArray();
                 foreach (Doctor doc in doctors)
                 {
                     appointments = (_appointmentService.GetByDoctor(doc.Id)).ToArray();
