@@ -73,6 +73,12 @@ const NavigationBar: FC = () => {
                                 Block user
                             </NavLink>
                         </NavItem>}
+                    {localStorage.role == 2 &&
+                        <NavItem>
+                            <NavLink href="/blooddonationnotifications">
+                                Blood donation
+                            </NavLink>
+                        </NavItem>}
                 </Nav>
                 <Nav className="nav" navbar>
                     <NavbarBrand className="brand" href="/">Home</NavbarBrand>

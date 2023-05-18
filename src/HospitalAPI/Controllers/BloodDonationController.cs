@@ -82,6 +82,7 @@ namespace HospitalAPI.Controllers
                 var channel = new Channel("localhost", 8787, ChannelCredentials.Insecure);
                 var client = new SpringGrpcService.SpringGrpcServiceClient(channel);
                 BloodDonationAppointment appointment = await client.makeBloodDonationAppointmentAsync(b);
+                Console.WriteLine(appointment);
                 return appointment;
             }
             catch (Exception ex)

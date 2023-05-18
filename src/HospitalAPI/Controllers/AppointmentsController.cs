@@ -30,6 +30,8 @@ namespace HospitalAPI.Controllers
             return new DateTime((dt.Ticks + d.Ticks - 1) / d.Ticks * d.Ticks, dt.Kind);
         }
 
+        //This is function that takes arguments and returns best appointment for your parameters
+        //Appointments are on each half a hour and only in working hours
         SuggestionDTO createSuggestion(Appointment[] appointments, DateTime tempStart, DateTime tempEnd, Period period, Doctor d, string message)
         {
             for (DateTime start = tempStart; start < tempEnd; start = start.AddMinutes(30))

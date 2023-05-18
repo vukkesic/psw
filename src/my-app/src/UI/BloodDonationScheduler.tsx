@@ -23,6 +23,7 @@ const BloodDonationScheduler: FC = () => {
     const [showErrorModal, setShowErrorModal] = useState<boolean>(false);
     const [showSuccessModal, setShowSuccessModal] = useState<boolean>(false);
     const [errMessage, setErrMessage] = useState<string>("");
+    const [appointmentScheduledMessage, setAppointmentScheduledMessage] = useState<string>("");
 
     const getApprovedBloodDonationNotifications = () => {
         axios.get('http://localhost:16177/api/BloodDonation/getApproved', {
@@ -79,11 +80,20 @@ const BloodDonationScheduler: FC = () => {
                 })
                 .then(function (response) {
                     console.log(response);
-                    setShowSuccessModal(true);
+                    if (response.data.location !== undefined) {
+                        var startTime = new Date(response.data.startTime.seconds * 1000);
+                        setAppointmentScheduledMessage("Blood donation appointment created sucessfully.\nStart time: " + startTime + "\n Location: " + response.data.location);
+                        setShowSuccessModal(true);
+                        console.log(new Date(response.data.startTime.seconds * 1000));
+                    }
+                    else {
+                        setErrMessage("Unsucessful. All appointments are taken. Please choose another blood doantin action.");
+                        setShowErrorModal(true);
+                    }
                 })
                 .catch(function (error) {
                     console.log(error);
-                    setErrMessage(error.response.data);
+                    setErrMessage(error.response.data.errorMesage);
                     setShowErrorModal(true);
                 });
 
@@ -238,7 +248,7 @@ const BloodDonationScheduler: FC = () => {
                 isOpen={showErrorModal}
                 setIsOpen={setShowErrorModal} />}
             {showSuccessModal && <FeedbackModal
-                errMessage={"Selected appointment is successfully created."}
+                errMessage={appointmentScheduledMessage}
                 isOpen={showSuccessModal}
                 setIsOpen={setShowSuccessModal} />}
         </div>

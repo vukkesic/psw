@@ -4,9 +4,13 @@ import { Notification } from "../Models/Notification";
 import "./HomePage.css";
 import axios from "axios";
 import NewNotification from "./NewNotification";
+import FeedbackModal from "./FeedbackModal";
 
 const BloodDonationNews = () => {
     const [bloodDonationNotifications, setBloodDonationNotifications] = useState<BloodDonationNotification[]>();
+    const [showApprovedModal, setShowApprovedModal] = useState<boolean>(false);
+    const [showDeniedModal, setShowDeniedModal] = useState<boolean>(false);
+
 
     const postNotification = (bdn: BloodDonationNotification) => {
         var notification = { id: 0, title: bdn.title, text: bdn.text }
@@ -53,6 +57,8 @@ const BloodDonationNews = () => {
             .then(function (response) {
                 console.log(response.data);
                 postNotification(notification);
+                setShowApprovedModal(true);
+                getAllPendingBloodDonationNotifications();
             })
             .catch(function (error) {
                 console.log(error);
@@ -76,6 +82,8 @@ const BloodDonationNews = () => {
         })
             .then(function (response) {
                 console.log(response.data);
+                setShowDeniedModal(true);
+                getAllPendingBloodDonationNotifications();
             })
             .catch(function (error) {
                 console.log(error);
@@ -117,6 +125,14 @@ const BloodDonationNews = () => {
                 </div>
             )
             }
+            {showApprovedModal && <FeedbackModal
+                errMessage={"Blood donation action approved."}
+                isOpen={showApprovedModal}
+                setIsOpen={setShowApprovedModal} />}
+            {showDeniedModal && <FeedbackModal
+                errMessage={"Blood donation action denied."}
+                isOpen={showDeniedModal}
+                setIsOpen={setShowDeniedModal} />}
         </div>
     )
 }
