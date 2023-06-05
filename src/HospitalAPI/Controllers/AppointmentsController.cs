@@ -74,7 +74,7 @@ namespace HospitalAPI.Controllers
             suggestion = createSuggestion(appointments, tempStart, tempEnd, period, d, "Great! We found appointment for your parameters.");
             if (suggestion != null)
                 return suggestion;
-
+            //Selected priority is doctor
             if (period.Priority == 1)
             {
                 tempStart = RoundUp(period.EndTime, TimeSpan.FromMinutes(30)).AddMinutes(-30).ToLocalTime();
@@ -99,6 +99,7 @@ namespace HospitalAPI.Controllers
                     return suggestion;
 
             }
+            // Selected priority is period 
             else if (period.Priority == 0)
             {
                 d = _doctorService.GetById(period.DoctorId);
@@ -116,7 +117,7 @@ namespace HospitalAPI.Controllers
             return null;
         }
 
-        //[Authorize(Roles = "PATIENT")]
+        [Authorize(Roles = "PATIENT")]
         [HttpPost("addAppointment")]
         public ActionResult AddAppointment(AppointmentDTO dto)
         {

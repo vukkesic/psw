@@ -25,7 +25,7 @@ namespace HospitalAPI.Controllers
         {
             _bloodDonationNotificationService = bloodDonationNotificationService;
         }
-        // GET: api/rooms
+        // GET: api/bloodDontaion
 
         [HttpGet]
         public ActionResult GetAll()
@@ -33,7 +33,7 @@ namespace HospitalAPI.Controllers
             return Ok(_bloodDonationNotificationService.GetAll());
         }
 
-        // GET api/rooms/2
+        // GET api/bloodDontaion/2
         [HttpGet("{id}")]
         public ActionResult GetById(int id)
         {
@@ -58,7 +58,7 @@ namespace HospitalAPI.Controllers
             return Ok(_bloodDonationNotificationService.GetApproved());
         }
 
-        // POST api/rooms
+        // POST api/bloodDontaion
         [AllowAnonymous]
         [HttpPost]
         public ActionResult Create(BloodDonationNotification bdn)
@@ -92,7 +92,7 @@ namespace HospitalAPI.Controllers
             }
         }
 
-        // PUT api/rooms/2
+        // PUT api/bloodDontaion/2
         [HttpPut("{id}")]
         public ActionResult Update(int id, BloodDonationNotification bloodDonationNotification)
         {
@@ -118,7 +118,7 @@ namespace HospitalAPI.Controllers
             return Ok(bloodDonationNotification);
         }
 
-        // DELETE api/rooms/2
+        // DELETE api/bloodDontaion/2
         [HttpDelete("{id}")]
         public ActionResult Delete(int id)
         {

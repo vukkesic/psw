@@ -69,7 +69,7 @@ namespace HospitalTests
         {
             AppointmentService service = new AppointmentService(CreateStubRepository());
             Appointment a = service.GetById(1);
-            bool b = a.CompareStartTime(new DateTime(2023, 05, 20, 9, 30, 0));
+            bool b = a.CompareStartTime(new DateTime(2023, 07, 20, 9, 30, 0));
             b.ShouldBeTrue();
         }
 
@@ -112,7 +112,7 @@ namespace HospitalTests
             var stubRepository = new Mock<IAppointmentRepository>();
             var appointments = new List<Appointment>();
 
-            var app1 = new Appointment(1, new DateTime(2023, 05, 20, 9, 30, 0), new DateTime(2023, 05, 20, 10, 00, 0), 2, 1, false, new DateTime(), false);
+            var app1 = new Appointment(1, new DateTime(2023, 07, 20, 9, 30, 0), new DateTime(2023, 07, 20, 10, 00, 0), 2, 1, false, new DateTime(), false);
             var app2 = new Appointment(2, new DateTime(2023, 05, 05, 9, 30, 0), new DateTime(2023, 05, 05, 10, 00, 0), 4, 3, false, new DateTime(), false);
             var app3 = new Appointment(3, new DateTime(), new DateTime(), 4, 3, false, new DateTime(), false);
             appointments.Add(app1);

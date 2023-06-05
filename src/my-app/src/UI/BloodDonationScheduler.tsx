@@ -139,7 +139,7 @@ const BloodDonationScheduler: FC = () => {
         if (selectedPatient !== undefined && selectedPatient.gender === Gender.Female) {
             if (menstrualData !== undefined) {
                 var d = new Date();
-                if (menstrualData.lastPeriod.valueOf() > (d.valueOf() - (2 * 24 * 60 * 60 * 1000)) && (menstrualData.lastPeriod.valueOf() < (d.valueOf() + (2 * 24 * 60 * 60 * 1000)))) {
+                if (menstrualData.lastPeriod.valueOf() > (d.valueOf() - (2 * 24 * 60 * 60 * 1000)) && (menstrualData.lastPeriod.valueOf() < (d.valueOf() + (2 * 24 * 60 * 60 * 1000))) || menstrualData.nextPeriod.valueOf() > (d.valueOf() - (2 * 24 * 60 * 60 * 1000)) && (menstrualData.nextPeriod.valueOf() < (d.valueOf() + (2 * 24 * 60 * 60 * 1000)))) {
                     error = true;
                     errorMessage = "You are currently in period, you can't donate blood.";
                 }

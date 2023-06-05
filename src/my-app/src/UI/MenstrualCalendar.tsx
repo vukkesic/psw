@@ -10,12 +10,13 @@ import { MenstrualData } from "../Models/MenstrualData";
 
 
 const MenstrualCalendar: FC = () => {
-    const [cycle, cycleValue] = useState("28");
+    const [cycle, cycleValue] = useState("");
     const [myMenstrualData, setMyMenstrualData] = useState<MenstrualData>();
     const [selectedLastPeriod, setSelectedLastPeriod] = useState(myMenstrualData?.lastPeriod);
     const [selectedNextPeriod, setSelectedNextPeriod] = useState(myMenstrualData?.nextPeriod);
     const [SelectedApproxOvulationDay, setSelectedApproxOvulationDate] = useState(myMenstrualData?.approxOvulationDay);
     const navigate = useNavigate();
+    const [lastCycle, setLastCycle] = useState("");
 
     const date = selectedLastPeriod;
     console.log(cycle);
@@ -32,6 +33,11 @@ const MenstrualCalendar: FC = () => {
             .then(function (response) {
                 console.log(response.data)
                 setMyMenstrualData(response.data);
+                setSelectedLastPeriod(new Date(response.data.lastPeriod));
+                setSelectedNextPeriod(new Date(response.data.nextPeriod));
+                const diffTime = (new Date(response.data.nextPeriod).getTime() - new Date(response.data.lastPeriod).getTime()) / (1000 * 60 * 60 * 24) + 1;
+                setLastCycle(diffTime.toString());
+                cycleValue(diffTime.toString());
             })
             .catch(function (error) {
                 console.log(error);
@@ -44,26 +50,29 @@ const MenstrualCalendar: FC = () => {
     }, []);
 
     useEffect(() => {
-        setSelectedNextPeriod(moment(selectedLastPeriod).add(cycleLength - 1, 'days').toDate());
-        setSelectedApproxOvulationDate(moment(selectedLastPeriod).add(cycleLength - 1 - 14, 'days').toDate())
+        setSelectedNextPeriod(moment(selectedLastPeriod).add(cycleLength - 1, 'days').add(2, 'hours').toDate());
+        setSelectedApproxOvulationDate(moment(selectedLastPeriod).add(cycleLength - 1 - 14, 'days').add(2, 'hours').toDate());
     }, [selectedLastPeriod, cycleLength]);
 
     const submitHandler = () => {
-        const idmd = myMenstrualData?.id;
-        let data = { id: idmd, lastPeriod: selectedLastPeriod, nextPeriod: selectedNextPeriod, approxOvulationDay: SelectedApproxOvulationDay, patientId: myMenstrualData?.patientId }
-        axios.put(`http://localhost:16177/api/MenstrualData/${idmd}`, data,
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.userToken.slice(1, -1)}`
-                }
-            })
-            .then(function (response) {
-                console.log(response.data)
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
+        if (selectedLastPeriod !== undefined) {
+            const idmd = myMenstrualData?.id;
+            const lastPeriodFixed = new Date(selectedLastPeriod?.getTime() + 2 * 60 * 60 * 1000);
+            let data = { id: idmd, lastPeriod: lastPeriodFixed, nextPeriod: selectedNextPeriod, approxOvulationDay: SelectedApproxOvulationDay, patientId: myMenstrualData?.patientId }
+            axios.put(`http://localhost:16177/api/MenstrualData/${idmd}`, data,
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.userToken.slice(1, -1)}`
+                    }
+                })
+                .then(function (response) {
+                    console.log(response.data)
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        }
     }
 
     return (
@@ -76,6 +85,7 @@ const MenstrualCalendar: FC = () => {
                 defaultValue={cycle}
                 className="m-2"
             >
+                <option value={lastCycle}>unchanged</option>
                 <option value="28">28</option>
                 <option value="29">29</option>
                 <option value="30">30</option>
@@ -129,7 +139,7 @@ const MenstrualCalendar: FC = () => {
             </div>
             <button onClick={() => navigate(-1)}>go back</button>
             <button onClick={submitHandler}>submit</button>
-        </div>
+        </div >
     )
 }
 

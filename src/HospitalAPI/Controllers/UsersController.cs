@@ -68,7 +68,6 @@ namespace HospitalAPI.Controllers
                     data.PatientId = p.Id;
                     _menstrualDataService.Create(data);
                 }
-                //return CreatedAtAction("GetById", new { id = patient.Id }, patient);   Treba dodati get metodu 
                 return Ok(patient);
             }
             else
@@ -164,8 +163,7 @@ namespace HospitalAPI.Controllers
             return Ok(patient);
         }
 
-        //[Authorize(Roles = "DOCTOR")]
-        [AllowAnonymous]
+        [Authorize(Roles = "DOCTOR")]
         [HttpGet("getAllPatients")]
         public ActionResult GetAllPatients()
         {
