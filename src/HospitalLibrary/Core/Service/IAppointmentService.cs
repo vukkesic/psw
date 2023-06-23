@@ -1,4 +1,5 @@
-﻿using HospitalLibrary.Core.Model;
+﻿using HospitalLibrary.Core.DTOs;
+using HospitalLibrary.Core.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,5 +19,6 @@ namespace HospitalLibrary.Core.Service
         IEnumerable<Appointment> GetByPatient(int patientId);
         IEnumerable<Appointment> GetDoctorTodayAppointments(DateTime today, int doctorId);
         IEnumerable<Appointment> GetLastMonthCanceledAppointments();
+        SuggestionDTO CheckPeriod(Period period,Doctor doctor, Doctor[] doctors);
     }
 }

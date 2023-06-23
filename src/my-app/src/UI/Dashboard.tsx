@@ -170,6 +170,8 @@ const Dashboard: FC = () => {
 
     useEffect(() => {
         if (healthData.length > 0) {
+            setPresureHigh(healthData[healthData.length - 1].bloodPresure.split('/', 1)[0])
+            setPresureLow(healthData[healthData.length - 1].bloodPresure.split('/', 2)[1])
             setBloodPresure(healthData[healthData.length - 1].bloodPresure)
             setBloodSugar(healthData[healthData.length - 1].bloodSugar)
             setBodyFatPercentage(healthData[healthData.length - 1].bodyFatPercentage)

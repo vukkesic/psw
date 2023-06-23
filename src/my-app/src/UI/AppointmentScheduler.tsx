@@ -238,12 +238,12 @@ const AppointmentScheduler: FC = () => {
                     Working hours: Mon-Fri 8-16H
                 </label>
                 <label>
-                    Referral letter
+                    Referral letter(specialization id)
                 </label>
                 <select onChange={event => {
                     setSelectedReferralLetter(JSON.parse(event.target.value));
                 }} style={styles.select}>
-                    <option value='null'></option>
+                    <option value='null'>6</option>
                     {myRefferalLetters.map((letter, index) =>
                         <option key={index}
                             value={JSON.stringify(letter)}>
@@ -290,6 +290,28 @@ const AppointmentScheduler: FC = () => {
                 <button onClick={submitHandler}>
                     submit
                 </button>
+                <h5 style={styles.result}>Specializations:</h5>
+                <p> 1: Allergy and immunology</p>
+                <p> 2: Anesthesiology</p>
+                <p> 3: Dermatology</p>
+                <p> 4: Diagnostic radiology</p>
+                <p> 5: Emergency medicine</p>
+                <p> 6: Family medicine</p>
+                <p> 7: Internal medicine</p>
+                <p> 8: Medical genetics</p>
+                <p> 9: Neurology</p>
+                <p> 10: Nuclear medicine</p>
+                <p> 11: Obstetrics and gynecology</p>
+                <p> 12: Ophthalmology</p>
+                <p> 13: Pathology</p>
+                <p> 14: Pediatrics</p>
+                <p> 15: Physical medicine and rehabilitation</p>
+                <p> 16: Preventive medicine</p>
+                <p> 17: Psychiatry</p>
+                <p> 18: Radiation oncology</p>
+                <p> 19: Surgery</p>
+                <p> 20: Urology</p>
+
                 {showAppointment && recommendedAppointment &&
                     <AppointmentModal
                         startDate={recommendedAppointment.startTime}

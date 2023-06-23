@@ -297,7 +297,7 @@ namespace HospitalLibrary.Migrations
             migrationBuilder.InsertData(
                 table: "healthdata",
                 columns: new[] { "Id", "BloodPresure", "BloodSugar", "BodyFatPercentage", "MeasurementTime", "PatientId", "Weight" },
-                values: new object[] { 1, "120/80", "12", "17", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 1, "102" });
+                values: new object[] { 1, "120/80", "12", "17", new DateTime(2023, 6, 23, 18, 54, 22, 440, DateTimeKind.Local).AddTicks(9631), 1, "102" });
 
             migrationBuilder.InsertData(
                 table: "menstrualdata",

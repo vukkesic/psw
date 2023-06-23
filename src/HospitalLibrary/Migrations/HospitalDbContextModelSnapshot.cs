@@ -275,7 +275,7 @@ namespace HospitalLibrary.Migrations
                             BloodPresure = "120/80",
                             BloodSugar = "12",
                             BodyFatPercentage = "17",
-                            MeasurementTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            MeasurementTime = new DateTime(2023, 6, 23, 18, 54, 22, 440, DateTimeKind.Local).AddTicks(9631),
                             PatientId = 1,
                             Weight = "102"
                         });
